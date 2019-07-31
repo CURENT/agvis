@@ -17,66 +17,25 @@ const canvas = document.getElementById('canvas');
 canvas.width = width;
 canvas.height = height;
 
-const gl = canvas.getContext('webgl');
-gl.viewport(0, 0, width, height);
+const ctx = canvas.getContext('2d');
 
-const vertShader = gl.createShader(gl.VERTEX_SHADER);
-	gl.shaderSource(vertShader, `
-	precision mediump float;
-	attribute vec2 aPosition;
-
-	void main() {
-		gl_Position = vec4(aPosition.xy, 0, 1);
-	}
-`);
-gl.compileShader(vertShader);
-const vertError = gl.getShaderInfoLog(vertShader);
-if (vertError.length > 0) {
-	console.error('vertShader', vertError);
-}
-
-
-const fragShader = gl.createShader(gl.FRAGMENT_SHADER);
-	gl.shaderSource(fragShader, `
-	precision mediump float;
-
-	void main() {
-		gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
-	}
-`);
-gl.compileShader(fragShader);
-const fragError = gl.getShaderInfoLog(fragShader);
-if (fragError.length > 0) {
-	console.error('fragShader', fragError);
-}
-
-const program = gl.createProgram();
-gl.attachShader(program, vertShader);
-gl.attachShader(program, fragShader);
-gl.linkProgram(program);
-const progError = gl.getProgramInfoLog(program);
-if (progError.length > 0) {
-	console.error('program', progError);
-}
-gl.useProgram(program);
-
-const aPosition = gl.getAttribLocation(program, 'aPosition');
-gl.enableVertexAttribArray(aPosition);
-const aPositionBuffer = gl.createBuffer();
-const aPositionValue = new Float32Array([
+const positions = new Float32Array([
 	-0.9, -0.9,
 	+0.9, -0.9,
 	 0.0, 0.9,
 ]);
 
-gl.bindBuffer(gl.ARRAY_BUFFER, aPositionBuffer);
-gl.bufferData(gl.ARRAY_BUFFER, aPositionValue, gl.STATIC_DRAW);
-gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 2 * aPositionValue.BYTES_PER_ELEMENT, 0);
-gl.bindBuffer(gl.ARRAY_BUFFER, null);
+ctx.clearRect(-1, -1, 2, 2);
+ctx.save();
+ctx.setTransform(width/2, 0, 0, -height/2, width/2, height/2);
+ctx.beginPath();
+for (let i=0; i<positions.length; i+=2) {
+	if (i == 0) ctx.moveTo(positions[i+0], positions[i+1]);
+	else        ctx.lineTo(positions[i+0], positions[i+1]);
+}
+ctx.lineTo(positions[0], positions[1]);
+ctx.restore();
+ctx.stroke();
 
-gl.clearColor(0, 0, 0, 0);
-gl.clear(gl.COLOR_BUFFER_BIT);
-
-gl.drawArrays(gl.LINE_LOOP, 0, 3);
 
 </script>
