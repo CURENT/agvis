@@ -8,16 +8,22 @@ registry=accona.eecs.utk.edu:5000
 xauth=
 entrypoint=
 ipc=
-net=
+net=host
 user=1
 cwd=1
 interactive=1
 script=
 port=8810
+pipindex=
+piptrustedhost=
+
+[ -f env.sh ] && . env.sh
 
 build() {
 	docker build \
 		${target:+--target $target} \
+		${pipindex:+--build-arg PIP_INDEX_URL=$pipindex} \
+		${piptrustedhost:+--build-arg PIP_TRUSTED_HOST=$piptrustedhost} \
 		-t $tag .
 }
 
@@ -55,10 +61,11 @@ push() {
 
 create() {
 	docker service create \
-		--name $name \
-		--mount type=bind,src=$PWD,dst=$PWD \
+		${name:+--name $name} \
+		${cwd:+--mount type=bind,src=$PWD,dst=$PWD} \
 		${data:+--mount type=bind,src=$data,dst=$data} \
-		$registry/$tag "$@"
+		$registry/$tag \
+		"$@"
 }
 
 destroy() {
@@ -73,5 +80,6 @@ python() { python3 "$@"; }
 python3() { python3.7 "$@"; }
 python3.7() { run python3.7 "$@"; }
 server() { python3.7 server.py --port=$port "$@"; }
+andes() { run andes "$@"; }
 
 "$@"
