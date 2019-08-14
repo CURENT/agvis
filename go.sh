@@ -78,8 +78,25 @@ logs() {
 
 python() { python3 "$@"; }
 python3() { python3.7 "$@"; }
-python3.7() { run python3.7 "$@"; }
+python3.7() { run python3.7 -u "$@"; }
 server() { python3.7 server.py --port=$port "$@"; }
 andes() { run andes "$@"; }
+reader() {
+	python benchmark.py --dime tcp://127.0.0.1:$port,reader,writer "$@" reader
+}
+writer() {
+	python benchmark.py --dime tcp://127.0.0.1:$port,writer,reader "$@" writer
+}
+dime() {
+	run dime tcp://0.0.0.0:$port --debug
+}
+
+dev() {
+	tmux split-window -v
+	tmux split-window -v
+	tmux send-keys -t0 "#./go.sh dime" Enter
+	tmux send-keys -t1 "#./go.sh reader" Enter
+	tmux send-keys -t2 "#./go.sh writer" Enter
+}
 
 "$@"
