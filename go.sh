@@ -91,12 +91,18 @@ dime() {
 	run dime tcp://0.0.0.0:$port --debug
 }
 
-dev() {
+dev-benchmark() {
 	tmux split-window -v
 	tmux split-window -v
 	tmux send-keys -t0 "#./go.sh dime" Enter
 	tmux send-keys -t1 "#./go.sh reader" Enter
 	tmux send-keys -t2 "#./go.sh writer" Enter
+}
+
+dev() {
+	tmux split-window -v
+	tmux send-keys -t0 "#./go.sh server" Enter
+	tmux send-keys -t1 "#vi static/index.html" Enter
 }
 
 "$@"
