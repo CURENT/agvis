@@ -2,7 +2,7 @@ from andes_addon.dime import Dime
 from time import sleep
 import numpy as np
 
-dimec = Dime('geovis', 'tcp://127.0.0.1:8811')
+dimec = Dime('geovis', 'tcp://127.0.0.1:8810')
 ok = dimec.start()
 if not ok:
 	print('bad!')
@@ -23,6 +23,7 @@ try:
 		if varname == 'DONE':
 			break
 		elif varname == 'Idxvgs':
+			print('Idxvgs', var)
 			ctx['Idxvgs'] = var
 			continue
 
@@ -53,8 +54,10 @@ try:
 				'vgsvaridx': np.arange(1, len(var) + 1),
 			})
 		elif varname == 'SysParam':
+			print('SysParam', var)
 			ctx['SysParam'] = var
 		elif varname == 'SysName':
+			print('SysName', var)
 			ctx['SysName'] = var
 		elif varname == 'Varvgs':
 			ctx['Varvgs'] = var

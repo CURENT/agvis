@@ -8,9 +8,18 @@
 }
 </style>
 <body>
-<contour-map></contour-map>
-<script src="/static/js/ContourMap.js"></script>
-<script type="application/json" src="/static/us-states.json"></script>
+<script src="/static/js/resp.js"></script>
+<script>
+(async () => {
+
+const response = await fetch('/stream/');
+for await (const data of RESP(response)) {
+	console.log(data);
+}
+
+})();
+</script>
+
 <!--
 <canvas id="canvas"></canvas>
 <script>

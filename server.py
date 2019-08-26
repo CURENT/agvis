@@ -25,11 +25,21 @@ class RequestHandler(SimpleHTTPRequestHandler):
 			self.directory = 'static'
 			self.path = self.path[len('/static'):]
 			super().do_GET()
+		elif self.path == '/stream/':
+			self.do_GET_stream()
 		elif self.path.startswith('/foo/'):
 			self.do_GET_foo()
 		else:
 			print('GET', self.path)
 			raise NotImplementedError
+	
+	def do_GET_stream(self):
+		self.send_response(200)
+		self.send_header('Content-Type', 'application/octet-stream')
+		self.end_headers()
+		for _ in range(10):
+			self.wfile.write(b'$6\r\nfoobar\r\n')
+
 	
 	def do_GET_foo(self):
 		"GET /foo/:name"
