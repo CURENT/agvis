@@ -6,50 +6,55 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+
+#map {
+	width: 100vw;
+	height: 100vh;
+}
 </style>
 <body>
-<script src="/static/js/resp.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+	integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+	crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+	integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+	crossorigin=""></script>
+<script src="https://rawcdn.githack.com/iDerekLi/Leaflet.CustomLayer/f2b4037ff00ae8f0bb909896f1ef53d918d6e47b/dist/Leaflet.CustomLayer.min.js"></script>
+<div id="map"></div>
 <script>
-(async () => {
+const TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
 
-const response = await fetch('/stream/');
-for await (const data of RESP(response)) {
-	console.log(data);
-}
+const map = L.map('map', {
+	minZoom: 3,
+	maxZoom: 10,
+	center: [40, -100],
+	zoom: 5,
+});
 
-})();
+const tileLayer = L.tileLayer(TILE_LAYER_URL)
+	.addTo(map);
+
+const contourLayer = new L.CustomLayer({
+	container: document.createElement('canvas'),
+});
+
+contourLayer.on('layer-render', function() {
+	const canvas = this.getContainer();
+	const size = this._bounds.getSize();
+
+	canvas.width = size.x;
+	canvas.height = size.y;
+	canvas.style.width = `${size.x}px`;
+	canvas.style.height = `${size.y}px`;
+
+	const ctx = canvas.getContext('2d');
+
+	const point = this._map.latLngToContainerPoint([40, -100]);
+	ctx.fillStyle = 'black';
+	ctx.beginPath();
+	ctx.arc(point.x, point.y, 10.0, 0, 2 * Math.PI);
+	ctx.fill();
+});
+
+contourLayer.addTo(map);
 </script>
-
-<!--
-<canvas id="canvas"></canvas>
-<script>
-const width = window.innerWidth;
-const height = window.innerHeight;
-
-const canvas = document.getElementById('canvas');
-canvas.width = width;
-canvas.height = height;
-
-const ctx = canvas.getContext('2d');
-
-const positions = new Float32Array([
-	-0.9, -0.9,
-	+0.9, -0.9,
-	 0.0, 0.9,
-]);
-
-ctx.clearRect(-1, -1, 2, 2);
-ctx.save();
-ctx.setTransform(width/2, 0, 0, -height/2, width/2, height/2);
-ctx.beginPath();
-for (let i=0; i<positions.length; i+=2) {
-	if (i == 0) ctx.moveTo(positions[i+0], positions[i+1]);
-	else        ctx.lineTo(positions[i+0], positions[i+1]);
-}
-ctx.lineTo(positions[0], positions[1]);
-ctx.restore();
-ctx.stroke();
-
-
-</script>
--->
