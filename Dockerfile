@@ -47,8 +47,8 @@ RUN unzip /tmp/dime-${dime_version}.zip -d /opt/ && \
         /opt/dime
 
 
-#RUN python3 -m pip install \
-#	requests
+RUN python3.7 -m pip install \
+        websockets
 
 ENTRYPOINT []
 CMD []

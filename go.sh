@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 tag=ltbweb:$USER
-name=ltbweb_service
+name=ltbweb_$USER
 target=base
 data=/mnt/seenas2/data
 registry=accona.eecs.utk.edu:5000
@@ -88,7 +88,7 @@ writer() {
 	python benchmark.py --dime tcp://127.0.0.1:$port,writer,reader "$@" writer
 }
 dime() {
-	run dime tcp://0.0.0.0:$port --debug
+	run dime ${1:-tcp://0.0.0.0:8819} --debug
 }
 
 dev-benchmark() {
@@ -101,8 +101,12 @@ dev-benchmark() {
 
 dev() {
 	tmux split-window -v
-	tmux send-keys -t0 "#./go.sh server" Enter
-	tmux send-keys -t1 "#vi static/index.html" Enter
+	tmux split-window -v
+	tmux split-window -v
+	tmux send-keys -t0 "#./go.sh dime tcp://127.0.0.1:8819" Enter
+	tmux send-keys -t1 "#./go.sh python server.py --port 8810" Enter
+	tmux send-keys -t2 "#./go.sh python wsdime.py --port 8811" Enter
+	tmux send-keys -t3 "#./go.sh andes --routine=tds /opt/andes/cases/ieee14/ieee14_syn.dm --dime=tcp://127.0.0.1:8819" Enter
 }
 
 "$@"

@@ -5,7 +5,7 @@ ANDES comes with ABSOLUTELY NO WARRANTY
 Use this software AT YOUR OWN RISK
 
 Case file: /opt/andes/cases/ieee14/ieee14_syn.dm
-report Time: 08/21/2019 08:04:20 PM
+report Time: 08/26/2019 03:21:36 AM
 
 Power flow method: NR
 Number of iterations: 4
