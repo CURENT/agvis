@@ -60,12 +60,39 @@ contourLayer.on('layer-render', function() {
 
 contourLayer.addTo(map);
 
+class NDArray {
+	constructor(typedArray, shape) {
+		this.typedArray = typedArray;
+		this.shape = shape;
+	}
+
+	get(...index) {
+		const shape = this.shape;
+		if (index.length !== shape.length) {
+			throw 'bad index ' + index.length + ' !== ' + shape.length;
+		}
+
+		const len = index.length;
+		let realIndex = 0;
+		for (let i=0; i<len; ++i) {
+			const s = shape[len-i-1];
+			const j = index[len-i-1];
+			if (j >= s) {
+				throw 'bad index: index=' + index + ', shape=' + shape;
+			}
+			realIndex = realIndex * s + j;
+		}
+
+		return this.typedArray[realIndex];
+	}
+}
+
 function pymatbridgeReviver(key, value) {
 	//console.log(JSON.parse(JSON.stringify({ this: this, key, value })));
 	if (value !== null && value.ndarray) {
-		const array = base64arraybuffer.decode(value.data);
-		array.shape = value.shape;
-		return array;
+		const buffer = base64arraybuffer.decode(value.data);
+		const array = new Float64Array(buffer);
+		return new NDArray(array, value.shape);
 	}
 	return value;
 };
@@ -176,10 +203,17 @@ for (;;) {
 				data: base64arraybuffer.encode(Float64Array.of(1).buffer),
 			},
 		});
+	} else if (name === 'SysParam') {
+		const Bus = value.Bus;
+		for (let i=0; i<Bus.shape[0]; ++i) {
+			const lat = Bus.get(i, 6);
+			const lng = Bus.get(i, 7);
+			console.log(lat, lng);
+		}
 	}
+
+
 }
 
 })();
-
-
 </script>
