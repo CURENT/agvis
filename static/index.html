@@ -13,15 +13,22 @@
 }
 </style>
 <body>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-	integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
 	crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
-	integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
 	crossorigin=""></script>
+<script>
+L.Class.include({
+	version: 0,
+});
+</script>
 <script src="https://rawcdn.githack.com/iDerekLi/Leaflet.CustomLayer/f2b4037ff00ae8f0bb909896f1ef53d918d6e47b/dist/Leaflet.CustomLayer.min.js"></script>
 <script>base64arraybuffer = exports = {};</script>
 <script src="https://unpkg.com/base64-arraybuffer@0.2.0/lib/base64-arraybuffer.js"></script>
+<script src="/static/js/NDArray.js"></script>
+<script src="/static/js/DimeClient.js"></script>
+<script src="/static/js/CanvasLayer.js"></script>
+<script src="/static/js/TopologyLayer.js"></script>
 <div id="map"></div>
 <script>
 const TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
@@ -36,150 +43,8 @@ const map = L.map('map', {
 const tileLayer = L.tileLayer(TILE_LAYER_URL)
 	.addTo(map);
 
-const contourLayer = L.customLayer({
-	container: document.createElement('canvas'),
-});
-
-contourLayer.on('layer-render', function() {
-	const canvas = this.getContainer();
-	const size = this._bounds.getSize();
-
-	canvas.width = size.x;
-	canvas.height = size.y;
-	canvas.style.width = `${size.x}px`;
-	canvas.style.height = `${size.y}px`;
-
-	const ctx = canvas.getContext('2d');
-
-	const point = this._map.latLngToContainerPoint([40, -100]);
-	ctx.fillStyle = 'black';
-	ctx.beginPath();
-	ctx.arc(point.x, point.y, 10.0, 0, 2 * Math.PI);
-	ctx.fill();
-});
-
-contourLayer.addTo(map);
-
-class NDArray {
-	constructor(typedArray, shape) {
-		this.typedArray = typedArray;
-		this.shape = shape;
-	}
-
-	get(...index) {
-		const shape = this.shape;
-		if (index.length !== shape.length) {
-			throw 'bad index ' + index.length + ' !== ' + shape.length;
-		}
-
-		const len = index.length;
-		let realIndex = 0;
-		for (let i=0; i<len; ++i) {
-			const s = shape[len-i-1];
-			const j = index[len-i-1];
-			if (j >= s) {
-				throw 'bad index: index=' + index + ', shape=' + shape;
-			}
-			realIndex = realIndex * s + j;
-		}
-
-		return this.typedArray[realIndex];
-	}
-}
-
-function pymatbridgeReviver(key, value) {
-	//console.log(JSON.parse(JSON.stringify({ this: this, key, value })));
-	if (value !== null && value.ndarray) {
-		const buffer = base64arraybuffer.decode(value.data);
-		const array = new Float64Array(buffer);
-		return new NDArray(array, value.shape);
-	}
-	return value;
-};
-
-const S_NAME = 0;
-const S_VALUE = 1;
-
-class DimeClient {
-	constructor(url) {
-		const ws = new WebSocket(`ws://${window.location.hostname}:${+window.location.port+1}`);
-
-		let readyResolve, readyReject;
-		const ready = new Promise((resolve, reject) => {
-			readyResolve = resolve;
-			readyReject = reject;
-		});
-
-		ws.addEventListener('open', () => {
-			this._onopen();
-		});
-
-		ws.addEventListener('message', (msg) => {
-			this._onmessage(msg);
-		});
-
-		const syncResolve = null, syncReject = null;
-
-		const syncState = S_NAME;
-		const syncName = null, syncValue = null;
-
-		Object.assign(this, {
-			ws,
-			ready,
-			readyResolve,
-			readyReject,
-			syncResolve,
-			syncReject,
-			syncState,
-			syncName,
-			syncValue,
-		});
-	}
-
-	_onopen() {
-		const { readyResolve } = this;
-		readyResolve(this);
-	}
-
-	_onmessage(msg) {
-		const { syncState, syncName, syncValue } = this;
-		if (syncState === S_NAME) {
-			const syncName = msg.data;
-			Object.assign(this, {
-				syncName,
-				syncState: S_VALUE,
-			});
-		} else if (syncState === S_VALUE) {
-			const syncValue = JSON.parse(msg.data, pymatbridgeReviver);
-			Object.assign(this, {
-				syncValue,
-				syncState: S_NAME,
-			});
-
-			this.syncResolve({
-				name: syncName,
-				value: syncValue,
-			});
-		}
-	}
-
-	sync() {
-		return new Promise((resolve, reject) => {
-			Object.assign(this, {
-				syncResolve: resolve,
-				syncReject: reject,
-			});
-		});
-	}
-
-	send_var(target, name, value) {
-		const { ws } = this;
-		ws.send(name);
-		ws.send(target);
-		console.log({ target, name, value });
-		ws.send(JSON.stringify(value));
-	}
-};
+const topologyLayer = L.topologyLayer({ repeat: true })
+	.addTo(map);
 
 (async () => {
 
@@ -191,7 +56,7 @@ const workspace = {};
 let sentHeader = false;
 for (;;) {
 	const { name, value } = await dimec.sync();
-	console.log({ name, value });
+	//console.log({ name, value });
 	workspace[name] = value;
 
 	if (!sentHeader && workspace.Varheader) {
@@ -208,11 +73,10 @@ for (;;) {
 		for (let i=0; i<Bus.shape[0]; ++i) {
 			const lat = Bus.get(i, 6);
 			const lng = Bus.get(i, 7);
-			console.log(lat, lng);
 		}
 	}
 
-
+	topologyLayer.update(workspace);
 }
 
 })();
