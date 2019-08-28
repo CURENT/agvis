@@ -50,6 +50,10 @@ RUN unzip /tmp/dime-${dime_version}.zip -d /opt/ && \
 RUN python3.7 -m pip install \
         websockets
 
+RUN python3.7 -m pip install \
+        netaddr \
+        pandas
+
 ENTRYPOINT []
 CMD []
 

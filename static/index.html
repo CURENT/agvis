@@ -61,7 +61,7 @@ const workspace = {};
 let sentHeader = false;
 for (;;) {
 	const { name, value } = await dimec.sync();
-	//console.log({ name, value });
+	console.log({ name, value });
 	workspace[name] = value;
 
 	if (!sentHeader && workspace.Varheader) {

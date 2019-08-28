@@ -8,65 +8,50 @@ if not ok:
 	print('bad!')
 	exit()
 
-try:
-	ctx = {}
-	while True:
-		varname = dimec.sync()
-		if not varname:
-			print('not ready', end='\r')
-			sleep(0.1)
-			continue
+pdc_params = []
+link_params = []
 
-		var = dimec.workspace[varname]
-		#print(f'got {varname!r} ({type(var)})')
+for line in the_topology_csv:
+  if col[0] == 'PDC':
+    lat = col[8]
+    lng = col[9]
+    num = col[1]
+    pdc_params.append(lat, lng, num)
+  elif col[0] == 'Link':
+    from = col[3]
+    to = col[4]
+    link_params.append()
 
-		if varname == 'DONE':
-			break
-		elif varname == 'Idxvgs':
-			print('Idxvgs', var)
-			ctx['Idxvgs'] = var
-			continue
+# Send the topology of the communication network. Once.
+dimec.broadcast('LTBNET_params', {
+  "PDC": np.array(pdc_params),
+  "Link": np.array(link_params),
+})
 
-			mask = np.zeros((1000,), dtype=bool)
-			minimum = 100
-			maximum = 0
-			nBus = int(var['System']['nBus'])
-			nLine = int(var['System']['nLine'])
-			print(f'nBus = {nBus}')
-			print(f'nLine = {nLine}')
-			for k, v in var.items():
-				for kk, vv in v.items():
-					if kk in ('nBus', 'nLine'):
-						continue
-					print(f'{k}.{kk}={vv.shape} ({vv[:1]})')
-					for vvv in vv.flatten():
-						vvv = int(vvv)
-						minimum = min(minimum, vvv)
-						maximum = max(maximum, vvv)
-						mask[vvv] = True
+# For good samaratins only
+dimec.broadcast('LTBNET_header', [
+  'Link_1_rx', 'Link_1_tx', 'Link_2_rx', 'Link_2_tx',
+])
 
-			print(minimum, maximum)
-			print(mask[minimum:maximum+1].sum())
+dimec.broadcast('LTBNET_idx', {
+  'Link': {
+    'rx': [1, 3, 5, 7, ...],
+    'tx': [2, 4, 6, 8, ...],
+  },
+})
 
-		elif varname == 'Varheader':
-			ctx['Varheader'] = var
-			dimec.send_var('sim', 'LTBNET_params', {
-				'vgsvaridx': np.arange(1, len(var) + 1),
-			})
-		elif varname == 'SysParam':
-			print('SysParam', var)
-			ctx['SysParam'] = var
-		elif varname == 'SysName':
-			print('SysName', var)
-			ctx['SysName'] = var
-		elif varname == 'Varvgs':
-			ctx['Varvgs'] = var
-			for k, v in zip(ctx['Varheader'], var['vars'].flatten()):
-				print(f'{k}={v!r}')
-				break
-		else:
-			print(varname)
-			raise NotImplementedError
-finally:
-	print('exiting')
-	dimec.exit()
+for line in the_stats_csv:
+  data = []
+  for link in links:
+    epoch_time = ...
+    rx_rate = ...
+    tx_rate = ...
+    the_who = ...
+    data.append(rx_rate, tx_rate)
+  
+  dimec.broadcast('LTBNET_vars', {
+    't': the_current_timestamp_from_zero,
+    'vars': np.array(data),
+  })
+
+exit()
