@@ -50,6 +50,8 @@ RUN unzip /tmp/dime-${dime_version}.zip -d /opt/ && \
 RUN python3.7 -m pip install \
         websockets
 
+RUN sed -ie 's/# Fault/Fault/g' /opt/andes/cases/curent/WECC_WIND0.dm
+
 ENTRYPOINT []
 CMD []
 

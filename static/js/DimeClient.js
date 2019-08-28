@@ -3,7 +3,7 @@ function pymatbridgeReviver(key, value) {
 	if (value !== null && value.ndarray) {
 		const buffer = base64arraybuffer.decode(value.data);
 		const array = new Float64Array(buffer);
-		return new NDArray(value.shape, array);
+		return new NDArray('F', value.shape, array);
 	}
 	return value;
 };

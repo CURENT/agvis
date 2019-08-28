@@ -61,16 +61,21 @@ const workspace = {};
 let sentHeader = false;
 for (;;) {
 	const { name, value } = await dimec.sync();
-	//console.log({ name, value });
+	if (name !== 'Varvgs')
+		console.log({ name, value });
 	workspace[name] = value;
 
 	if (!sentHeader && workspace.Varheader) {
+		const indices = new Float64Array(value.length);
+		for (let i=0; i<indices.length; ++i) {
+			indices[i] = i + 1;
+		}
 		sentHeader = true;
 		dimec.send_var('sim', 'geovis', {
 			vgsvaridx: {
 				ndarray: true,
-				shape: [1, 1],
-				data: base64arraybuffer.encode(Float64Array.of(1).buffer),
+				shape: [1, indices.length],
+				data: base64arraybuffer.encode(indices.buffer),
 			},
 		});
 	} else if (name === 'SysParam') {
