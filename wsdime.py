@@ -107,9 +107,7 @@ async def handler(websocket, path):
 		task.cancel()
 
 
-def main(bind, port):
-	dhost = '127.0.0.1'
-	dport = 8819
+def main(bind, port, dhost, dport):
 	print(f'Connecting to dime on tcp://{dhost}:{dport}')
 	dimec = Dime('geovis', f'tcp://{dhost}:{dport}')
 	ok = dimec.start()
@@ -134,6 +132,8 @@ def cli():
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--bind', default='')
 	parser.add_argument('--port', type=int, default=8810)
+	parser.add_argument('--dhost', default='127.0.0.1')
+	parser.add_argument('--dport', default=8819)
 	args = vars(parser.parse_args())
 
 	main(**args)
