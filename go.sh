@@ -103,10 +103,10 @@ dev() {
 	tmux split-window -v
 	tmux split-window -v
 	tmux split-window -v
-	tmux send-keys -t0 "#./go.sh dime tcp://127.0.0.1:8819" Enter
-	tmux send-keys -t1 "#./go.sh python server.py --port 8810" Enter
-	tmux send-keys -t2 "#./go.sh python wsdime.py --port 8811" Enter
-	tmux send-keys -t3 "#./go.sh andes --routine=tds /opt/andes/cases/ieee14/ieee14_syn.dm --dime=tcp://127.0.0.1:8819" Enter
+	tmux send-keys -t0 "#./go.sh dime tcp://127.0.0.1:$((port+9))" Enter
+	tmux send-keys -t1 "#./go.sh python server.py --port $((port+0))" Enter
+	tmux send-keys -t2 "#./go.sh python wsdime.py --port $((port+1))" Enter
+	tmux send-keys -t3 "#./go.sh andes --routine=tds /opt/andes/cases/ieee14/ieee14_syn.dm --dime=tcp://127.0.0.1:$((port+9))" Enter
 }
 
 "$@"
