@@ -1,12 +1,9 @@
 function renderTopology(canvas, { size, bounds, project, needsUpdate }) {
-	console.log('render');
 	const context = this._context;
 	if (!context) return;
 	const SysParam = context.SysParam;
 	if (!SysParam) return;
 	const Bus = SysParam.Bus;
-
-	console.log('render', { needsUpdate });
 
 	let busArray = this._busArray;
 	if (!busArray || needsUpdate) {
@@ -64,5 +61,5 @@ L.TopologyLayer = L.CanvasLayer.extend({
 });
 
 L.topologyLayer = function(options) {
-	return new L.TopologyLayer();
+	return new L.TopologyLayer(options);
 };
