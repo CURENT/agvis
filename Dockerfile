@@ -51,6 +51,9 @@ RUN python3.7 -m pip install \
         websockets
 
 RUN sed -ie 's/# Fault/Fault/g' /opt/andes/cases/curent/WECC_WIND0.dm
+RUN python3.7 -m pip install \
+        netaddr \
+        pandas
 
 ENTRYPOINT []
 CMD []
