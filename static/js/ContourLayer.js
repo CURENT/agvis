@@ -1,17 +1,23 @@
 const contourVertexShader = `
+precision mediump float;
 attribute vec2 aPosition;
 attribute float aValue;
 uniform mat4 uProjection;
+varying float vValue;
 
 void main() {
-	gl_PointSize = 10.0 * aValue;
 	gl_Position = uProjection * vec4(aPosition, 0, 1);
+	vValue = aValue;
 }
 `;
 
 const contourFragmentShader = `
+precision mediump float;
+varying float vValue;
+
 void main() {
-	gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+	float value = (vValue - 0.9) / (1.1 - 0.9);
+	gl_FragColor = vec4(value, value, value, 1.0);
 }
 `;
 
@@ -28,7 +34,7 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 	const vars = Varvgs.vars;
 
 	let busCache = this._cache.get(Bus);
-	let { busPixelCoords } = busCache ? busCache : {};
+	let { busPixelCoords, busTriangles } = busCache ? busCache : {};
 	if (!busCache || needsUpdate) {
 		busCache = {};
 		this._cache.set(Bus, busCache);
@@ -42,6 +48,10 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 			busPixelCoords.set(point.x, i, 0);
 			busPixelCoords.set(point.y, i, 1);
 		}
+
+		const delaunay = new d3.Delaunay(busPixelCoords.typedArray);
+		busTriangles = busCache.busTriangles = new NDArray('C', [delaunay.triangles.length/3, 3], delaunay.triangles);
+		console.log({ busTriangles });
 	}
 
 	let idxvgsCache = this._cache.get(Idxvgs);
@@ -52,16 +62,18 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 
 		busVoltageExtents = idxvgsCache.busVoltageExtents =
 			Idxvgs.Bus.V.extents();
+		busVoltageExtents.end -= busVoltageExtents.begin - 1;
+		busVoltageExtents.begin = 0;
 	}
 
 	let gl = this._cache.get(canvas);
 	if (!gl || needsUpdate) {
-		gl = canvas.getContext('webgl');
+		gl = canvas.getContext('webgl2');
 		this._cache.set(canvas, gl);
 	}
 
 	let glCache = this._cache.get(gl);
-	let { programInfo, aPositionBufferInfo, uProjection } = glCache ? glCache : {};
+	let { programInfo, aPositionBufferInfo, uProjection, aIndicesBufferInfo } = glCache ? glCache : {};
 	if (!glCache || needsUpdate) {
 		console.log('rebuilding glCache');
 
@@ -77,6 +89,14 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 			},
 		});
 
+		aIndicesBufferInfo = glCache.aIndicesBufferInfo = twgl.createBufferInfoFromArrays(gl, {
+			indices: {
+				data: busTriangles.typedArray,
+				numComponents: 3,
+			},
+		});
+		console.log({ aIndicesBufferInfo });
+
 		uProjection = glCache.uProjection = {
 			uProjection: [
 				2.0 / +gl.canvas.width, 0, 0, 0,
@@ -89,6 +109,7 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 	
 	const busVoltage = vars.subarray(busVoltageExtents);
 	console.log(busVoltage.get(0, 0));
+	console.log({ vars, busVoltageExtents, busVoltage });
 
 	const aValueBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 		aValue: {
@@ -101,8 +122,9 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 	gl.useProgram(programInfo.program);
 	twgl.setBuffersAndAttributes(gl, programInfo, aPositionBufferInfo);
 	twgl.setBuffersAndAttributes(gl, programInfo, aValueBufferInfo);
+	twgl.setBuffersAndAttributes(gl, programInfo, aIndicesBufferInfo);
 	twgl.setUniforms(programInfo, uProjection);
-	twgl.drawBufferInfo(gl, aValueBufferInfo, gl.POINTS);
+	twgl.drawBufferInfo(gl, aIndicesBufferInfo, gl.TRIANGLES);
 }
 
 L.ContourLayer = L.CanvasLayer.extend({

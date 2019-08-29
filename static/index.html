@@ -27,6 +27,7 @@ L.Class.include({
 <script src="https://unpkg.com/base64-arraybuffer@0.2.0/lib/base64-arraybuffer.js"></script>
 <script>exports = undefined</script>
 <script src="https://rawcdn.githack.com/greggman/twgl.js/0e14d352a4062e9c2242cd6fa971f738ad763a38/dist/4.x/twgl-full.min.js"></script>
+<script src="https://unpkg.com/d3-delaunay@5.1.3/dist/d3-delaunay.min.js"></script>
 <script src="/static/js/NDArray.js"></script>
 <script src="/static/js/DimeClient.js"></script>
 <script src="/static/js/CanvasLayer.js"></script>
@@ -55,6 +56,7 @@ const contourLayer = L.contourLayer().addTo(map);
 
 const dimec = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+1}`);
 await dimec.ready;
+console.time('dimec');
 
 const workspace = {};
 
@@ -65,10 +67,11 @@ for (;;) {
 		console.log({ name, value });
 	workspace[name] = value;
 
-	if (!sentHeader && workspace.Varheader) {
-		const indices = new Float64Array(value.length);
-		for (let i=0; i<indices.length; ++i) {
-			indices[i] = i + 1;
+	if (!sentHeader && workspace.Idxvgs) {
+		const busVoltageIndices = workspace.Idxvgs.Bus.V.typedArray;
+		const indices = new Float64Array(busVoltageIndices.length);
+		for (let i=0; i<busVoltageIndices.length; ++i) {
+			indices[i] = busVoltageIndices[i];
 		}
 		sentHeader = true;
 		dimec.send_var('sim', 'geovis', {
@@ -84,6 +87,9 @@ for (;;) {
 			const lat = Bus.get(i, 6);
 			const lng = Bus.get(i, 7);
 		}
+	} else if (name === 'DONE') {
+		dimec.close();
+		console.timeEnd('dimec');
 	}
 
 	topologyLayer.update(workspace);

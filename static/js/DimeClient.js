@@ -2,8 +2,9 @@ function pymatbridgeReviver(key, value) {
 	//console.log(JSON.parse(JSON.stringify({ this: this, key, value })));
 	if (value !== null && value.ndarray) {
 		const buffer = base64arraybuffer.decode(value.data);
-		const array = new Float64Array(buffer);
-		return new NDArray('F', value.shape, array);
+		const f64array = new Float64Array(buffer);
+		const f32array = Float32Array.from(f64array);
+		return new NDArray('F', value.shape, f32array);
 	}
 	return value;
 };
@@ -89,5 +90,10 @@ class DimeClient {
 		ws.send(target);
 		console.log({ target, name, value });
 		ws.send(JSON.stringify(value));
+	}
+
+	close() {
+		const { ws } = this;
+		ws.close();
 	}
 };

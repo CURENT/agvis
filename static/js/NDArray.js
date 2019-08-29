@@ -2,9 +2,7 @@ class NDArray {
 	constructor(order, shape, typedArray) {
 		this.order = order;
 		this.shape = shape;
-		if (typedArray) {
-			typedArray = Float32Array.from(typedArray);
-		} else {
+		if (!typedArray) {
 			let total = 1;
 			for (let x of shape) {
 				total *= x;
