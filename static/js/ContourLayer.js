@@ -132,6 +132,9 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!uColormapSampler) {
 		uColormapSampler = glCache.uColormapSampler = twgl.createTexture(gl, {
 			src: '/static/img/map256.png',
+			wrapS: gl.CLAMP_TO_EDGE,
+			wrapT: gl.CLAMP_TO_EDGE,
+			min: gl.LINEAR_MIPMAP_LINEAR,
 		});
 	}
 	
@@ -149,8 +152,8 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		const v = Math.abs(busVoltage.get(0, i) - 1.0);
 		maxVoltageDifference = Math.max(maxVoltageDifference, v);
 	}
-	const uScaleMin = 1.0 - maxVoltageDifference;
-	const uScaleMax = 1.0 + maxVoltageDifference;
+	const uScaleMin = 0.75; //1.0 - maxVoltageDifference;
+	const uScaleMax = 1.25; //1.0 + maxVoltageDifference;
 
 	const aValueBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 		aValue: {
@@ -160,6 +163,8 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	});
 
 	gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+	gl.enable(gl.BLEND);
+	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 	gl.useProgram(programInfo.program);
 	twgl.setBuffersAndAttributes(gl, programInfo, aPositionBufferInfo);
 	twgl.setBuffersAndAttributes(gl, programInfo, aValueBufferInfo);

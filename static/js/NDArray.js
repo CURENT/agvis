@@ -48,7 +48,7 @@ class NDArray {
 			throw 'bad order, expected "' + this.order + '"';
 		}
 		const start = this._makeIndex([0, n], false);
-		const end = this._makeIndex([1, n], false);
+		const end = this._makeIndex([0, n+1], false);
 		console.log({ start, end });
 		return this.typedArray.slice(start, end);
 	}
