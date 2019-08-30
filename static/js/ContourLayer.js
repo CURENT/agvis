@@ -14,10 +14,13 @@ void main() {
 const contourFragmentShader = `
 precision mediump float;
 varying float vValue;
+uniform sampler2D uColormapSampler;
+uniform float uScaleMin;
+uniform float uScaleMax;
 
 void main() {
-	float value = (vValue - 0.9) / (1.1 - 0.9);
-	gl_FragColor = vec4(value, value, value, 1.0);
+	float value = (vValue - uScaleMin) / (uScaleMax - uScaleMin);
+	gl_FragColor = texture2D(uColormapSampler, vec2(value, 0.0));
 }
 `;
 
@@ -32,6 +35,8 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 	const Varvgs = context.Varvgs;
 	if (!Varvgs) return;
 	const vars = Varvgs.vars;
+	const colormap = this._colormap;
+	if (!(colormap.complete && colormap.naturalWidth !== 0)) return;
 
 	let busCache = this._cache.get(Bus);
 	let { busPixelCoords, busTriangles } = busCache ? busCache : {};
@@ -73,7 +78,7 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 	}
 
 	let glCache = this._cache.get(gl);
-	let { programInfo, aPositionBufferInfo, uProjection, aIndicesBufferInfo } = glCache ? glCache : {};
+	let { programInfo, aPositionBufferInfo, uProjection, aIndicesBufferInfo, colormapTexture, uColormapSampler } = glCache ? glCache : {};
 	if (!glCache || needsUpdate) {
 		console.log('rebuilding glCache');
 
@@ -105,11 +110,29 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 				-1, 1, 0, 1,
 			],
 		};
+
+		colormapTexture = glCache.colormapTexture = twgl.createTexture(gl, {
+			src: '/static/img/map256.png',
+		});
+
+		uColormapSampler = glCache.uColormapSampler = {
+			uColormapSampler: colormapTexture,
+		};
 	}
 	
 	const busVoltage = vars.subarray(busVoltageExtents);
 	console.log(busVoltage.get(0, 0));
 	console.log({ vars, busVoltageExtents, busVoltage });
+
+
+	let maxVoltageDifference = Math.abs(busVoltage.get(0, 0) - 1.0);
+	for (let i=1, l=busVoltage.shape[1]; i<l; ++i) {
+		const v = Math.abs(busVoltage.get(0, i) - 1.0);
+		maxVoltageDifference = Math.max(maxVoltageDifference, v);
+	}
+	const uScaleMin = 1.0 - maxVoltageDifference;
+	const uScaleMax = 1.0 + maxVoltageDifference;
+	console.log({ uScaleMin, uScaleMax });
 
 	const aValueBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 		aValue: {
@@ -124,6 +147,11 @@ function renderContour(canvas, { size, bounds, project, needsUpdate }) {
 	twgl.setBuffersAndAttributes(gl, programInfo, aValueBufferInfo);
 	twgl.setBuffersAndAttributes(gl, programInfo, aIndicesBufferInfo);
 	twgl.setUniforms(programInfo, uProjection);
+	twgl.setUniforms(programInfo, uColormapSampler);
+	twgl.setUniforms(programInfo, {
+		uScaleMin,
+		uScaleMax,
+	});
 	twgl.drawBufferInfo(gl, aIndicesBufferInfo, gl.TRIANGLES);
 }
 
@@ -134,6 +162,8 @@ L.ContourLayer = L.CanvasLayer.extend({
 
 	initialize(options) {
 		this._context = null;
+		this._colormap = new Image();
+		this._colormap.src = '/static/img/map256.png';
 		this._cache = new WeakMap();
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},

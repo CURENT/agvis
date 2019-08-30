@@ -80,6 +80,6 @@ class NDArray {
 	}
 
 	subarray({ begin, end }) {
-		return new NDArray(this.order, [1, end - begin], this.typedArray.subarray(begin, end));
+		return new NDArray(this.order, [1, end - begin - 1], this.typedArray.subarray(begin, end));
 	}
 }
