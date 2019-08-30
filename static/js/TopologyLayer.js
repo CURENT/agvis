@@ -1,5 +1,4 @@
-function renderTopology(canvas, { size, bounds, project, needsUpdate }) {
-	console.log('render');
+function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }) {
 	const context = this._context;
 	if (!context) return;
 	const SysParam = context.SysParam;
@@ -7,25 +6,39 @@ function renderTopology(canvas, { size, bounds, project, needsUpdate }) {
 	const Bus = SysParam.Bus;
 	const Line = SysParam.Line;
 
-	console.log('render', { needsUpdate });
-
 	let busCache = this._cache.get(Bus);
-	let { busPixelCoords, busLookup } = busCache ? busCache : {};
-	if (!busCache || needsUpdate) {
+	if (!busCache) {
 		busCache = {};
 		this._cache.set(Bus, busCache);
+	}
 
-		busPixelCoords = busCache.busPixelCoords =
-			new NDArray([Bus.shape[0], 2]);
-	
+	let { busLatLngCoords } = busCache;
+	if (!busLatLngCoords) {
+		busLatLngCoords = busCache.busLatLngCoords =
+			new NDArray('C', [Bus.shape[0], 2]);
+		
 		for (let i=0; i<Bus.shape[0]; ++i) {
 			const lat = Bus.get(i, 6);
 			const lng = Bus.get(i, 7);
+			busLatLngCoords.set(lat, i, 0);
+			busLatLngCoords.set(lng, i, 1);
+		}
+	}
+
+	let { busPixelCoords } = busCache;
+	if (!busPixelCoords || needsProjectionUpdate) {
+		busPixelCoords = busCache.busPixelCoords = new NDArray('C', [Bus.shape[0], 2]);
+		for (let i=0; i<Bus.shape[0]; ++i) {
+			const lat = busLatLngCoords.get(i, 0);
+			const lng = busLatLngCoords.get(i, 1);
 			const point = project(L.latLng(lat, lng));
 			busPixelCoords.set(point.x, i, 0);
 			busPixelCoords.set(point.y, i, 1);
 		}
+	}
 
+	let { busLookup } = busCache;
+	if (!busLookup) {
 		busLookup = busCache.busLookup =
 			new Map();
 		for (let i=0; i<Bus.shape[0]; ++i) {

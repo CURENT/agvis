@@ -60,8 +60,7 @@ L.CanvasLayer = L.Layer.extend({
 	_reset() {
 		var topLeft = this._map.containerPointToLayerPoint([0, 0]);
 		L.DomUtil.setPosition(this._canvas, topLeft);
-		console.log('reset');
-		this._needsUpdate = true;
+		this._needsProjectionUpdate = true;
 		this.redraw();
 	},
 
@@ -75,14 +74,14 @@ L.CanvasLayer = L.Layer.extend({
 				size,
 				bounds,
 				project,
-				needsUpdate: this._needsUpdate,
+				needsProjectionUpdate: this._needsProjectionUpdate,
 			};
 
 			this.options.render.call(this, this._canvas, params);
 		}
 
 		this._frame = null;
-		this._needsUpdate = false;
+		this._needsProjectionUpdate = false;
 
 		if (this.options.repeat) {
 			this.redraw();
