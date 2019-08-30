@@ -36,15 +36,15 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!Varvgs) return;
 	const vars = Varvgs.vars;
 
-	let busCache = this._cache.get(Bus);
-	if (!busCache) {
-		busCache = {};
-		this._cache.set(Bus, busCache);
+	let paramCache = this._cache.get(SysParam);
+	if (!paramCache) {
+		paramCache = {};
+		this._cache.set(SysParam, paramCache);
 	}
 
-	let { busLatLngCoords } = busCache;
+	let { busLatLngCoords } = paramCache;
 	if (!busLatLngCoords) {
-		busLatLngCoords = busCache.busLatLngCoords =
+		busLatLngCoords = paramCache.busLatLngCoords =
 			new NDArray('C', [Bus.shape[0], 2]);
 		
 		for (let i=0; i<Bus.shape[0]; ++i) {
@@ -55,9 +55,9 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		}
 	}
 
-	let { busPixelCoords } = busCache;
+	let { busPixelCoords } = paramCache;
 	if (!busPixelCoords || needsProjectionUpdate) {
-		busPixelCoords = busCache.busPixelCoords = new NDArray('C', [Bus.shape[0], 2]);
+		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [Bus.shape[0], 2]);
 		for (let i=0; i<Bus.shape[0]; ++i) {
 			const lat = busLatLngCoords.get(i, 0);
 			const lng = busLatLngCoords.get(i, 1);
@@ -67,11 +67,11 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		}
 	}
 	
-	let { busTriangles } = busCache;
+	let { busTriangles } = paramCache;
 	if (!busTriangles || needsProjectionUpdate) {
 		const delaunay = new d3.Delaunay(busLatLngCoords.typedArray);
 
-		busTriangles = busCache.busTriangles =
+		busTriangles = paramCache.busTriangles =
 			new NDArray('C', [delaunay.triangles.length/3, 3], delaunay.triangles);
 	}
 

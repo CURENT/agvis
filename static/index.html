@@ -13,16 +13,8 @@
 }
 </style>
 <body>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
-	crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
-	crossorigin=""></script>
-<script>
-L.Class.include({
-	version: 0,
-});
-</script>
-<script src="https://rawcdn.githack.com/iDerekLi/Leaflet.CustomLayer/f2b4037ff00ae8f0bb909896f1ef53d918d6e47b/dist/Leaflet.CustomLayer.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js" crossorigin=""></script>
 <script>base64arraybuffer = exports = {};</script>
 <script src="https://unpkg.com/base64-arraybuffer@0.2.0/lib/base64-arraybuffer.js"></script>
 <script>exports = undefined</script>
@@ -47,10 +39,11 @@ const map = L.map('map', {
 const tileLayer = L.tileLayer(TILE_LAYER_URL)
 	.addTo(map);
 
-const topologyLayer = L.topologyLayer({ repeat: true })
+const topologyLayer = L.topologyLayer()
 	.addTo(map);
 
-const contourLayer = L.contourLayer().addTo(map);
+const contourLayer = L.contourLayer()
+	.addTo(map);
 
 (async () => {
 
@@ -67,7 +60,7 @@ for (;;) {
 		console.log({ name, value });
 	workspace[name] = value;
 
-	if (!sentHeader && workspace.Idxvgs) {
+	if (!sentHeader && name === 'Idxvgs') {
 		const busVoltageIndices = workspace.Idxvgs.Bus.V.typedArray;
 		const indices = new Float64Array(busVoltageIndices.length);
 		for (let i=0; i<busVoltageIndices.length; ++i) {
@@ -81,12 +74,7 @@ for (;;) {
 				data: base64arraybuffer.encode(indices.buffer),
 			},
 		});
-	} else if (name === 'SysParam') {
-		const Bus = value.Bus;
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const lat = Bus.get(i, 6);
-			const lng = Bus.get(i, 7);
-		}
+
 	} else if (name === 'DONE') {
 		dimec.close();
 		console.timeEnd('dimec');
