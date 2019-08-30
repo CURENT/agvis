@@ -1,0 +1,116 @@
+=================================
+Large-Scale Test Bed Visualiation
+=================================
+
+This repository provides the visualization capabilities for the LTB simulator
+Andes. This serves as the successor to the LTBWeb visualization application
+with a more direct and simple implementation.
+
+
+Components
+----------
+
+There are 2 main components to this visualization:
+
+1. wsdime: an interface between Dime and web browsers, using websockets to
+   communicate.
+
+2. ltbvis: the main JavaScript code base that handles all the rendering and
+   control of the visualization.
+
+In addition, the visualization uses the following other components:
+
+1. andes: the simulator that provides data to the frontend via Dime.
+
+2. dime: a message broker that fascilitates communicating with the simulator
+   and other modules.
+
+3. http.server: a simple http server that provides static assets to the
+   browser, including JavaScript code and images.
+
+
+Running the Visualization
+-------------------------
+
+To run the visualization requires installing some packages and tools.
+
+The first tool required is Andes [andes] with the Dime module [andes_addon].
+First installed andes_addon with:
+
+  $ cd andes_addon
+  $ python3.7 -m pip install .
+
+Then install Andes:
+
+  $ cd andes
+  $ python3.7 -m pip install .
+
+Next Dime [dime] needs to be installed to run the server:
+
+  $ cd dime
+  $ python2.7 -m pip install .
+
+In addition, there are some packages that need to be installed:
+
+  $ python3.7 -m pip install websockets
+
+With those installed, there's a series of 5 things that need to happen to see
+the visualization:
+
+1. Start the static file server.
+
+  $ python3.7 server.py --port 8810
+
+2. Start the Dime server.
+
+  $ dime tcp://127.0.0.1:8819
+
+3. Start the Dime WebSockets interface.
+
+  $ python3.7 wsdime.py --port 8811 --dport 8819
+
+4. Open the web interface.
+
+  $ chrome http://localhost:8810
+
+5. Start Andes.
+
+  $ andes --routine=tds cases/curent/WECC_WIND0.dm --dime=tcp://127.0.0.1:8819
+
+Now in Chrome (or another browser), the simulator data should be received and
+start displaying on-screen.
+
+To see another visualization, only steps 4 and 5 need to be repeated. So,
+refresh the web page and then re-run Andes.
+
+[andes]: https://github.com/cuihantao/andes
+
+[andes_addon]: https://bitbucket.org/curent/andes_addon
+
+[dime]: https://bitbucket.org/curent/dime
+
+
+Docker
+------
+
+To simplify the process of setting things up, there is a Dockerfile that all
+dependencies can be installed into.
+
+To do this, first download zip files of the dependencies from the websites
+above. Specific versions need to be installed, and those versions can be
+checked in the Dockerfile (for instance, Dime expects the code for commit
+b3d58ba70df to be saved in dime-b43d58ba70df.zip).
+
+Then build the Docker image using the provided helper script:
+
+  $ ./go.sh build
+
+To help with running everything, you can use tmux:
+
+  $ tmux
+  (inside tmux)$ ./go.sh dev
+
+Afterwards, 4 windows will be created with some commands pre-typed in (with
+comments at the beginning, to prevent accidentally running everything).
+
+Everything still needs to be run in the same order as described above.
