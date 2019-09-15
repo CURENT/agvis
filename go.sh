@@ -3,7 +3,7 @@
 tag=ltbweb:$USER
 name=ltbweb_$USER
 target=base
-data=/mnt/seenas2/data
+data=/home/thobson2/tmp/Data/Data
 registry=accona.eecs.utk.edu:5000
 xauth=
 entrypoint=
