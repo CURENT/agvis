@@ -40,20 +40,11 @@
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
 
 <div class="row">
-	<div class="column", id="map", width=50%></div>
-	<div class="column", id="map2"></div>
+	<div class="column", id="map"></div>
 </div>
     <script>
     const dimec1 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+1}`);
-    const dimec2 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+2}`);
 
     const map1 = CreateWindow('map', dimec1, 'geovis');
-    const map2 = CreateWindow('map2', dimec2, 'geovis2');
-
-    var helloPopup = L.popup().setContent('Hello World!');
-
-    const voltageButton = L.easyButton('ToggleSecondWindow', function(btn, map1){
-            helloPopup.setLatLng(map1.getCenter()).openOn(map1);
-    }).addTo(map1);
 
     </script>

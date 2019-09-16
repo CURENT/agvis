@@ -54,7 +54,7 @@ async def consumer(message: str):
 		_g_cons_data = json.loads(message)
 
 		_g_dimec.send_var(_g_cons_target, _g_cons_name, _g_cons_data)
-		
+
 		_g_cons_state = S_CONS_NAME
 	else:
 		raise NotImplementedError
@@ -73,9 +73,9 @@ async def producer() -> str:
 			if not name:
 				await sleep(0.1)
 				continue
-			
+
 			break
-			
+
 		_g_prod_name = name
 		_g_prod_value = json.dumps(_g_dimec.workspace[name])
 		_g_prod_state = S_PROD_VALUE
@@ -107,9 +107,9 @@ async def handler(websocket, path):
 		task.cancel()
 
 
-def main(bind, port, dhost, dport):
+def main(name, bind, port, dhost, dport):
 	print(f'Connecting to dime on tcp://{dhost}:{dport}')
-	dimec = Dime('geovis', f'tcp://{dhost}:{dport}')
+	dimec = Dime(name, f'tcp://{dhost}:{dport}')
 	ok = dimec.start()
 	if not ok:
 		raise ValueError('Could not start dime client')
@@ -120,7 +120,7 @@ def main(bind, port, dhost, dport):
 
 	print(f'Listening on {bind}:{port}')
 	start_server = serve(handler, bind, port)
-	
+
 	loop = get_event_loop()
 	loop.run_until_complete(start_server)
 	loop.run_forever()
@@ -134,6 +134,7 @@ def cli():
 	parser.add_argument('--port', type=int, default=8810)
 	parser.add_argument('--dhost', default='127.0.0.1')
 	parser.add_argument('--dport', default=8819)
+	parser.add_argument('--name', default='geovis')
 	args = vars(parser.parse_args())
 
 	main(**args)
