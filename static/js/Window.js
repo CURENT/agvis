@@ -1,7 +1,7 @@
-function CreateWindow(name, dimec, dimec_name){
+function CreateWindow(map_name, dimec, dimec_name){
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
 
-    var map = L.map(name, {
+    var map = L.map(map_name, {
         minZoom: 3,
         maxZoom: 10,
         center: [40, -100],
@@ -19,11 +19,12 @@ function CreateWindow(name, dimec, dimec_name){
     const communicationLayer = L.communicationLayer()
         .addTo(map);
 
-    this._map = map;
+    const simTimeBox = L.simTimeBox({ position: 'topright'  }).addTo(map);
+
     (async () => {
 
     await dimec.ready;
-    console.time(name);
+    console.time(map_name);
 
     const workspace = {};
 
@@ -51,14 +52,16 @@ function CreateWindow(name, dimec, dimec_name){
 
         } else if (name === 'DONE') {
             dimec.close();
-            console.timeEnd(name);
+            console.timeEnd(map_name);
         }
 
         topologyLayer.update(workspace);
         contourLayer.update(workspace);
         communicationLayer.update(workspace);
+        if (workspace.Varvgs){
+            simTimeBox.update(workspace.Varvgs.t.toFixed(2));
+        }
     }
-
     })();
 
     return map;
