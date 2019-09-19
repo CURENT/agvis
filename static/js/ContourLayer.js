@@ -81,13 +81,14 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		this._cache.set(idxvgsCache);
 	}
 
-	let { busVoltageExtents } = idxvgsCache;
-	if (!busVoltageExtents) {
-		busVoltageExtents = idxvgsCache.busVoltageExtents =
+	let { variableSubIndices } = idxvgsCache;
+
+	if (!variableSubIndices) {
+		variableSubIndices = idxvgsCache.variableSubIndices =
 			Idxvgs.Bus.V.extents();
 
-		busVoltageExtents.end -= busVoltageExtents.begin - 1;
-		busVoltageExtents.begin = 0;
+		variableSubIndices.end -= variableSubIndices.begin - 1;
+		variableSubIndices.begin = 0;
 	}
 
 	let gl = this._cache.get(canvas);
@@ -145,19 +146,20 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		-1, 1, 0, 1,
 	];
 	
-	const busVoltage = vars.subarray(busVoltageExtents);
+	const variableValue = vars.subarray(this._variableRange);
 
-	let maxVoltageDifference = Math.abs(busVoltage.get(0, 0) - 1.0);
-	for (let i=1, l=busVoltage.shape[1]; i<l; ++i) {
-		const v = Math.abs(busVoltage.get(0, i) - 1.0);
+	let maxVoltageDifference = Math.abs(variableValue.get(0, 0) - 1.0);
+	for (let i=1, l=variableValue.shape[1]; i<l; ++i) {
+		const v = Math.abs(variableValue.get(0, i) - 1.0);
 		maxVoltageDifference = Math.max(maxVoltageDifference, v);
 	}
-	const uScaleMin = 0.75; //1.0 - maxVoltageDifference;
-	const uScaleMax = 1.25; //1.0 + maxVoltageDifference;
+
+	const uScaleMin = this._uScaleMin;
+	const uScaleMax = this._uScaleMax;
 
 	const aValueBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 		aValue: {
-			data: busVoltage.typedArray,
+			data: variableValue.typedArray,
 			numComponents: 1,
 		},
 	});
@@ -185,6 +187,9 @@ L.ContourLayer = L.CanvasLayer.extend({
 
 	initialize(options) {
 		this._context = null;
+		this._variableRange = null;
+		this._uScaleMin = 0.8;
+		this._uScaleMax = 1.2;
 		this._cache = new WeakMap();
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
@@ -193,6 +198,18 @@ L.ContourLayer = L.CanvasLayer.extend({
 		this._context = context;
 		this.redraw();
 	},
+
+	updateIndex(idx) {
+		// updates the indices of variables for the contour map
+		this._variableRange = idx;
+		this.redraw();
+	},
+
+	updateRange(lower, upper){
+		this._uScaleMax = upper;
+		this._uScaleMin = lower;
+	},
+
 });
 
 L.contourLayer = function(options) {

@@ -1,4 +1,5 @@
 function CreateWindow(map_name, dimec, dimec_name){
+
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
 
     var map = L.map(map_name, {
@@ -21,6 +22,7 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     const simTimeBox = L.simTimeBox({ position: 'topright'  }).addTo(map);
 
+
     (async () => {
 
     await dimec.ready;
@@ -40,26 +42,38 @@ function CreateWindow(map_name, dimec, dimec_name){
             const busThetaIndices = workspace.Idxvgs.Bus.theta.typedArray;
             const busfreqIndices= workspace.Idxvgs.Bus.w_Busfreq.typedArray;
 
-            const voltageIndices = new Float64Array(busVoltageIndices.length);
-            const thetaIndices = new Float64Array(busThetaIndices.length);
-            const freqIndices = new Float64Array(busfreqIndices.length);
+            const nBus = busVoltageIndices.length;
+
+            // Build the idx list for simulator
+            const variableAbsIndices = new Float64Array(nBus * 3);
+            const variableRelIndices = {};
 
             for (let i=0; i<busVoltageIndices.length; ++i) {
-                voltageIndices[i] = busVoltageIndices[i];
+                variableAbsIndices[i] = busVoltageIndices[i];
             }
+
             for (let i=0; i<busThetaIndices.length; ++i) {
-                thetaIndices[i] = busThetaIndices[i];
+                variableAbsIndices[nBus + i] = busThetaIndices[i];
             }
             for (let i=0; i<busfreqIndices.length; ++i) {
-                freqIndices[i] = busfreqIndices[i];
+                variableAbsIndices[2*nBus + i] = busfreqIndices[i];
             }
+
+            // Build internal idx list
+            variableRelIndices["V"] = {"begin": 0, "end": nBus};
+            variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
+            variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
+
+            // Update variable Range
+            contourLayer.updateIndex(variableRelIndices["freq"]);
+            contourLayer.updateRange(0.9995, 1.0005);
 
             sentHeader = true;
             dimec.send_var('sim', dimec_name, {
                 vgsvaridx: {
                     ndarray: true,
-                    shape: [1, freqIndices.length],
-                    data: base64arraybuffer.encode(freqIndices.buffer),
+                    shape: [1, variableAbsIndices.length],
+                    data: base64arraybuffer.encode(variableAbsIndices.buffer),
                 },
             });
 
@@ -80,3 +94,4 @@ function CreateWindow(map_name, dimec, dimec_name){
     return map;
 
 }
+
