@@ -20,7 +20,21 @@ function CreateWindow(map_name, dimec, dimec_name){
     const communicationLayer = L.communicationLayer()
         .addTo(map);
 
-    const simTimeBox = L.simTimeBox({ position: 'topright'  }).addTo(map);
+    const simTimeBox = L.simTimeBox({ position: 'topright'  })
+        .addTo(map);
+
+    const thetaButton= L.easyButton('theta', function(btn, map){
+        contourLayer.showVariable("theta");
+        contourLayer.updateRange(-1, 1);
+    }).addTo(map);
+    const voltageButton= L.easyButton('voltage', function(btn, map){
+        contourLayer.showVariable("V");
+        contourLayer.updateRange(0.8, 1.2);
+    }).addTo(map);
+    const freqButton= L.easyButton('frequency', function(btn, map){
+        contourLayer.showVariable("freq");
+        contourLayer.updateRange(0.9995, 1.0005);
+    }).addTo(map);
 
 
     (async () => {
@@ -65,7 +79,8 @@ function CreateWindow(map_name, dimec, dimec_name){
             variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
 
             // Update variable Range
-            contourLayer.updateIndex(variableRelIndices["freq"]);
+            contourLayer.storeRelativeIndices(variableRelIndices);
+            contourLayer.showVariable("freq");
             contourLayer.updateRange(0.9995, 1.0005);
 
             sentHeader = true;

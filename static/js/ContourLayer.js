@@ -188,6 +188,7 @@ L.ContourLayer = L.CanvasLayer.extend({
 	initialize(options) {
 		this._context = null;
 		this._variableRange = null;
+		this._variableRelIndices = null;
 		this._uScaleMin = 0.8;
 		this._uScaleMax = 1.2;
 		this._cache = new WeakMap();
@@ -199,9 +200,13 @@ L.ContourLayer = L.CanvasLayer.extend({
 		this.redraw();
 	},
 
-	updateIndex(idx) {
-		// updates the indices of variables for the contour map
-		this._variableRange = idx;
+	storeRelativeIndices(idx) {
+		this._variableRelIndices = idx;
+	},
+
+	showVariable(name) {
+		// updates the name of variables for the contour map
+		this._variableRange = this._variableRelIndices[name];
 		this.redraw();
 	},
 
