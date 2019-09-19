@@ -37,16 +37,29 @@ function CreateWindow(map_name, dimec, dimec_name){
 
         if (!sentHeader && name === 'Idxvgs') {
             const busVoltageIndices = workspace.Idxvgs.Bus.V.typedArray;
-            const indices = new Float64Array(busVoltageIndices.length);
+            const busThetaIndices = workspace.Idxvgs.Bus.theta.typedArray;
+            const busfreqIndices= workspace.Idxvgs.Bus.w_Busfreq.typedArray;
+
+            const voltageIndices = new Float64Array(busVoltageIndices.length);
+            const thetaIndices = new Float64Array(busThetaIndices.length);
+            const freqIndices = new Float64Array(busfreqIndices.length);
+
             for (let i=0; i<busVoltageIndices.length; ++i) {
-                indices[i] = busVoltageIndices[i];
+                voltageIndices[i] = busVoltageIndices[i];
             }
+            for (let i=0; i<busThetaIndices.length; ++i) {
+                thetaIndices[i] = busThetaIndices[i];
+            }
+            for (let i=0; i<busfreqIndices.length; ++i) {
+                freqIndices[i] = busfreqIndices[i];
+            }
+
             sentHeader = true;
             dimec.send_var('sim', dimec_name, {
                 vgsvaridx: {
                     ndarray: true,
-                    shape: [1, indices.length],
-                    data: base64arraybuffer.encode(indices.buffer),
+                    shape: [1, freqIndices.length],
+                    data: base64arraybuffer.encode(freqIndices.buffer),
                 },
             });
 
