@@ -14,16 +14,56 @@
 
 .row {
   display: flex;
+  flex-grow: 1;
 }
 
 .column {
   flex: 50%;
 }
+.flex-container {
+  /* We first create a flex layout context */
+    width: 25%;
+  display: flex;
+  
+  /* Then we define the flow direction 
+     and if we allow the items to wrap 
+   * Remember this is the same as:
+   * flex-direction: row;
+   * flex-wrap: wrap;
+   */
+  flex-flow: row wrap;
+  
+  /* Then we define how is distributed the remaining space */
+  justify-content: flex-end;
+}
+
+.vega-actions a {
+        margin-right: 5px;
+      }
 
 </style>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
+
+    <style media="screen">
+        /* Add space between Vega-Embed links  */
+        .vega-actions a {
+          margin-right: 5px;
+        }
+      </style>
+  
+</head>
+
 <body>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" crossorigin="" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-dialog@1.0.5/Leaflet.Dialog.min.css">
 <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js" crossorigin=""></script>
 <script>base64arraybuffer = exports = {};</script>
 <script src="https://unpkg.com/base64-arraybuffer@0.2.0/lib/base64-arraybuffer.js"></script>
@@ -39,11 +79,18 @@
 <script src="/static/js/Window.js"></script>
 <script src="/static/js/TimeBox.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-dialog@1.0.5/Leaflet.Dialog.min.js"></script>
 
 <div class="row">
 	<div class="column", id="map"></div>
-	<div class="column", id="map2"></div>
+    <div class="column", id="map2"></div>
+    <div class="flex-container", id="plots">
+        <div class="row", id="vis"> </div>
+        <div class="row", id="vis2"> </div>
+        <div class="row", id="vis3"> </div>
+    </div>
 </div>
+
     <script>
         function ToggleSecond() {
             var x1 = document.getElementById("map");
@@ -62,7 +109,7 @@
         const map1 = CreateWindow('map', dimec1, 'geovis');
         const map2 = CreateWindow('map2', dimec2, 'geovis2');
 
-        const toggleSecondWindow= L.easyButton('ToggleSecondWindow', function(btn, map1){
+        const toggleSecondWindow= L.easyButton('<span>2</span>', function(btn, map1){
             ToggleSecond();
             map1.invalidateSize();
         }).addTo(map1);

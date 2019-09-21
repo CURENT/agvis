@@ -2,6 +2,8 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
 
+    let plotOpen = false;
+
     var map = L.map(map_name, {
         minZoom: 3,
         maxZoom: 10,
@@ -23,24 +25,55 @@ function CreateWindow(map_name, dimec, dimec_name){
     const simTimeBox = L.simTimeBox({ position: 'topright'  })
         .addTo(map);
 
-    const thetaButton= L.easyButton('theta', function(btn, map){
+    const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
         contourLayer.showVariable("theta");
         contourLayer.updateRange(-1, 1);
-    }).addTo(map);
-    const voltageButton= L.easyButton('voltage', function(btn, map){
+    });
+    const voltageButton = L.easyButton('<span>V</span>', function(btn, map){
         contourLayer.showVariable("V");
         contourLayer.updateRange(0.8, 1.2);
-    }).addTo(map);
-    const freqButton= L.easyButton('frequency', function(btn, map){
+    });
+    const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map){
         contourLayer.showVariable("freq");
         contourLayer.updateRange(0.9995, 1.0005);
+    });
+
+    const avfButtons= [thetaButton, voltageButton, freqButton];
+    const avfBar = L.easyBar(avfButtons).addTo(map);
+
+    const plotSelector = L.control.dialog({"initOpen": false})
+        .setContent("<p>Hello! Welcome to your nice new dialog box!</p>")
+        .addTo(map);
+
+    const plotButton = L.easyButton('<span><i>p</i></span>', function(btn, map){
+        if (plotOpen == false) {
+            plotSelector.open();
+            plotOpen = true;
+        } else {
+            plotSelector.close();
+            plotOpen = false;
+        }
+
     }).addTo(map);
 
+    const lineSpec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Google's stock price over time.",
+    "data": {"name": "table"},
+    "mark": "line",
+    "encoding": {
+        "x": {"field": "t", "type": "quantitative"},
+        "y": {"field": "voltage", "type": "quantitative"}
+    }
+    };
 
     (async () => {
 
     await dimec.ready;
     console.time(map_name);
+
+    // plot
+    const { view } = await vegaEmbed('#vis', lineSpec, {defaultStyle: true})
 
     const workspace = {};
 
@@ -102,6 +135,7 @@ function CreateWindow(map_name, dimec, dimec_name){
         communicationLayer.update(workspace);
         if (workspace.Varvgs){
             simTimeBox.update(workspace.Varvgs.t.toFixed(2));
+            view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, 0) }).run();
         }
     }
     })();
