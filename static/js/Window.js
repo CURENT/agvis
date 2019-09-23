@@ -1,8 +1,10 @@
 function CreateWindow(map_name, dimec, dimec_name){
 
-    let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
+    let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?' +
+                         'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
 
     let plotOpen = false;
+    let plot1Index = 5;
 
     var map = L.map(map_name, {
         minZoom: 3,
@@ -25,6 +27,18 @@ function CreateWindow(map_name, dimec, dimec_name){
     const simTimeBox = L.simTimeBox({ position: 'topright'  })
         .addTo(map);
 
+    const lineSpec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+    "description": "Voltage on Bus 0 Plot",
+    "data": {"name": "table"},
+    "mark": "line",
+    "encoding": {
+        "x": {"field": "t", "type": "quantitative"},
+        "y": {"field": "voltage", "type": "quantitative"}
+    }
+    };
+
+    /// Bar of icons for voltage, theta and frequency
     const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
         contourLayer.showVariable("theta");
         contourLayer.updateRange(-1, 1);
@@ -41,6 +55,7 @@ function CreateWindow(map_name, dimec, dimec_name){
     const avfButtons= [thetaButton, voltageButton, freqButton];
     const avfBar = L.easyBar(avfButtons).addTo(map);
 
+    // Plot selector Dialog
     const plotSelector = L.control.dialog({"initOpen": false})
         .setContent("<p>Hello! Welcome to your nice new dialog box!</p>")
         .addTo(map);
@@ -56,16 +71,39 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     }).addTo(map);
 
-    const lineSpec = {
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "description": "Google's stock price over time.",
-    "data": {"name": "table"},
-    "mark": "line",
-    "encoding": {
-        "x": {"field": "t", "type": "quantitative"},
-        "y": {"field": "voltage", "type": "quantitative"}
-    }
+    // side bar
+    const sidebar = L.control.sidebar({
+        autopan: true,       // whether to maintain the centered map point when opening the sidebar
+        closeButton: true,    // whether t add a close button to the panes
+        container: map_name + '_sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
+        position: 'right',     // left or right
+    }).addTo(map);
+    
+    /* add a new panel */
+    let visPlotName = map_name + "Vis";
+
+    var panelContent = {
+        id: 'userinfo',                     // UID, used to access the panel
+        tab: '<i class="fa fa-line-chart"></i>',  // content can be passed as HTML string,
+        pane: '<div id="' + visPlotName + '"></div>',        // DOM elements can be passed, too
+        title: 'Plot Tool',              // an optional pane header
+        position: 'top'                  // optional vertical alignment, defaults to 'top'
     };
+    sidebar.addPanel(panelContent);
+
+    /* add an external link */
+    sidebar.addPanel({
+        id: 'ghlink',
+        tab: '<i class="fa fa-github"></i>',
+        button: 'https://github.com/nickpeihl/leaflet-sidebar-v2',
+    });
+
+    /* add a button with click listener */
+    sidebar.addPanel({
+        id: 'click',
+        tab: '<i class="fa fa-info"></i>',
+        button: function (event) { console.log(event); }
+    });
 
     (async () => {
 
@@ -73,16 +111,18 @@ function CreateWindow(map_name, dimec, dimec_name){
     console.time(map_name);
 
     // plot
-    const { view } = await vegaEmbed('#vis', lineSpec, {defaultStyle: true})
+    const { view } = await vegaEmbed('#' + map_name + 'Vis', lineSpec, {defaultStyle: true})
 
     const workspace = {};
+    const Varvgs_store = [];
 
     let sentHeader = false;
     for (;;) {
         const { name, value } = await dimec.sync();
+        workspace[name] = value;
+
         if (name !== 'Varvgs')
             console.log({ name, value });
-        workspace[name] = value;
 
         if (!sentHeader && name === 'Idxvgs') {
             const busVoltageIndices = workspace.Idxvgs.Bus.V.typedArray;
@@ -130,12 +170,16 @@ function CreateWindow(map_name, dimec, dimec_name){
             console.timeEnd(map_name);
         }
 
+        // is Varvgs
         topologyLayer.update(workspace);
         contourLayer.update(workspace);
         communicationLayer.update(workspace);
+
         if (workspace.Varvgs){
             simTimeBox.update(workspace.Varvgs.t.toFixed(2));
-            view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, 0) }).run();
+            view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, plot1Index) }).run();
+
+            Varvgs_store.push(workspace.Varvgs);
         }
     }
     })();
