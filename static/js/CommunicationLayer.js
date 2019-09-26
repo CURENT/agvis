@@ -7,11 +7,20 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 	const { Pdc } = LTBNET_params;
 	const { Pmu } = LTBNET_params;
 	const { Switch } = LTBNET_params;
+	const LTBNET_vars = context.LTBNET_vars;
+	if (!LTBNET_vars) return;
+	const { Transfer } = LTBNET_vars;
 
 	let paramCache = this._cache.get(LTBNET_params);
 	if (!paramCache) {
 		paramCache = {};
 		this._cache.set(LTBNET_params, paramCache);
+	}
+
+	let varCache = this._cache.get(LTBNET_vars);
+	if(!varCache) {
+		varCache = {};
+		this._cache.set(LTBNET_vars, varCache);
 	}
 
 	let { pdcPixelCoords } = paramCache;
@@ -50,34 +59,221 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		}
 	}
 
+	let { linkPixelCoords } = paramCache; 
+	if (!linkPixelCoords || needsProjectionUpdate) {
+		linkPixelCoords = paramCache.linkPixelCoords = new NDArray('C', [Link.shape[0], 4]);
+		for (let i=0; i<Link.shape[0]; ++i) {
+			// A link can between two arbitrary devices
+			const options = [Switch, Pmu, Pdc];
+		
+			// Get the first device from the list of types
+			const fromDevice = options[Link.get(i, 0)];
+			// Get the latitude ad longitude for that device
+			const fromNodeIndex = Link.get(i, 1);
+			lat1 = fromDevice.get(fromNodeIndex, 0);
+			lng1 = fromDevice.get(fromNodeIndex, 1);
+
+			// Get the second devices lat and long
+			const toDevice = options[Link.get(i, 2)];
+			const toNodeIndex = Link.get(i, 3);
+			lat2 = toDevice.get(toNodeIndex, 0);
+			lng2 = toDevice.get(toNodeIndex, 1);
+
+			// Create the first point
+			const point1 = project(L.latLng(lat1, lng1));
+			linkPixelCoords.set(point1.x, i, 0);
+			linkPixelCoords.set(point1.y, i, 1);
+
+			// Create the second point
+			const point2 = project(L.latLng(lat2, lng2));
+			linkPixelCoords.set(point2.x, i, 2);
+			linkPixelCoords.set(point2.y, i, 3);
+		}
+	}
+
+	let { transferBytesPerNode } = varCache;
+	let { totalTransfer } = varCache;
+	if (!transferBytesPerNode || needsProjectionUpdate || true) {
+		transferBytesPerNode = varCache.transferBytesPerNode = {};
+		totalTransfer = varCache.totalTransfer = 0;
+	}
+
+	let { receiveBytesPerNode } = varCache;
+	let { totalReceive } = varCache;
+	if (!receiveBytesPerNode || needsProjectionUpdate || true){
+		receiveBytesPerNode = varCache.receiveBytesPerNode = {};
+		totalReceive = varCache.totalReceive = 0;
+	}
+
+	let { transferPixelCoords } = varCache;
+	if (!transferPixelCoords || needsProjectionUpdate) {
+		console.log("Updating tansfer pixels")
+		transferPixelCoords = varCache.transferPixelCoords = new NDArray('C', [Transfer.shape[0], 4]);
+		for(let i=0; i<Transfer.shape[0]; ++i) {
+			const options = [Switch, Pmu, Pdc];
+
+			let lat1;
+			let lng1;
+			let lat2;
+			let lng2;
+			lat1 = lng1 = lat2 = lng2 = 0;
+
+			const fromType = Transfer.get(i, 1);
+			const fromDevice = options[fromType];
+			const fromNodeIndex = Transfer.get(i, 2);
+			lat1 = fromDevice.get(fromNodeIndex, 0);
+			lng1 = fromDevice.get(fromNodeIndex, 1);
+
+			const toType = Transfer.get(i, 3);
+			const toDevice = options[toType];
+			const toNodeIndex = Transfer.get(i, 4);
+			lat2 = toDevice.get(toNodeIndex, 0);
+			lng2 = toDevice.get(toNodeIndex, 1);
+
+			const point1 = project(L.latLng(lat1, lng1));
+			transferPixelCoords.set(point1.x, i, 0);
+			transferPixelCoords.set(point1.y, i, 1);
+
+			const point2 = project(L.latLng(lat2, lng2));
+			transferPixelCoords.set(point2.x, i, 2);
+			transferPixelCoords.set(point2.y, i, 3);
+
+			let transferAmount = Transfer.get(i, 6);
+			totalTransfer += transferAmount;
+			totalReceive += transferAmount;
+
+			if(typeof transferBytesPerNode[`${fromType},${fromNodeIndex}`] !== 'undefined') {
+				transferBytesPerNode[`${fromType},${fromNodeIndex}`][2] += transferAmount;
+			} else {
+				transferBytesPerNode[`${fromType},${fromNodeIndex}`] = []
+				transferBytesPerNode[`${fromType},${fromNodeIndex}`][0] = point1.x;
+				transferBytesPerNode[`${fromType},${fromNodeIndex}`][1] = point1.y;
+				transferBytesPerNode[`${fromType},${fromNodeIndex}`][2] = transferAmount;
+			}
+
+			if(receiveBytesPerNode[`${toType},${toNodeIndex}`]) {
+				receiveBytesPerNode[`${toType},${toNodeIndex}`][2] += transferAmount;
+			} else {
+				receiveBytesPerNode[`${toType},${toNodeIndex}`] = []
+				receiveBytesPerNode[`${toType},${toNodeIndex}`][0] = point2.x;
+				receiveBytesPerNode[`${toType},${toNodeIndex}`][1] = point2.y;
+				receiveBytesPerNode[`${toType},${toNodeIndex}`][2] = transferAmount;
+			}
+		}
+		console.log('end');
+	}
+
 	const ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, size.x, size.y);
 
-	ctx.fillStyle = 'red';
-	for (let i=0; i<Pdc.shape[0]; ++i) {
-		const x = pdcPixelCoords.get(i, 0);
-		const y = pdcPixelCoords.get(i, 1);
+	// Draw links first so they appear under nodes
+	ctx.strokeStyle = 'rgba(255,0,255,0.2)';
+	ctx.fillStyle = 'rgba(255,0,255,0.2)';
+	ctx.lineWidth = 3;
+	ctx.setLineDash([5, 15]);
+
+	for (let i=0; i<Link.shape[0]; ++i){
+		const x1 = linkPixelCoords.get(i, 0);
+		const y1 = linkPixelCoords.get(i, 1);
+		const x2 = linkPixelCoords.get(i, 2);
+		const y2 = linkPixelCoords.get(i, 3);
+
 		ctx.beginPath();
-		ctx.arc(x, y, 10.0, 0, 2 * Math.PI);
-		ctx.fill();
+		ctx.moveTo(x1, y1);
+		ctx.lineTo(x2, y2);
+		ctx.stroke();
 	}
 
-	ctx.fillStyle = 'blue';
-	for (let i=0; i<Pmu.shape[0]; ++i) {
-		const x = pmuPixelCoords.get(i, 0);
-		const y = pmuPixelCoords.get(i, 1);
+	ctx.strokeStyle = 'black';
+	ctx.fillStyle = 'black';
+	ctx.lineWidth = 3;
+	ctx.setLineDash([]);
+	for(let i=0; i<Transfer.shape[0]; ++i) {
+		const x1 = transferPixelCoords.get(i, 0);
+		const y1 = transferPixelCoords.get(i, 1);
+		const x2 = transferPixelCoords.get(i, 2);
+		const y2 = transferPixelCoords.get(i, 3);
+
+		const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+		gradient.addColorStop("0", "rgba(222,66,91, 0.4)");
+		gradient.addColorStop(".25", "rgba(239,162,103, 0.4)");
+		gradient.addColorStop(".50", "rgba(255,248,187, 0.4)");
+		gradient.addColorStop(".75", "rgba(255,255,248, 0.4)");
+		gradient.addColorStop("1", "rgba(255,255,255, 0.4)");
+		ctx.fillStyle = gradient;
+		ctx.strokeStyle = gradient;
+		
 		ctx.beginPath();
-		ctx.arc(x, y, 10.0, 0, 2 * Math.PI);
-		ctx.fill();
+		ctx.moveTo(x1, y1);
+		ctx.lineTo(x2, y2);
+		ctx.stroke();
 	}
 
 	ctx.fillStyle = 'green';
+	for (let i=0; i<Pdc.shape[0]; ++i) {
+		//break; // For now, skip drawing PDC's
+		const x = pdcPixelCoords.get(i, 0);
+		const y = pdcPixelCoords.get(i, 1);
+		ctx.beginPath();
+		ctx.arc(x, y, 3.0, 0, 2 * Math.PI);
+		ctx.fill();
+	}
+
+	ctx.fillStyle = 'rgba(222,66,91, 1.0)';
+	for (let i=0; i<Pmu.shape[0]; ++i) {
+		//break; // For now, skip drawing PMU's
+		const x = pmuPixelCoords.get(i, 0);
+		const y = pmuPixelCoords.get(i, 1);
+		ctx.beginPath();
+		ctx.arc(x, y, 3.0, 0, 2 * Math.PI);
+		ctx.fill();
+	}
+
+	ctx.fillStyle = 'rgba(244,165,107, 1.0)';
 	for (let i=0; i<Switch.shape[0]; ++i) {
 		const x = switchPixelCoords.get(i, 0);
 		const y = switchPixelCoords.get(i, 1);
 		ctx.beginPath();
-		ctx.arc(x, y, 10.0, 0, 2 * Math.PI);
+		ctx.arc(x, y, 3.0, 0, 2 * Math.PI);
 		ctx.fill();
+	}
+
+	let maxTransmission = 0;
+	for (let [key, value] of Object.entries(transferBytesPerNode)) {
+		let commSize = ((value[2] / totalTransfer)).toPrecision(2);
+		if (commSize > maxTransmission) {
+			maxTransmission = commSize;
+		}
+	}
+
+	let maxReception = 0;
+	for (let [key, value] of Object.entries(receiveBytesPerNode)) {
+		let commSize = ((value[2] / totalReceive)).toPrecision(2);
+		if (commSize > maxReception) {
+			maxReception = commSize;
+		}
+	}
+
+	ctx.strokeStyle = 'rgba(222,66,91, 0.5)';
+	ctx.lineWidth = 3;
+	for (let [key, value] of Object.entries(transferBytesPerNode)) {
+		let commSize = ((value[2] / totalTransfer)).toPrecision(2) / maxTransmission;
+		x = value[0];
+		y = value[1];
+		ctx.beginPath();
+		ctx.arc(x, y, 3 + (15 * commSize), 0, 2 * Math.PI);
+		ctx.stroke();
+	}
+
+	ctx.strokeStyle = 'rgba(255,255,255, 0.5)';
+	ctx.lineWidth = 3;
+	for (let [key, value] of Object.entries(receiveBytesPerNode)) {
+		let commSize = ((value[2] / totalReceive)).toPrecision(2) / maxReception;
+		x = value[0];
+		y = value[1];
+		ctx.beginPath();
+		ctx.arc(x, y, 3 + (15 * commSize), 0, 2 * Math.PI);
+		ctx.stroke();
 	}
 }
 
