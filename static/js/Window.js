@@ -122,7 +122,9 @@ function CreateWindow(map_name, dimec, dimec_name){
         return reset;
     }
 
-    const resetTime = updateThread(workspace);
+    (async () => {
+
+    const resetTime = await updateThread(workspace);
     /// Bar of icons for voltage, theta and frequency
 
     const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
@@ -161,7 +163,6 @@ function CreateWindow(map_name, dimec, dimec_name){
         resetTime();
     }).addTo(map);
 
-    (async () => {
 
     await dimec.ready;
     console.time(map_name);
