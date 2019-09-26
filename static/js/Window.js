@@ -71,6 +71,10 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     }).addTo(map);
 
+    const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map){
+
+    }).addTo(map);
+
     // side bar
     const sidebar = L.control.sidebar({
         autopan: true,       // whether to maintain the centered map point when opening the sidebar
@@ -105,6 +109,55 @@ function CreateWindow(map_name, dimec, dimec_name){
         button: function (event) { console.log(event); }
     });
 
+    const workspace = {};
+    const history = {};
+
+    function doTheThing(workspace, history, currentTimeInSeconds, varname) {
+        const varHistory = history[varname];
+        let value;
+
+        if (varHistory == null){
+            return false;
+        }
+        for (let i=0; i<varHistory.length; ++i) {
+            value = varHistory[i];
+            const t = value.t;
+            if (t >= currentTimeInSeconds) break;
+        }
+        workspace[varname] = value;
+        return true;
+
+    }
+
+    function updateThread(workspace) {
+        let firstTime = null;
+        function step(currentTime) {
+            requestAnimationFrame(step);
+            if (firstTime === null) {
+                firstTime = currentTime;
+                return;
+            }
+            workspace.currentTimeInSeconds = (currentTime - firstTime) / 1000.0;
+
+            // get data from history, update contour, simulation time, and plots
+            ready = doTheThing(workspace, history, workspace.currentTimeInSeconds, 'Varvgs');
+            if (!ready) return;
+
+            topologyLayer.update(workspace);
+            contourLayer.update(workspace);
+            communicationLayer.update(workspace);
+            if (workspace.Varvgs){
+                simTimeBox.update(workspace.Varvgs.t.toFixed(2));
+                workspace.view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, plot1Index) }).run();
+            }
+        }
+        function reset() {
+            firstTime = null;
+        }
+        requestAnimationFrame(step);
+        return reset;
+    }
+
     (async () => {
 
     await dimec.ready;
@@ -113,13 +166,17 @@ function CreateWindow(map_name, dimec, dimec_name){
     // plot
     const { view } = await vegaEmbed('#' + map_name + 'Vis', lineSpec, {defaultStyle: true})
 
-    const workspace = {};
-    const Varvgs_store = [];
-
     let sentHeader = false;
+    const resetTime = updateThread(workspace);
+
+    workspace.view = view;
+
     for (;;) {
         const { name, value } = await dimec.sync();
         workspace[name] = value;
+
+        if (!history[name]) history[name] = [];
+        history[name].push(value);
 
         if (name !== 'Varvgs')
             console.log({ name, value });
@@ -156,35 +213,24 @@ function CreateWindow(map_name, dimec, dimec_name){
             contourLayer.showVariable("freq");
             contourLayer.updateRange(0.9995, 1.0005);
 
-            sentHeader = true;
             dimec.send_var('sim', dimec_name, {
                 vgsvaridx: {
                     ndarray: true,
                     shape: [1, variableAbsIndices.length],
                     data: base64arraybuffer.encode(variableAbsIndices.buffer),
                 },
-            });
+            }
+            );
+            sentHeader = true;
 
         } else if (name === 'DONE') {
             dimec.close();
             console.timeEnd(map_name);
         }
 
-        // is Varvgs
-        topologyLayer.update(workspace);
-        contourLayer.update(workspace);
-        communicationLayer.update(workspace);
-
-        if (workspace.Varvgs){
-            simTimeBox.update(workspace.Varvgs.t.toFixed(2));
-            view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, plot1Index) }).run();
-
-            Varvgs_store.push(workspace.Varvgs);
-        }
     }
     })();
 
     return map;
 
 }
-
