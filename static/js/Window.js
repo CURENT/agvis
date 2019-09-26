@@ -72,7 +72,7 @@ function CreateWindow(map_name, dimec, dimec_name){
     }).addTo(map);
 
     const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map){
-
+        resetTime()
     }).addTo(map);
 
     // side bar
@@ -112,6 +112,7 @@ function CreateWindow(map_name, dimec, dimec_name){
     const workspace = {};
     const history = {};
 
+
     function doTheThing(workspace, history, currentTimeInSeconds, varname) {
         const varHistory = history[varname];
         let value;
@@ -129,7 +130,8 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     }
 
-    function updateThread(workspace) {
+    async function updateThread(workspace) {
+        const { view } = await vegaEmbed('#' + map_name + 'Vis', lineSpec, {defaultStyle: true})
         let firstTime = null;
         function step(currentTime) {
             requestAnimationFrame(step);
@@ -148,7 +150,7 @@ function CreateWindow(map_name, dimec, dimec_name){
             communicationLayer.update(workspace);
             if (workspace.Varvgs){
                 simTimeBox.update(workspace.Varvgs.t.toFixed(2));
-                workspace.view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, plot1Index) }).run();
+                view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, plot1Index) }).run();
             }
         }
         function reset() {
@@ -164,12 +166,9 @@ function CreateWindow(map_name, dimec, dimec_name){
     console.time(map_name);
 
     // plot
-    const { view } = await vegaEmbed('#' + map_name + 'Vis', lineSpec, {defaultStyle: true})
 
     let sentHeader = false;
     const resetTime = updateThread(workspace);
-
-    workspace.view = view;
 
     for (;;) {
         const { name, value } = await dimec.sync();
