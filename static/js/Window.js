@@ -13,6 +13,9 @@ function CreateWindow(map_name, dimec, dimec_name){
         zoom: 5,
     });
 
+    const workspace = {};
+    const history = {};
+
     const tileLayer = L.tileLayer(TILE_LAYER_URL)
         .addTo(map);
     const topologyLayer = L.topologyLayer()
@@ -37,43 +40,6 @@ function CreateWindow(map_name, dimec, dimec_name){
         "y": {"field": "voltage", "type": "quantitative"}
     }
     };
-
-    /// Bar of icons for voltage, theta and frequency
-    const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
-        contourLayer.showVariable("theta");
-        contourLayer.updateRange(-1, 1);
-    });
-    const voltageButton = L.easyButton('<span>V</span>', function(btn, map){
-        contourLayer.showVariable("V");
-        contourLayer.updateRange(0.8, 1.2);
-    });
-    const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map){
-        contourLayer.showVariable("freq");
-        contourLayer.updateRange(0.9995, 1.0005);
-    });
-
-    const avfButtons= [thetaButton, voltageButton, freqButton];
-    const avfBar = L.easyBar(avfButtons).addTo(map);
-
-    // Plot selector Dialog
-    const plotSelector = L.control.dialog({"initOpen": false})
-        .setContent("<p>Hello! Welcome to your nice new dialog box!</p>")
-        .addTo(map);
-
-    const plotButton = L.easyButton('<span><i>p</i></span>', function(btn, map){
-        if (plotOpen == false) {
-            plotSelector.open();
-            plotOpen = true;
-        } else {
-            plotSelector.close();
-            plotOpen = false;
-        }
-
-    }).addTo(map);
-
-    const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map){
-        resetTime()
-    }).addTo(map);
 
     // side bar
     const sidebar = L.control.sidebar({
@@ -108,10 +74,6 @@ function CreateWindow(map_name, dimec, dimec_name){
         tab: '<i class="fa fa-info"></i>',
         button: function (event) { console.log(event); }
     });
-
-    const workspace = {};
-    const history = {};
-
 
     function doTheThing(workspace, history, currentTimeInSeconds, varname) {
         const varHistory = history[varname];
@@ -160,6 +122,45 @@ function CreateWindow(map_name, dimec, dimec_name){
         return reset;
     }
 
+    const resetTime = updateThread(workspace);
+    /// Bar of icons for voltage, theta and frequency
+
+    const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
+        contourLayer.showVariable("theta");
+        contourLayer.updateRange(-1, 1);
+    });
+    const voltageButton = L.easyButton('<span>V</span>', function(btn, map){
+        contourLayer.showVariable("V");
+        contourLayer.updateRange(0.8, 1.2);
+    });
+    const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map){
+        contourLayer.showVariable("freq");
+        contourLayer.updateRange(0.9995, 1.0005);
+    });
+
+    const avfButtons= [thetaButton, voltageButton, freqButton];
+    const avfBar = L.easyBar(avfButtons).addTo(map);
+
+    // Plot selector Dialog
+    const plotSelector = L.control.dialog({"initOpen": false})
+        .setContent("<p>Hello! Welcome to your nice new dialog box!</p>")
+        .addTo(map);
+
+    const plotButton = L.easyButton('<span><i>p</i></span>', function(btn, map){
+        if (plotOpen == false) {
+            plotSelector.open();
+            plotOpen = true;
+        } else {
+            plotSelector.close();
+            plotOpen = false;
+        }
+
+    }).addTo(map);
+
+    const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map){
+        resetTime();
+    }).addTo(map);
+
     (async () => {
 
     await dimec.ready;
@@ -168,7 +169,6 @@ function CreateWindow(map_name, dimec, dimec_name){
     // plot
 
     let sentHeader = false;
-    const resetTime = updateThread(workspace);
 
     for (;;) {
         const { name, value } = await dimec.sync();
