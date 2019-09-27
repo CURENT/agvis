@@ -94,6 +94,8 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     async function updateThread(workspace) {
         const { view } = await vegaEmbed('#' + map_name + 'Vis', lineSpec, {defaultStyle: true})
+        workspace.view = view;
+        
         let firstTime = null;
         function step(currentTime) {
             requestAnimationFrame(step);
@@ -117,6 +119,7 @@ function CreateWindow(map_name, dimec, dimec_name){
         }
         function reset() {
             firstTime = null;
+            // view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, plot1Index) }).run();
         }
         requestAnimationFrame(step);
         return reset;
