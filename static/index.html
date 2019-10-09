@@ -96,6 +96,13 @@
 </div>
 
     <script>
+        const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
+
+        console.log('a number parameter', +options.myNumberParameter); // http://example.com/#myNumberParameter=1.2345
+        console.log('a string param', options.stringParam); // http://example.com/#stringParam=hello
+        console.log('alternate bool param', options.anotherBoolParam === 'true'); // http://example.com/#anotherBoolParam=true
+
+        
         function ToggleSecond() {
             var x1 = document.getElementById("map");
             var x2 = document.getElementById("map2");
