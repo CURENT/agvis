@@ -7,6 +7,9 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 	const { Pdc } = LTBNET_params;
 	const { Pmu } = LTBNET_params;
 	const { Switch } = LTBNET_params;
+	const { Hwintf } = LTBNET_params;
+	const { Tchwintf } = LTBNET_params;
+
 	const LTBNET_vars = context.LTBNET_vars;
 	if (!LTBNET_vars) return;
 	const { Transfer } = LTBNET_vars;
@@ -64,7 +67,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		linkPixelCoords = paramCache.linkPixelCoords = new NDArray('C', [Link.shape[0], 4]);
 		for (let i=0; i<Link.shape[0]; ++i) {
 			// A link can between two arbitrary devices
-			const options = [Switch, Pmu, Pdc];
+			const options = [Switch, Pmu, Pdc, Hwintf, Tchwintf];
 		
 			// Get the first device from the list of types
 			const fromDevice = options[Link.get(i, 0)];
@@ -110,7 +113,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		console.log("Updating tansfer pixels")
 		transferPixelCoords = varCache.transferPixelCoords = new NDArray('C', [Transfer.shape[0], 4]);
 		for(let i=0; i<Transfer.shape[0]; ++i) {
-			const options = [Switch, Pmu, Pdc];
+			const options = [Switch, Pmu, Pdc, Hwintf, Tchwintf];
 
 			let lat1;
 			let lng1;

@@ -83,7 +83,7 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
 
         Pdc[i] = (Latitude, Longitude)
 
-    Hwintf = np.zeros((len(pdcs), 2))
+    Hwintf = np.zeros((len(hwintfs), 2))
     LTBNET_params['Hwintf'] = Hwintf
     HwintfIndex: Dict[Idx, int] = {}
     HwintfIndexInv: Dict[int, Idx] = {}
@@ -93,7 +93,7 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
 
         Hwintf[i] = (Latitude, Longitude)
 
-    Tchwintf = np.zeros((len(pdcs), 2))
+    Tchwintf = np.zeros((len(tchwintfs), 2))
     LTBNET_params['Tchwintf'] = Tchwintf
     TchwintfIndex: Dict[Idx, int] = {}
     TchwintfIndexInv: Dict[int, Idx] = {}
@@ -249,7 +249,7 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
                 ToIndex = PdcIndex[toNode]
             elif toNode in hwintfs:
                 ToType = 3
-                ToIndex = HwIntfIndex[toNode]
+                ToIndex = HwintfIndex[toNode]
             elif toNode in tchwintfs:
                 ToType = 4
                 ToIndex = TchwintfIndex[toNode]
@@ -259,7 +259,7 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
 
             if aggregateTime not in flowDict:
                 flowDict[aggregateTime] = []
-            flowTime -= 1559160380
+            flowTime -= startTime
             flowDict[aggregateTime].append(
                 (flowTime, FromType, FromIndex, ToType, ToIndex, flowPackets, flowBytes))
 
@@ -284,6 +284,7 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
                     Transfer[i] = (flowTime, FromType, FromIndex, ToType, ToIndex, flowPackets, flowBytes)
                 print(len(flowDict[newTime]))
                 dimec.broadcast('LTBNET_vars', LTBNET_vars)
+
             oldTime = newTime
             # If the file is coming to a close, exit
             if newTime >= maxTime:

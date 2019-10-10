@@ -181,7 +181,7 @@ function CreateWindow(map_name, dimec, dimec_name){
         if (!history[name]) history[name] = [];
         history[name].push(value);
 
-        if (name !== 'Varvgs')
+        if (name !== 'Varvgs' && name !== 'pmudata' && name !== 'LTBNET_vars')
             console.log({ name, value });
 
         if (!sentHeader && name === 'Idxvgs') {
