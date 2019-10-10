@@ -1,13 +1,12 @@
 from __future__ import annotations
 from andes_addon.dime import Dime
-from time import sleep
 import numpy as np
 from pathlib import Path
 from csv import DictReader
 from timeit import default_timer as timer
 
 
-def broadcastCommFiles(rootFolder="./", port=8819):
+def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
     root = Path(rootFolder)
     flow = root / 'stats' / 'net_stats_flow.csv'
     port = root / 'stats' / 'net_stats_port.csv'
@@ -120,7 +119,7 @@ def broadcastCommFiles(rootFolder="./", port=8819):
     LTBNET_idx = {}
     LTBNET_vars = {}
 
-    dimec = Dime('LTBNET', 'tcp://127.0.0.1:8819')
+    dimec = Dime('LTBNET', dime_address)
     ok = dimec.start()
     if not ok:
         print('bad!')
@@ -235,10 +234,11 @@ def broadcastCommFiles(rootFolder="./", port=8819):
     currentTime = timer()
     oldTime = -1
     maxTime = -1
+
     for key in flowDict.keys():
         if key > maxTime:
             maxTime = key
-    while (True):
+    while True:
         # For every second, try to get the new data
         newTime = int(timer() - currentTime)
         if newTime != oldTime:
@@ -257,9 +257,9 @@ def broadcastCommFiles(rootFolder="./", port=8819):
                 break
 
 
-def main(root, port):
-    print(f'Broadcasting files in {root} to across DIME on {port}')
-    broadcastCommFiles(root, port)
+def main(root, dime_address):
+    print(f'Broadcasting files in {root} to across DIME on {dime_address}')
+    broadcastCommFiles(root, dime_address)
 
 
 def cli():
@@ -267,7 +267,7 @@ def cli():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--root', default='./')
-    parser.add_argument('--port', type=int, default=8819)
+    parser.add_argument('--dime_address', default='ipc:///tmp/dime')
     args = vars(parser.parse_args())
 
     main(**args)
