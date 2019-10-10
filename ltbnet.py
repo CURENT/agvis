@@ -4,6 +4,7 @@ import numpy as np
 from pathlib import Path
 from csv import DictReader
 from timeit import default_timer as timer
+import pprint
 
 
 def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
@@ -16,6 +17,8 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
     switches: Dict[Idx, Tuple[Longitude, Latitude]] = {}
     pmus: Dict[Idx, Tuple[Longitude, Latitude]] = {}
     pdcs: Dict[Idx, Tuple[Longitude, Latitude]] = {}
+    hwintfs = {}
+    tchwintfs = {}
     macs: Dict[Idx, MAC] = {}
     links: List[Tuple[Idx, Idx]] = []
 
@@ -39,7 +42,11 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
                 pdcs[Idx] = (float(Longitude), float(Latitude))
             elif Type == 'Link':
                 links.append((From, To))
-            elif Type in ('Region', 'HwIntf'):
+            elif Type == 'HwIntf':
+                hwintfs[Idx] = (float(Longitude), float(Latitude))
+            elif Type == 'TCHwIntf':
+                tchwintfs[Idx] = (float(Longitude), float(Latitude))
+            elif Type in ('Region'):
                 pass
             else:
                 print('Unknown: ' + Type)
@@ -75,6 +82,26 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
         PdcIndexInv[i] = Idx
 
         Pdc[i] = (Latitude, Longitude)
+
+    Hwintf = np.zeros((len(pdcs), 2))
+    LTBNET_params['Hwintf'] = Hwintf
+    HwintfIndex: Dict[Idx, int] = {}
+    HwintfIndexInv: Dict[int, Idx] = {}
+    for i, (Idx, (Longitude, Latitude)) in enumerate(hwintfs.items()):
+        HwintfIndex[Idx] = i
+        HwintfIndexInv[i] = Idx
+
+        Hwintf[i] = (Latitude, Longitude)
+
+    Tchwintf = np.zeros((len(pdcs), 2))
+    LTBNET_params['Tchwintf'] = Tchwintf
+    TchwintfIndex: Dict[Idx, int] = {}
+    TchwintfIndexInv: Dict[int, Idx] = {}
+    for i, (Idx, (Longitude, Latitude)) in enumerate(tchwintfs.items()):
+        TchwintfIndex[Idx] = i
+        TchwintfIndexInv[i] = Idx
+
+        Tchwintf[i] = (Latitude, Longitude)
 
     Link = np.zeros((len(links), 4))
     LTBNET_params['Link'] = Link
@@ -132,9 +159,9 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
     since the information does not have to be sent across dime, we use
     this data to simplify what we shall stream through dime vars later
     '''
-    macandporttoidx: Dict[Tuple[MAC, int], Idx] = {}
-    idtoswitch: Dict[SID, Idx] = {}
-    mactoidx: Dict[MAC, Idx] = {}
+    mac_and_port_to_idx: Dict[Tuple[MAC, int], Idx] = {}
+    id_to_switch: Dict[SID, Idx] = {}
+    mac_to_idx: Dict[MAC, Idx] = {}
     with open(node, 'r') as f:
         reader = DictReader(f)
         for row in reader:
@@ -144,31 +171,31 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
             Port = int(row['Port'])
             From = row['Idx']
 
-            macandporttoidx[MAC, Port] = To
-            idtoswitch[SID] = From
-            mactoidx[MAC] = From
+            mac_and_port_to_idx[MAC, Port] = To
+            id_to_switch[SID] = From
+            mac_to_idx[MAC] = From
 
     # Mac and Port mapped to an internal name (i.e. "s1"),
     # change that internal name from "s1" to actual switch S_BCTC
-    for key, val in macandporttoidx.items():
-        if val in idtoswitch:
-            macandporttoidx[key] = idtoswitch[val]
-    print(macandporttoidx)
+    for key, val in mac_and_port_to_idx.items():
+        if val in id_to_switch:
+            mac_and_port_to_idx[key] = id_to_switch[val]
+    pprint.pprint(mac_and_port_to_idx)
 
     # mac maps to an internal name (i.e "s1"),
     # change that intenal name from "s1" to actual switch S_BCTC
-    for key, val in mactoidx.items():
-        if val in idtoswitch:
-            mactoidx[key] = idtoswitch[val]
+    for key, val in mac_to_idx.items():
+        if val in id_to_switch:
+            mac_to_idx[key] = id_to_switch[val]
 
     # change (MAC, Port) -> IDX to (IDX, Port) -> Idx
     # this process could be skipped; however, it makes debugging easier
-    fullportmap: Dict[Tuple[Idx, int], Idx] = {}
-    for key, theidx in macandporttoidx.items():
+    full_port_map: Dict[Tuple[Idx, int], Idx] = {}
+    for key, theidx in mac_and_port_to_idx.items():
         themac = key[0]
         theport = int(key[1])
-        fullportmap[(mactoidx[themac], theport)] = theidx
-    print(fullportmap)
+        full_port_map[(mac_to_idx[themac], theport)] = theidx
+    pprint.pprint(full_port_map)
 
     # FlowDict = Dictionary{TimeAtSecond[TimeAtMilliSecond, fromType, fromIndex, toType, toIndex, packets, bytes]}
     flowDict: Dict[int, List[Tuple[float, int, int, int, int, int, int]]] = {}
@@ -183,8 +210,8 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
             flowPackets = int(row['packets'])
             flowBytes = int(row['bytes'])
 
-            fromNode = mactoidx[flowMac]
-            toNode = fullportmap[(fromNode, flowOutPort)]
+            fromNode = mac_to_idx[flowMac]
+            toNode = full_port_map[(fromNode, flowOutPort)]
 
             # Why subtracr a set time?
             # A: Because our data set starts at a UNIX TimeStamp.
@@ -220,6 +247,12 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
             elif toNode in pdcs:
                 ToType = 2
                 ToIndex = PdcIndex[toNode]
+            elif toNode in hwintfs:
+                ToType = 3
+                ToIndex = HwIntfIndex[toNode]
+            elif toNode in tchwintfs:
+                ToType = 4
+                ToIndex = TchwintfIndex[toNode]
             else:
                 print(fromNode, toNode)
                 raise NotImplementedError
