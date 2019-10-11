@@ -62,13 +62,13 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		}
 	}
 
-	let { linkPixelCoords } = paramCache; 
+	let { linkPixelCoords } = paramCache;
 	if (!linkPixelCoords || needsProjectionUpdate) {
 		linkPixelCoords = paramCache.linkPixelCoords = new NDArray('C', [Link.shape[0], 4]);
 		for (let i=0; i<Link.shape[0]; ++i) {
 			// A link can between two arbitrary devices
 			const options = [Switch, Pmu, Pdc, Hwintf, Tchwintf];
-		
+
 			// Get the first device from the list of types
 			const fromDevice = options[Link.get(i, 0)];
 			// Get the latitude ad longitude for that device
@@ -205,7 +205,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		gradient.addColorStop("1", "rgba(255,255,255, 0.4)");
 		ctx.fillStyle = gradient;
 		ctx.strokeStyle = gradient;
-		
+
 		ctx.beginPath();
 		ctx.moveTo(x1, y1);
 		ctx.lineTo(x2, y2);
@@ -237,7 +237,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		const x = switchPixelCoords.get(i, 0);
 		const y = switchPixelCoords.get(i, 1);
 		ctx.beginPath();
-		ctx.arc(x, y, 3.0, 0, 2 * Math.PI);
+		ctx.arc(x, y, 4.0, 0, 2 * Math.PI);
 		ctx.fill();
 	}
 
@@ -257,7 +257,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		}
 	}
 
-	ctx.strokeStyle = 'rgba(222,66,91, 0.5)';
+	ctx.strokeStyle = 'rgba(222,66,91, 0.8)';
 	ctx.lineWidth = 3;
 	for (let [key, value] of Object.entries(transferBytesPerNode)) {
 		let commSize = ((value[2] / totalTransfer)).toPrecision(2) / maxTransmission;
@@ -268,7 +268,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		ctx.stroke();
 	}
 
-	ctx.strokeStyle = 'rgba(255,255,255, 0.5)';
+	ctx.strokeStyle = 'rgba(255,255,255, 0.8)';
 	ctx.lineWidth = 3;
 	for (let [key, value] of Object.entries(receiveBytesPerNode)) {
 		let commSize = ((value[2] / totalReceive)).toPrecision(2) / maxReception;

@@ -1,4 +1,36 @@
 function CreateWindow(map_name, dimec, dimec_name){
+        const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
+
+        const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
+        const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
+
+        const amin = (options.amin === undefined) ? -1.0 : options.amin;
+        const amax = (options.amax === undefined) ?  1.0 : options.amax;
+
+        const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
+        const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
+
+        const p1 = (options.p1 === undefined) ? 0 : options.p1;
+        const p2 = options.p2;
+        const p3 = options.p3;
+
+        const p1min = (options.p1min === undefined) ? 0 : options.p1min;
+        const p1max = (options.p1max === undefined) ? 0 : options.p1max;
+
+
+        console.log(vmin);
+        console.log(vmax);
+
+        console.log(amin);
+        console.log(amax);
+
+        console.log(fmin);
+        console.log(fmax);
+
+        // console.log('a number parameter', +options.myNumberParameter); // http://example.com/#myNumberParameter=1.2345
+        // console.log('a string param', options.stringParam); // http://example.com/#stringParam=hello
+        // console.log('alternate bool param', options.anotherBoolParam === 'true'); // http://example.com/#anotherBoolParam=true
+
 
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?' +
                          'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
@@ -32,12 +64,12 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     const lineSpec = {
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "description": "Voltage on Bus 0 Plot",
+    "description": "Plot",
     "data": {"name": "table"},
     "mark": "line",
     "encoding": {
         "x": {"field": "t", "type": "quantitative"},
-        "y": {"field": "voltage", "type": "quantitative"}
+        "y": {"field": "var", "type": "quantitative"}
     }
     };
 
@@ -48,14 +80,25 @@ function CreateWindow(map_name, dimec, dimec_name){
         container: map_name + '_sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
         position: 'right',     // left or right
     }).addTo(map);
-    
+
     /* add a new panel */
     let visPlotName = map_name + "Vis";
+
+    visPane = "";
+    if (p1 !== undefined){
+        visPane = visPane + '<div id="' + visPlotName + p1 + '"></div>'
+    }
+    if (p2 !== undefined){
+        visPane = visPane + '<div id="' + visPlotName + p2 + '"></div>'
+    }
+    if (p3 !== undefined){
+        visPane = visPane + '<div id="' + visPlotName + p3 + '"></div>'
+    }
 
     var panelContent = {
         id: 'userinfo',                     // UID, used to access the panel
         tab: '<i class="fa fa-line-chart"></i>',  // content can be passed as HTML string,
-        pane: '<div id="' + visPlotName + '"></div>',        // DOM elements can be passed, too
+        pane: visPane,        // DOM elements can be passed, too
         title: 'Plot Tool',              // an optional pane header
         position: 'top'                  // optional vertical alignment, defaults to 'top'
     };
@@ -93,9 +136,18 @@ function CreateWindow(map_name, dimec, dimec_name){
     }
 
     async function updateThread(workspace) {
-        const { view } = await vegaEmbed('#' + map_name + 'Vis', lineSpec, {defaultStyle: true})
-        workspace.view = view;
-        
+
+        const { view } = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true})
+        workspace.p1 = view;
+        if (p2 !== undefined){
+            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p2, lineSpec, {defaultStyle: true})
+            workspace.p2 = view;
+        }
+        if (p3 !== undefined){
+            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p3, lineSpec, {defaultStyle: true})
+            workspace.p3 = view;
+        }
+
         let firstTime = null;
         function step(currentTime) {
             requestAnimationFrame(step);
@@ -114,12 +166,17 @@ function CreateWindow(map_name, dimec, dimec_name){
             communicationLayer.update(workspace);
             if (workspace.Varvgs){
                 simTimeBox.update(workspace.Varvgs.t.toFixed(2));
-                view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, plot1Index) }).run();
+                workspace.p1.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, workspace.variableRelIndices['p1']) }).run();
+                if (p2 !== undefined)
+                    workspace.p2.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, workspace.variableRelIndices['p2']) }).run();
+                if (p3 !== undefined)
+                    workspace.p3.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, workspace.variableRelIndices['p3']) }).run();
+
             }
         }
         function reset() {
             firstTime = null;
-            // view.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, plot1Index) }).run();
+            // workspace.p1.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, workspace.variableRelIndices['p1']) }).run();
         }
         requestAnimationFrame(step);
         return reset;
@@ -128,6 +185,8 @@ function CreateWindow(map_name, dimec, dimec_name){
     (async () => {
 
     const resetTime = await updateThread(workspace);
+    workspace.resetTime = resetTime;
+
     /// Bar of icons for voltage, theta and frequency
 
     const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
@@ -140,37 +199,32 @@ function CreateWindow(map_name, dimec, dimec_name){
     });
     const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map){
         contourLayer.showVariable("freq");
-        contourLayer.updateRange(0.9995, 1.0005);
+        contourLayer.updateRange(0.9998, 1.0002);
     });
 
     const avfButtons= [thetaButton, voltageButton, freqButton];
     const avfBar = L.easyBar(avfButtons).addTo(map);
 
-    // Plot selector Dialog
-    const plotSelector = L.control.dialog({"initOpen": false})
-        .setContent("<p>Hello! Welcome to your nice new dialog box!</p>")
-        .addTo(map);
-
-    const plotButton = L.easyButton('<span><i>p</i></span>', function(btn, map){
-        if (plotOpen == false) {
-            plotSelector.open();
-            plotOpen = true;
-        } else {
-            plotSelector.close();
-            plotOpen = false;
-        }
-
-    }).addTo(map);
+    // Plot selector Dialog (incomplete)
+    // const plotSelector = L.control.dialog({"initOpen": false})
+    //     .setContent("<p>Hello! Welcome to your nice new dialog box!</p>")
+    //     .addTo(map);
+    // const plotButton = L.easyButton('<span><i>p</i></span>', function(btn, map){
+    //     if (plotOpen == false) {
+    //         plotSelector.open();
+    //         plotOpen = true;
+    //     } else {
+    //         plotSelector.close();
+    //         plotOpen = false;
+    //     }
+    // }).addTo(map);
 
     const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map){
         resetTime();
     }).addTo(map);
 
-
     await dimec.ready;
     console.time(map_name);
-
-    // plot
 
     let sentHeader = false;
 
@@ -192,13 +246,20 @@ function CreateWindow(map_name, dimec, dimec_name){
             const nBus = busVoltageIndices.length;
 
             // Build the idx list for simulator
-            const variableAbsIndices = new Float64Array(nBus * 3);
+            nPlotVariable = 1;
+            if (p2 !== undefined){
+                nPlotVariable += 1;
+            }
+            if (p3 !== undefined){
+                nPlotVariable += 1;
+            }
+
+            const variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
             const variableRelIndices = {};
 
             for (let i=0; i<busVoltageIndices.length; ++i) {
                 variableAbsIndices[i] = busVoltageIndices[i];
             }
-
             for (let i=0; i<busThetaIndices.length; ++i) {
                 variableAbsIndices[nBus + i] = busThetaIndices[i];
             }
@@ -206,15 +267,29 @@ function CreateWindow(map_name, dimec, dimec_name){
                 variableAbsIndices[2*nBus + i] = busfreqIndices[i];
             }
 
+            // Append the indices of the variables to plot
+            variableAbsIndices[3 * nBus] = p1;
+            variableRelIndices['p1'] = 3 * nBus;
+            if (p2 !== undefined){
+                variableAbsIndices[3 * nBus + 1] = p2;
+                variableRelIndices['p2'] = 3 * nBus + 1;
+            }
+            if (p3 != undefined){
+                variableAbsIndices[3 * nBus + 2] = p3;
+                variableRelIndices['p3'] = 3 * nBus + 2;
+            }
+
             // Build internal idx list
             variableRelIndices["V"] = {"begin": 0, "end": nBus};
             variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
             variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
 
+            workspace.variableRelIndices = variableRelIndices;
+
             // Update variable Range
             contourLayer.storeRelativeIndices(variableRelIndices);
             contourLayer.showVariable("freq");
-            contourLayer.updateRange(0.9995, 1.0005);
+            contourLayer.updateRange(0.9998, 1.0002);
 
             dimec.send_var('sim', dimec_name, {
                 vgsvaridx: {

@@ -5,7 +5,7 @@ L.SimTimeBox = L.Control.extend({
                 this.simulation_time = 0;
                 this.text = L.DomUtil.create('div');
                 this.text.id = "info_text";
-                this.text.innerHTML = "<strong>Simulation time:</strong> " + this.simulation_time;
+                this.text.innerHTML = "<p style=\"font-size:250%;\"><strong>Simulation time:</strong> " + this.simulation_time + "</p>";
                 return this.text;
 
     },
@@ -17,7 +17,7 @@ L.SimTimeBox = L.Control.extend({
 
     update: function(t){
         this.simulation_time = t;
-        this.text.innerHTML = "<strong>Simulation time:</strong> " + this.simulation_time;
+        this.text.innerHTML = "<p style=\"font-size:250%;\"><strong>Simulation time:</strong> " + this.simulation_time + "</p>";
     }
 
 });
