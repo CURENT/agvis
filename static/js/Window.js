@@ -10,22 +10,12 @@ function CreateWindow(map_name, dimec, dimec_name){
         const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
         const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
 
-        const p1 = (options.p1 === undefined) ? 0 : options.p1;
+        const p1 = options.p1;
         const p2 = options.p2;
         const p3 = options.p3;
 
         const p1min = (options.p1min === undefined) ? 0 : options.p1min;
         const p1max = (options.p1max === undefined) ? 0 : options.p1max;
-
-
-        console.log(vmin);
-        console.log(vmax);
-
-        console.log(amin);
-        console.log(amax);
-
-        console.log(fmin);
-        console.log(fmax);
 
         // console.log('a number parameter', +options.myNumberParameter); // http://example.com/#myNumberParameter=1.2345
         // console.log('a string param', options.stringParam); // http://example.com/#stringParam=hello
@@ -118,7 +108,7 @@ function CreateWindow(map_name, dimec, dimec_name){
         button: function (event) { console.log(event); }
     });
 
-    function doTheThing(workspace, history, currentTimeInSeconds, varname) {
+    function historyKeeper(workspace, history, currentTimeInSeconds, varname) {
         const varHistory = history[varname];
         let value;
 
@@ -137,12 +127,16 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     async function updateThread(workspace) {
 
-        const { view } = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true})
-        workspace.p1 = view;
+        if (p1 !== undefined){
+            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true})
+            workspace.p1 = view;
+        }
+
         if (p2 !== undefined){
             const { view } = await vegaEmbed('#' + map_name + 'Vis' + p2, lineSpec, {defaultStyle: true})
             workspace.p2 = view;
         }
+
         if (p3 !== undefined){
             const { view } = await vegaEmbed('#' + map_name + 'Vis' + p3, lineSpec, {defaultStyle: true})
             workspace.p3 = view;
@@ -158,7 +152,7 @@ function CreateWindow(map_name, dimec, dimec_name){
             workspace.currentTimeInSeconds = (currentTime - firstTime) / 1000.0;
 
             // get data from history, update contour, simulation time, and plots
-            ready = doTheThing(workspace, history, workspace.currentTimeInSeconds, 'Varvgs');
+            ready = historyKeeper(workspace, history, workspace.currentTimeInSeconds, 'Varvgs');
             if (!ready) return;
 
             topologyLayer.update(workspace);
@@ -268,8 +262,10 @@ function CreateWindow(map_name, dimec, dimec_name){
             }
 
             // Append the indices of the variables to plot
-            variableAbsIndices[3 * nBus] = p1;
-            variableRelIndices['p1'] = 3 * nBus;
+            if (p1 !== undefined){
+                variableAbsIndices[3 * nBus] = p1;
+                variableRelIndices['p1'] = 3 * nBus;
+            }
             if (p2 !== undefined){
                 variableAbsIndices[3 * nBus + 1] = p2;
                 variableRelIndices['p2'] = 3 * nBus + 1;
