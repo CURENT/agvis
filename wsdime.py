@@ -108,8 +108,8 @@ async def handler(websocket, path):
 
 
 def main(name, bind, port, dhost, dport):
-	print(f'Connecting to dime on tcp://{dhost}:{dport}')
-	dimec = Dime(name, f'tcp://{dhost}:{dport}')
+	print(f'Connecting to dime on {dhost}')
+	dimec = Dime(name, f'{dhost}')
 	ok = dimec.start()
 	if not ok:
 		raise ValueError('Could not start dime client')
