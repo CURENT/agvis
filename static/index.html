@@ -44,11 +44,7 @@
 </style>
 <head>
     <script src="https://cdn.jsdelivr.net/npm/vega@5.6.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/vega@5.6.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.10"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
 
     <style media="screen">
@@ -109,6 +105,7 @@
             }
         }
 
+
         const dimec1 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+1}`);
         const dimec2 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+2}`);
 
@@ -119,5 +116,17 @@
             ToggleSecond();
             map1.invalidateSize();
         }).addTo(map1);
+
+        // reset time button
+        const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map1){
+            map1.resetTime();
+            map2.resetTime();
+        }).addTo(map1);
+
+        // set the number of map views
+        if (options.nview == 1){
+            ToggleSecond();
+            map1.invalidateSize();
+        }
 
     </script>

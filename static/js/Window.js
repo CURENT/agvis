@@ -17,10 +17,6 @@ function CreateWindow(map_name, dimec, dimec_name){
         const p1min = (options.p1min === undefined) ? 0 : options.p1min;
         const p1max = (options.p1max === undefined) ? 0 : options.p1max;
 
-        // console.log('a number parameter', +options.myNumberParameter); // http://example.com/#myNumberParameter=1.2345
-        // console.log('a string param', options.stringParam); // http://example.com/#stringParam=hello
-        // console.log('alternate bool param', options.anotherBoolParam === 'true'); // http://example.com/#anotherBoolParam=true
-
 
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?' +
                          'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
@@ -160,17 +156,36 @@ function CreateWindow(map_name, dimec, dimec_name){
             communicationLayer.update(workspace);
             if (workspace.Varvgs){
                 simTimeBox.update(workspace.Varvgs.t.toFixed(2));
-                workspace.p1.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, workspace.variableRelIndices['p1']) }).run();
+
+                // determine the number of plots
+                nPlots = 0;
+                if (p1 !== undefined)
+                    nPlots += 1;
                 if (p2 !== undefined)
-                    workspace.p2.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, workspace.variableRelIndices['p2']) }).run();
+                    nPlots += 1;
                 if (p3 !== undefined)
-                    workspace.p3.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, workspace.variableRelIndices['p3']) }).run();
+                    nPlots += 1;
+
+                // determine the total number of variables from andes
+                nVariables = workspace.Varvgs.vars.shape[1];
+
+                if (p1 !== undefined)
+                    workspace.p1.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, nVariables - nPlots) }).run();
+                if (p2 !== undefined)
+                    workspace.p2.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, nVariables - nPlots + 1) }).run();
+                if (p3 !== undefined)
+                    workspace.p3.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, nVariables - nPlots + 2) }).run();
 
             }
         }
         function reset() {
             firstTime = null;
-            // workspace.p1.insert("table", {"t": workspace.Varvgs.t, "voltage": workspace.Varvgs.vars.get(0, workspace.variableRelIndices['p1']) }).run();
+            if (p1 !== undefined)
+                workspace.p1.remove('table', function(d) { return true; }).run();
+            if (p2 !== undefined)
+                workspace.p2.remove('table', function(d) { return true; }).run();
+            if (p3 !== undefined)
+                workspace.p3.remove('table', function(d) { return true; }).run();
         }
         requestAnimationFrame(step);
         return reset;
@@ -180,9 +195,9 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     const resetTime = await updateThread(workspace);
     workspace.resetTime = resetTime;
+    map.resetTime = resetTime;
 
     /// Bar of icons for voltage, theta and frequency
-
     const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
         contourLayer.showVariable("theta");
         contourLayer.updateRange(-1, 1);
@@ -198,24 +213,6 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     const avfButtons= [thetaButton, voltageButton, freqButton];
     const avfBar = L.easyBar(avfButtons).addTo(map);
-
-    // Plot selector Dialog (incomplete)
-    // const plotSelector = L.control.dialog({"initOpen": false})
-    //     .setContent("<p>Hello! Welcome to your nice new dialog box!</p>")
-    //     .addTo(map);
-    // const plotButton = L.easyButton('<span><i>p</i></span>', function(btn, map){
-    //     if (plotOpen == false) {
-    //         plotSelector.open();
-    //         plotOpen = true;
-    //     } else {
-    //         plotSelector.close();
-    //         plotOpen = false;
-    //     }
-    // }).addTo(map);
-
-    const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map){
-        resetTime();
-    }).addTo(map);
 
     await dimec.ready;
     console.time(map_name);
@@ -261,26 +258,10 @@ function CreateWindow(map_name, dimec, dimec_name){
                 variableAbsIndices[2*nBus + i] = busfreqIndices[i];
             }
 
-            // Append the indices of the variables to plot
-            if (p1 !== undefined){
-                variableAbsIndices[3 * nBus] = p1;
-                variableRelIndices['p1'] = 3 * nBus;
-            }
-            if (p2 !== undefined){
-                variableAbsIndices[3 * nBus + 1] = p2;
-                variableRelIndices['p2'] = 3 * nBus + 1;
-            }
-            if (p3 != undefined){
-                variableAbsIndices[3 * nBus + 2] = p3;
-                variableRelIndices['p3'] = 3 * nBus + 2;
-            }
-
             // Build internal idx list
             variableRelIndices["V"] = {"begin": 0, "end": nBus};
             variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
             variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
-
-            workspace.variableRelIndices = variableRelIndices;
 
             // Update variable Range
             contourLayer.storeRelativeIndices(variableRelIndices);
