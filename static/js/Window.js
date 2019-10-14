@@ -214,6 +214,7 @@ function CreateWindow(map_name, dimec, dimec_name){
     const avfButtons= [thetaButton, voltageButton, freqButton];
     const avfBar = L.easyBar(avfButtons).addTo(map);
 
+
     await dimec.ready;
     console.time(map_name);
 
@@ -257,6 +258,12 @@ function CreateWindow(map_name, dimec, dimec_name){
             for (let i=0; i<busfreqIndices.length; ++i) {
                 variableAbsIndices[2*nBus + i] = busfreqIndices[i];
             }
+            if (p1 !== undefined)
+                variableAbsIndices[3*nBus] = parseInt(p1);
+            if (p2 !== undefined)
+                variableAbsIndices[3*nBus + 1] = parseInt(p2);
+            if (p3 !== undefined)
+                variableAbsIndices[3*nBus + 2] = parseInt(p3);
 
             // Build internal idx list
             variableRelIndices["V"] = {"begin": 0, "end": nBus};

@@ -58,7 +58,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 			synToExcLookup.set(synNumber, i);
 		}
 	}
-	
+
 	let { excToPssLookup } = paramCache;
 	if (!excToPssLookup) {
 		excToPssLookup = paramCache.excToPssLookup = new Map();
@@ -73,7 +73,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!busLatLngCoords) {
 		busLatLngCoords = paramCache.busLatLngCoords =
 			new NDArray('C', [Bus.shape[0], 2]);
-		
+
 		for (let i=0; i<Bus.shape[0]; ++i) {
 			const lat = Bus.get(i, 6);
 			const lng = Bus.get(i, 7);
@@ -107,7 +107,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	let { busToImageLookup } = paramCache;
 	if (!busToImageLookup) {
 		busToImageLookup = paramCache.busToImageLookup = new Map();
-		
+
 		for (let i=0; i<Bus.shape[0]; ++i) {
 			const busNumber = Bus.get(i, 0);
 			const syn = busToSynLookup.get(busNumber);
@@ -124,11 +124,11 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 				syn !== undefined ? images.syn :
 				dfig !== undefined ? images.dfig :
 				images.bus;
-			
+
 			busToImageLookup.set(busNumber, image);
 		}
 	}
-	
+
 	let { lineVoltageRating } = paramCache;
 	if (!lineVoltageRating) {
 		lineVoltageRating = paramCache.lineVoltageRating = Line.column(3);
@@ -144,8 +144,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 
 	let { zoomToLineVoltageRatingMinLookup } = paramCache;
 	if (!zoomToLineVoltageRatingMinLookup) {
-		const minZoom = 3;
-		const maxZoom = 10;
+		const minZoom = 1;
+		const maxZoom = 7;
 		const minVoltageRating = lineVoltageRatingExtents.min;
 		const maxVoltageRating = lineVoltageRatingExtents.max;
 		const voltageRatingStep = (maxVoltageRating - minVoltageRating) / (maxZoom - minZoom + 1);
