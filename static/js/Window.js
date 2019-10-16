@@ -17,6 +17,21 @@ function CreateWindow(map_name, dimec, dimec_name){
         const p1min = (options.p1min === undefined) ? 0 : options.p1min;
         const p1max = (options.p1max === undefined) ? 0 : options.p1max;
 
+        const demo = (options.demo === undefined) ? 0 : options.demo;
+
+        const intro = {"0": {"map": "", "map2": ""},
+                       "1": {"map": "<h1> LTB Platform Architecture </h1>",
+                             "map2": "<h1> LTB Platform Architecture </h1>"
+                            },
+                       "2": {"map": "<h1> Model Predictive Control based AGC</h1> <h2>(no control)</h2>",
+                             "map2": "<h1> Model Predictive Control-based AGC</h1> <h2>(with Control)</h2>"},
+                       "3": {"map": "<h1> Wide-Area Damping Control</h1> <br> <h2> No controller in action</h2>",
+                             "map2": "<h1> Wide-Area Damping Control</h1> <br> <h2>With control using wind farms</h2>"},
+                       "4": {"map": "<h1> Wide-Area Damping Control </h1><br><h2>no delay</h2>",
+                             "map2": "<h1> Wide-Area Damping Control </h1><br><h2>300 ms delay under denial-of-service attack</h2>"},
+                       }
+        const arch = "LTB Modules and Data Flow"
+
 
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?' +
                          'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
@@ -70,7 +85,8 @@ function CreateWindow(map_name, dimec, dimec_name){
     /* add a new panel */
     let visPlotName = map_name + "Vis";
 
-    visPane = "";
+    let visPane = intro[demo][map_name];
+
     if (p1 !== undefined){
         visPane = visPane + '<div id="' + visPlotName + p1 + '"></div>'
     }
@@ -81,27 +97,29 @@ function CreateWindow(map_name, dimec, dimec_name){
         visPane = visPane + '<div id="' + visPlotName + p3 + '"></div>'
     }
 
-    var panelContent = {
-        id: 'userinfo',                     // UID, used to access the panel
+    var plotPanel = {
+        id: 'plotPanel',                     // UID, used to access the panel
         tab: '<i class="fa fa-line-chart"></i>',  // content can be passed as HTML string,
         pane: visPane,        // DOM elements can be passed, too
-        title: 'Plot Tool',              // an optional pane header
+        title: 'LTB Plot Panel',              // an optional pane header
         position: 'top'                  // optional vertical alignment, defaults to 'top'
     };
-    sidebar.addPanel(panelContent);
+    sidebar.addPanel(plotPanel);
 
     /* add an external link */
-    sidebar.addPanel({
-        id: 'ghlink',
-        tab: '<i class="fa fa-github"></i>',
-        button: 'https://github.com/nickpeihl/leaflet-sidebar-v2',
-    });
+    // sidebar.addPanel({
+    //     id: 'ghlink',
+    //     tab: '<i class="fa fa-github"></i>',
+    //     button: 'https://github.com/nickpeihl/leaflet-sidebar-v2',
+    // });
 
     /* add a button with click listener */
     sidebar.addPanel({
-        id: 'click',
+        id: 'architecture',
         tab: '<i class="fa fa-info"></i>',
-        button: function (event) { console.log(event); }
+        pane: visPane,
+        title: 'LTB System Architecture',
+        position: 'top'
     });
 
     function historyKeeper(workspace, history, currentTimeInSeconds, varname) {

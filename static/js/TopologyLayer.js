@@ -164,8 +164,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	const ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, size.x, size.y);
 
-	ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
-	ctx.lineWidth = 3;
+	ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+	ctx.lineWidth = 2;
 	ctx.beginPath();
 	for (let i=0; i<Line.shape[0]; ++i){
 		const voltageRating = Line.get(i, 3);

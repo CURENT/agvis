@@ -170,8 +170,8 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 	ctx.clearRect(0, 0, size.x, size.y);
 
 	// Draw links first so they appear under nodes
-	ctx.strokeStyle = 'rgba(255,0,255,0.2)';
-	ctx.fillStyle = 'rgba(255,0,255,0.2)';
+	ctx.strokeStyle = 'rgba(224, 106, 37, 1)';
+	ctx.fillStyle = 'rgba(224, 106, 37, 1)';
 	ctx.lineWidth = 3;
 	ctx.setLineDash([5, 15]);
 
@@ -212,7 +212,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		ctx.stroke();
 	}
 
-	ctx.fillStyle = 'green';
+	ctx.fillStyle = 'rgba(0,147,209,1)';
 	for (let i=0; i<Pdc.shape[0]; ++i) {
 		//break; // For now, skip drawing PDC's
 		const x = pdcPixelCoords.get(i, 0);
@@ -222,7 +222,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		ctx.fill();
 	}
 
-	ctx.fillStyle = 'rgba(222,66,91, 1.0)';
+	ctx.fillStyle = 'rgba(242,99,95, 1.0)';
 	for (let i=0; i<Pmu.shape[0]; ++i) {
 		//break; // For now, skip drawing PMU's
 		const x = pmuPixelCoords.get(i, 0);
@@ -232,7 +232,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		ctx.fill();
 	}
 
-	ctx.fillStyle = 'rgba(244,165,107, 1.0)';
+	ctx.fillStyle = 'rgba(0, 100, 149, 1.0)';
 	for (let i=0; i<Switch.shape[0]; ++i) {
 		const x = switchPixelCoords.get(i, 0);
 		const y = switchPixelCoords.get(i, 1);
