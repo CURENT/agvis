@@ -166,12 +166,22 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		console.log('end');
 	}
 
+    const lineBgColor = "rgba(243, 176, 90, 1)";
+    const lineFlowColor000 = "rgba(222,66,91, 0.5)";
+    const lineFlowColor025 = "rgba(239,162,103, 0.5)";
+    const lineFlowColor050 = "rgba(255,248,187, 0.5)";
+    const lineFlowColor075 = "rgba(255,255,248, 0.5)";
+    const lineFlowColor100 = "rgba(255,255,255, 0.5)";
+    const pdcColor = 'rgba(92, 74, 114, 1)';
+    const pmuColor = 'rgba(0, 147, 209, 1.0)';
+    const switchColor = 'rgba(244, 106, 78, 1.0)';
+
 	const ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, size.x, size.y);
 
 	// Draw links first so they appear under nodes
-	ctx.strokeStyle = 'rgba(224, 106, 37, 1)';
-	ctx.fillStyle = 'rgba(224, 106, 37, 1)';
+	ctx.strokeStyle = lineBgColor;
+	ctx.fillStyle = lineBgColor;
 	ctx.lineWidth = 3;
 	ctx.setLineDash([5, 15]);
 
@@ -198,11 +208,11 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		const y2 = transferPixelCoords.get(i, 3);
 
 		const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-		gradient.addColorStop("0", "rgba(222,66,91, 0.4)");
-		gradient.addColorStop(".25", "rgba(239,162,103, 0.4)");
-		gradient.addColorStop(".50", "rgba(255,248,187, 0.4)");
-		gradient.addColorStop(".75", "rgba(255,255,248, 0.4)");
-		gradient.addColorStop("1", "rgba(255,255,255, 0.4)");
+		gradient.addColorStop("0", lineFlowColor000);
+		gradient.addColorStop(".25", lineFlowColor025);
+		gradient.addColorStop(".50", lineFlowColor050);
+		gradient.addColorStop(".75", lineFlowColor075);
+		gradient.addColorStop("1", lineFlowColor100);
 		ctx.fillStyle = gradient;
 		ctx.strokeStyle = gradient;
 
@@ -212,7 +222,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		ctx.stroke();
 	}
 
-	ctx.fillStyle = 'rgba(0,147,209,1)';
+	ctx.fillStyle = pdcColor;
 	for (let i=0; i<Pdc.shape[0]; ++i) {
 		//break; // For now, skip drawing PDC's
 		const x = pdcPixelCoords.get(i, 0);
@@ -222,7 +232,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		ctx.fill();
 	}
 
-	ctx.fillStyle = 'rgba(242,99,95, 1.0)';
+	ctx.fillStyle = pmuColor;
 	for (let i=0; i<Pmu.shape[0]; ++i) {
 		//break; // For now, skip drawing PMU's
 		const x = pmuPixelCoords.get(i, 0);
@@ -232,7 +242,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		ctx.fill();
 	}
 
-	ctx.fillStyle = 'rgba(0, 100, 149, 1.0)';
+	ctx.fillStyle = switchColor;
 	for (let i=0; i<Switch.shape[0]; ++i) {
 		const x = switchPixelCoords.get(i, 0);
 		const y = switchPixelCoords.get(i, 1);
@@ -257,7 +267,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		}
 	}
 
-	ctx.strokeStyle = 'rgba(222,66,91, 0.8)';
+	ctx.strokeStyle = 'rgba(222,66,91, 0.9)';
 	ctx.lineWidth = 3;
 	for (let [key, value] of Object.entries(transferBytesPerNode)) {
 		let commSize = ((value[2] / totalTransfer)).toPrecision(2) / maxTransmission;
@@ -268,7 +278,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 		ctx.stroke();
 	}
 
-	ctx.strokeStyle = 'rgba(255,255,255, 0.8)';
+	ctx.strokeStyle = 'rgba(255,255,255, 0.9)';
 	ctx.lineWidth = 3;
 	for (let [key, value] of Object.entries(receiveBytesPerNode)) {
 		let commSize = ((value[2] / totalReceive)).toPrecision(2) / maxReception;

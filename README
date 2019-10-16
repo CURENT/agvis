@@ -67,8 +67,8 @@ the visualization:
 
 3. Start the Dime WebSockets interfaces.
 
-  $ python3.7 wsdime.py --port 8811 --dport 8819
-  $ python3.7 wsdime.py --port 8812 --dport 8819 --name geovis2
+  $ python3.7 wsdime.py --port 8811 --dhost tcp://127.0.0.1:8819
+  $ python3.7 wsdime.py --port 8812 --dhost tcp://127.0.0.1:8819 --name geovis2
 
 4. Open the web interface.
 
