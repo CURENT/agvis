@@ -23,8 +23,8 @@ function CreateWindow(map_name, dimec, dimec_name){
                        "1": {"map": "<h1> LTB Platform Architecture </h1>",
                              "map2": "<h1> LTB Platform Architecture </h1>"
                             },
-                       "2": {"map": "<h1> Model Predictive Control based AGC</h1> <h2>(no control)</h2>",
-                             "map2": "<h1> Model Predictive Control-based AGC</h1> <h2>(with Control)</h2>"},
+                       "2": {"map": "<h1> Model Predictive Control-Based AGC</h1> <h2>(no control)</h2>",
+                             "map2": "<h1> Model Predictive Control-Based AGC</h1> <h2>(with Control)</h2>"},
                        "3": {"map": "<h1> Wide-Area Damping Control</h1> <br> <h2> No controller in action</h2>",
                              "map2": "<h1> Wide-Area Damping Control</h1> <br> <h2>With control using wind farms</h2>"},
                        "4": {"map": "<h1> Wide-Area Damping Control </h1><br><h2>no delay</h2>",
@@ -106,21 +106,27 @@ function CreateWindow(map_name, dimec, dimec_name){
     };
     sidebar.addPanel(plotPanel);
 
-    /* add an external link */
-    // sidebar.addPanel({
-    //     id: 'ghlink',
-    //     tab: '<i class="fa fa-github"></i>',
-    //     button: 'https://github.com/nickpeihl/leaflet-sidebar-v2',
-    // });
-
-    /* add a button with click listener */
     sidebar.addPanel({
         id: 'architecture',
         tab: '<i class="fa fa-info"></i>',
-        pane: visPane,
+        pane: '<img src="static/img/ltb-architecture.gif" width="450">',
         title: 'LTB System Architecture',
         position: 'top'
     });
+
+    // sidebar.on('content', function (e) {
+    //     const sidebarElement = document.querySelector('.leaflet-sidebar')
+    //     switch (e.id) {
+    //         case 'architecture' :
+    //             sidebarElement.style.width = '600px'
+    //             sidebarElement.style.maxwidth = '600px'
+    //             break
+    //         case 'plotPanel':
+    //             sidebarElement.style.width = '200px'
+    //             sidebarElement.style.maxWidth = '200px'
+    //             break
+    //     }
+    // });
 
     function historyKeeper(workspace, history, currentTimeInSeconds, varname) {
         const varHistory = history[varname];
@@ -229,9 +235,20 @@ function CreateWindow(map_name, dimec, dimec_name){
         contourLayer.updateRange(0.9998, 1.0002);
     });
 
+    /// Added toggle buttons for different layer views
+    const rendContourButton = L.easyButton('<i class="fa fa-bolt"></i>', function(btn, map){
+        contourLayer.toggleRender();
+        topologyLayer.toggleRender();
+    });
+    const rendCommunicationButton = L.easyButton('<i class="fa fa-wifi"></i>', function(btn, map){
+        communicationLayer.toggleRender();
+    });
+
     const avfButtons= [thetaButton, voltageButton, freqButton];
     const avfBar = L.easyBar(avfButtons).addTo(map);
 
+    const toggleLayerButtons = [rendContourButton, rendCommunicationButton];
+    const toggleLayerBar = L.easyBar(toggleLayerButtons).addTo(map);
 
     await dimec.ready;
     console.time(map_name);

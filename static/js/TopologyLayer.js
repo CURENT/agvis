@@ -164,6 +164,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	const ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, size.x, size.y);
 
+    if(this._render) {
 	ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
 	ctx.lineWidth = 2;
 	ctx.beginPath();
@@ -195,6 +196,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 		const size = 12;
 		ctx.drawImage(image, x - size/2, y - size/2, size, size);
 	}
+
+}
 }
 
 L.TopologyLayer = L.CanvasLayer.extend({
@@ -205,6 +208,7 @@ L.TopologyLayer = L.CanvasLayer.extend({
 	initialize(options) {
 		this._context = null;
 		this._cache = new WeakMap();
+        this._render = true;
 
 		const images = {};
 		for (let { name, src } of [
@@ -244,6 +248,10 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._context = context;
 		this.redraw();
 	},
+    toggleRender() {
+        this._render = !this._render;
+        console.log("Topology rendering: ", this._render);
+    }
 });
 
 L.topologyLayer = function(options) {
