@@ -64,13 +64,15 @@ function CreateWindow(map_name, dimec, dimec_name){
         .addTo(map);
 
     const lineSpec = {
+    // "width":400,
+    // "height":400,
     "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
     "description": "Plot",
     "data": {"name": "table"},
     "mark": "line",
     "encoding": {
-        "x": {"field": "t", "type": "quantitative"},
-        "y": {"field": "var", "type": "quantitative"}
+        "x": {"field": "t", "type": "quantitative", "axis": {"offset":-0, "tickSize":1,"labelFontSize":10}},
+        "y": {"field": "var", "type": "quantitative", "axis": {"offset":-0, "tickSize":2,"labelFontSize":5, "labelPadding":-0}},
     }
     };
 
