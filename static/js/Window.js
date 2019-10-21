@@ -23,15 +23,20 @@ function CreateWindow(map_name, dimec, dimec_name){
                        "1": {"map": "<h1> LTB Platform Architecture </h1>",
                              "map2": "<h1> LTB Platform Architecture </h1>"
                             },
-                       "2": {"map": "<h1> Model Predictive Control-Based AGC</h1> <h2>(no control)</h2>",
-                             "map2": "<h1> Model Predictive Control-Based AGC</h1> <h2>(with Control)</h2>"},
-                       "3": {"map": "<h1> Wide-Area Damping Control</h1> <br> <h2> No controller in action</h2>",
-                             "map2": "<h1> Wide-Area Damping Control</h1> <br> <h2>With control using wind farms</h2>"},
-                       "4": {"map": "<h1> Wide-Area Damping Control </h1><br><h2>no delay</h2>",
-                             "map2": "<h1> Wide-Area Damping Control </h1><br><h2>300 ms delay under denial-of-service attack</h2>"},
+                       "2": {"map": "<h1> Model Predictive Control-Based AGC (No control)</h1>",
+                             "map2": "<h1> Model Predictive Control-Based AGC (With control)</h1>"},
+                       "3": {"map": "<h1> Wide-Area Damping Control (No control)</h1>",
+                             "map2": "<h1> Wide-Area Damping Control (With control using wind farms)</h1>"},
+                       "4": {"map": "<h1> Wide-Area Damping Control (No delay)",
+                             "map2": "<h1> Wide-Area Damping Control (300 ms delay under DOS attack)</h1>"},
                        }
         const arch = "LTB Modules and Data Flow"
 
+        const title = {"1": {"1": "Frequency", "2": "", "3": ""},
+                       "2": {"1": "Rotor Angle\ [rad]", "2": "MPC-AGC Output [pu]", "3": ""},
+                       "3": {"1": "Frequency\ [pu]", "2": "", "3": ""},
+                       "4": {"1": "Frequency\ [pu]", "2": "", "3": ""}
+                       }
 
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?' +
                          'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
@@ -64,16 +69,19 @@ function CreateWindow(map_name, dimec, dimec_name){
         .addTo(map);
 
     const lineSpec = {
-    // "width":400,
-    // "height":400,
-    "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-    "description": "Plot",
-    "data": {"name": "table"},
-    "mark": "line",
-    "encoding": {
-        "x": {"field": "t", "type": "quantitative", "axis": {"offset":-0, "tickSize":1,"labelFontSize":10}},
-        "y": {"field": "var", "type": "quantitative", "axis": {"offset":-0, "tickSize":2,"labelFontSize":5, "labelPadding":-0}},
-    }
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "width": 300,
+        "height": 180,
+        "description": "Plot",
+        "data": {"name": "table"},
+        "mark": "line",
+        "encoding": {
+            "x": {"field": "Time",  "type": "quantitative" },
+            "y": {"field": "Value", "type": "quantitative"},
+        },
+        "autosize": {
+            resize: true
+        }
     };
 
     // side bar
@@ -90,13 +98,16 @@ function CreateWindow(map_name, dimec, dimec_name){
     let visPane = intro[demo][map_name];
 
     if (p1 !== undefined){
-        visPane = visPane + '<div id="' + visPlotName + p1 + '"></div>'
+        let title1 = '<center><h2>1. ' + title[demo]["1"] + '</h2></center>'
+        visPane = visPane + title1 + '<div id="' + visPlotName + p1 + '"></div>'
     }
     if (p2 !== undefined){
-        visPane = visPane + '<div id="' + visPlotName + p2 + '"></div>'
+        let title2 = '<center><h2>2. ' + title[demo]["2"] + '</h2></center>'
+        visPane = visPane + title2 + '<div id="' + visPlotName + p2 + '"></div>'
     }
     if (p3 !== undefined){
-        visPane = visPane + '<div id="' + visPlotName + p3 + '"></div>'
+        let title3 = '<center><h2>3. ' + title[demo]["3"] + '</h2></center>'
+        visPane = visPane + title3 + '<div id="' + visPlotName + p3 + '"></div>'
     }
 
     var plotPanel = {
@@ -111,24 +122,10 @@ function CreateWindow(map_name, dimec, dimec_name){
     sidebar.addPanel({
         id: 'architecture',
         tab: '<i class="fa fa-info"></i>',
-        pane: '<img src="static/img/ltb-architecture.gif" width="450">',
+        pane: '<img src="static/img/ltb-architecture.gif" width="400", height="600">',
         title: 'LTB System Architecture',
         position: 'top'
     });
-
-    // sidebar.on('content', function (e) {
-    //     const sidebarElement = document.querySelector('.leaflet-sidebar')
-    //     switch (e.id) {
-    //         case 'architecture' :
-    //             sidebarElement.style.width = '600px'
-    //             sidebarElement.style.maxwidth = '600px'
-    //             break
-    //         case 'plotPanel':
-    //             sidebarElement.style.width = '200px'
-    //             sidebarElement.style.maxWidth = '200px'
-    //             break
-    //     }
-    // });
 
     function historyKeeper(workspace, history, currentTimeInSeconds, varname) {
         const varHistory = history[varname];
@@ -196,11 +193,11 @@ function CreateWindow(map_name, dimec, dimec_name){
                 nVariables = workspace.Varvgs.vars.shape[1];
 
                 if (p1 !== undefined)
-                    workspace.p1.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, nVariables - nPlots) }).run();
+                    workspace.p1.insert("table", {"Time": workspace.Varvgs.t, "Value": workspace.Varvgs.vars.get(0, nVariables - nPlots) }).run();
                 if (p2 !== undefined)
-                    workspace.p2.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, nVariables - nPlots + 1) }).run();
+                    workspace.p2.insert("table", {"Time": workspace.Varvgs.t, "Value": workspace.Varvgs.vars.get(0, nVariables - nPlots + 1) }).run();
                 if (p3 !== undefined)
-                    workspace.p3.insert("table", {"t": workspace.Varvgs.t, "var": workspace.Varvgs.vars.get(0, nVariables - nPlots + 2) }).run();
+                    workspace.p3.insert("table", {"Time": workspace.Varvgs.t, "Value": workspace.Varvgs.vars.get(0, nVariables - nPlots + 2) }).run();
 
             }
         }
