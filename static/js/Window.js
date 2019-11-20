@@ -17,26 +17,7 @@ function CreateWindow(map_name, dimec, dimec_name){
         const p1min = (options.p1min === undefined) ? 0 : options.p1min;
         const p1max = (options.p1max === undefined) ? 0 : options.p1max;
 
-        const demo = (options.demo === undefined) ? 0 : options.demo;
-
-        const intro = {"0": {"map": "", "map2": ""},
-                       "1": {"map": "<h1> LTB Platform Architecture </h1>",
-                             "map2": "<h1> LTB Platform Architecture </h1>"
-                            },
-                       "2": {"map": "<h1> Model Predictive Control-Based AGC (No control)</h1>",
-                             "map2": "<h1> Model Predictive Control-Based AGC (With control)</h1>"},
-                       "3": {"map": "<h1> Wide-Area Damping Control (No control)</h1>",
-                             "map2": "<h1> Wide-Area Damping Control (With control using wind farms)</h1>"},
-                       "4": {"map": "<h1> Wide-Area Damping Control (No delay)",
-                             "map2": "<h1> Wide-Area Damping Control (300 ms delay under DOS attack)</h1>"},
-                       }
         const arch = "LTB Modules and Data Flow"
-
-        const title = {"1": {"1": "Frequency", "2": "", "3": ""},
-                       "2": {"1": "Rotor Angle\ [rad]", "2": "MPC-AGC Output [pu]", "3": ""},
-                       "3": {"1": "Frequency\ [pu]", "2": "", "3": ""},
-                       "4": {"1": "Frequency\ [pu]", "2": "", "3": ""}
-                       }
 
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?' +
                          'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
@@ -95,19 +76,16 @@ function CreateWindow(map_name, dimec, dimec_name){
     /* add a new panel */
     let visPlotName = map_name + "Vis";
 
-    let visPane = intro[demo][map_name];
+    let visPane = '';
 
     if (p1 !== undefined){
-        let title1 = '<center><h2>1. ' + title[demo]["1"] + '</h2></center>'
-        visPane = visPane + title1 + '<div id="' + visPlotName + p1 + '"></div>'
+        visPane = visPane + '<div id="' + visPlotName + p1 + '"></div>'
     }
     if (p2 !== undefined){
-        let title2 = '<center><h2>2. ' + title[demo]["2"] + '</h2></center>'
-        visPane = visPane + title2 + '<div id="' + visPlotName + p2 + '"></div>'
+        visPane = visPane + '<div id="' + visPlotName + p2 + '"></div>'
     }
     if (p3 !== undefined){
-        let title3 = '<center><h2>3. ' + title[demo]["3"] + '</h2></center>'
-        visPane = visPane + title3 + '<div id="' + visPlotName + p3 + '"></div>'
+        visPane = visPane + '<div id="' + visPlotName + p3 + '"></div>'
     }
 
     var plotPanel = {
