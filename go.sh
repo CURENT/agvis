@@ -133,7 +133,7 @@ dev() {
 	tmux send-keys -t2 "./go.sh run_8810 python3.7 server.py --port $((port+0)) --bind 0.0.0.0" Enter
 	tmux send-keys -t3 "./go.sh run_8811 python3.7 wsdime.py --port $((port+1)) --dhost tcp://127.0.0.1:$((port+9))" Enter
 	tmux send-keys -t4 "./go.sh run_8812 python3.7 wsdime.py --port $((port+2)) --dhost tcp://127.0.0.1:$((port+9)) --name geovis2" Enter
-	tmux send-keys -t5 "./go.sh andes --routine=tds /opt/andes/cases/ieee14/ieee14_syn.dm --dime=tcp://127.0.0.1:$((port+9))"
+	tmux send-keys -t5 "./go.sh andes --no-output --routine=tds /opt/andes/cases/curent/WECC_WIND0.dm --dime=tcp://127.0.0.1:$((port+9))"
 }
 
 "$@"
