@@ -16,36 +16,23 @@ RUN apt-get update && \
 ARG PIP_INDEX_URL
 ARG PIP_TRUSTED_HOST
 
-ARG andes_addon_version=89e6f3f11f63
-WORKDIR /tmp
-COPY curent-andes_addon-${andes_addon_version}.zip /tmp/
-WORKDIR /opt
-RUN unzip /tmp/curent-andes_addon-${andes_addon_version}.zip -d /opt/ && \
-    rm /tmp/curent-andes_addon-${andes_addon_version}.zip && \
-    mv /opt/curent-andes_addon-${andes_addon_version} /opt/andes_addon && \
-    python3.7 -m pip install \
-        /opt/andes_addon
-
 ARG andes_version=master
-WORKDIR /tmp
-COPY andes-${andes_version}.zip /tmp/
 WORKDIR /opt
-RUN unzip /tmp/andes-${andes_version}.zip -d /opt/ && \
-    rm /tmp/andes-${andes_version}.zip && \
-    mv /opt/andes-${andes_version} /opt/andes && \
-    python3.7 -m pip install \
+COPY andes /opt/andes
+RUN python3.7 -m pip install \
         /opt/andes
 
-ARG dime_version=b43d58ba70df
-WORKDIR /tmp
-COPY dime-${dime_version}.zip /tmp/
+ARG andes_addon_version=89e6f3f11f63
 WORKDIR /opt
-RUN unzip /tmp/dime-${dime_version}.zip -d /opt/ && \
-    rm /tmp/dime-${dime_version}.zip && \
-    mv /opt/curent-dime-${dime_version} /opt/dime && \
-    python2.7 -m pip install \
-        /opt/dime
+COPY andes_addon /opt/andes_addon
+RUN python3.7 -m pip install \
+        /opt/andes_addon
 
+ARG dime_version=b43d58ba70df
+WORKDIR /opt
+COPY dime /opt/dime
+RUN python3.7 -m pip install \
+        /opt/dime
 
 RUN python3.7 -m pip install \
         websockets

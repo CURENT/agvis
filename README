@@ -48,7 +48,7 @@ Then install Andes:
 Next Dime [dime] needs to be installed to run the server:
 
   $ cd dime
-  $ python2.7 -m pip install .
+  $ python3.7 -m pip install .
 
 In addition, there are some packages that need to be installed:
 
@@ -65,7 +65,7 @@ the visualization:
 
   $ dime tcp://127.0.0.1:8819
 
-3. Start the Dime WebSockets interfaces.
+3. Start two Dime WebSockets interfaces.
 
   $ python3.7 wsdime.py --port 8811 --dhost tcp://127.0.0.1:8819
   $ python3.7 wsdime.py --port 8812 --dhost tcp://127.0.0.1:8819 --name geovis2
@@ -86,9 +86,9 @@ refresh the web page and then re-run Andes.
 
 [andes]: https://github.com/cuihantao/andes
 
-[andes_addon]: https://bitbucket.org/curent/andes_addon
+[andes_addon]: https://github.com/curent/andes_addon
 
-[dime]: https://bitbucket.org/curent/dime
+[dime]: https://github.com/curent/dime
 
 
 Docker

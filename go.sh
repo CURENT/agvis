@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-tag=ltbweb:$USER
-name=ltbweb_$USER
+tag=ltbvis:$USER
+name=ltbvis_$USER
 target=base
-data=/home/thobson2/tmp/Data/Data
-registry=accona.eecs.utk.edu:5000
+data=/Users/hcui7/tmp
+registry=ltb.curent.utk.edu:5000
 xauth=
 entrypoint=
 ipc=
@@ -20,6 +20,9 @@ piptrustedhost=
 [ -f env.sh ] && . env.sh
 
 build() {
+    cp -rf ../andes .
+    cp -rf ../andes_addon .
+    cp -rf ../dime .
 	docker build \
 		${target:+--target $target} \
 		${pipindex:+--build-arg PIP_INDEX_URL=$pipindex} \
@@ -37,6 +40,24 @@ run() {
 		${script:+-a stdin -a stdout -a stderr --sig-proxy=true} \
 		${ipc:+--ipc=$ipc} \
 		${net:+--net=$net} \
+		${user:+-u $(id -u):$(id -g)} \
+		${cwd:+-v $PWD:$PWD -w $PWD} \
+		${port:+-p $port:$port} \
+		${data:+-v $data:$data} \
+		${xauth:+-e DISPLAY -v /etc/group:/etc/group:ro -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/sudoers.d:/etc/sudoers.d:ro -v $xauth:$xauth -e XAUTHORITY=$xauth} \
+		${entrypoint:+--entrypoint $entrypoint} \
+		$tag "$@"
+}
+
+run_nohost() {
+	if [ -n "$xauth" ]; then
+		rm -f $xauth
+		xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $xauth nmerge -
+	fi
+	docker run --rm \
+		${interactive:+-it} \
+		${script:+-a stdin -a stdout -a stderr --sig-proxy=true} \
+		${ipc:+--ipc=$ipc} \
 		${user:+-u $(id -u):$(id -g)} \
 		${cwd:+-v $PWD:$PWD -w $PWD} \
 		${port:+-p $port:$port} \
@@ -103,10 +124,13 @@ dev() {
 	tmux split-window -v
 	tmux split-window -v
 	tmux split-window -v
-	tmux send-keys -t0 "#./go.sh dime tcp://127.0.0.1:$((port+9))" Enter
-	tmux send-keys -t1 "#./go.sh python server.py --port $((port+0))" Enter
-	tmux send-keys -t2 "#./go.sh python wsdime.py --port $((port+1)) --dport $((port+9))" Enter
-	tmux send-keys -t3 "#./go.sh andes --routine=tds /opt/andes/cases/ieee14/ieee14_syn.dm --dime=tcp://127.0.0.1:$((port+9))" Enter
+	tmux split-window -v
+	tmux select-layout tiled
+	tmux send-keys -t1 "./go.sh dime tcp://127.0.0.1:$((port+9))" Enter
+	tmux send-keys -t2 "./go.sh run_nohost python3.7 server.py --port $((port+0)) --bind 0.0.0.0" Enter
+	tmux send-keys -t3 "./go.sh python wsdime.py --port $((port+1)) --dhost tcp://127.0.0.1:$((port+9))" Enter
+	tmux send-keys -t4 "./go.sh python wsdime.py --port $((port+2)) --dhost tcp://127.0.0.1:$((port+9)) --name geovis2" Enter
+	tmux send-keys -t5 "./go.sh andes --routine=tds /opt/andes/cases/ieee14/ieee14_syn.dm --dime=tcp://127.0.0.1:$((port+9))"
 }
 
 "$@"
