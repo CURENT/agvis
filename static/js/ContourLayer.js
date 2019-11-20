@@ -46,7 +46,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!busLatLngCoords) {
 		busLatLngCoords = paramCache.busLatLngCoords =
 			new NDArray('C', [Bus.shape[0], 2]);
-		
+
 		for (let i=0; i<Bus.shape[0]; ++i) {
 			const lat = Bus.get(i, 6);
 			const lng = Bus.get(i, 7);
@@ -66,7 +66,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 			busPixelCoords.set(point.y, i, 1);
 		}
 	}
-	
+
 	let { busTriangles } = paramCache;
 	if (!busTriangles || needsProjectionUpdate) {
 		const delaunay = new d3.Delaunay(busLatLngCoords.typedArray);
@@ -81,13 +81,14 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		this._cache.set(idxvgsCache);
 	}
 
-	let { busVoltageExtents } = idxvgsCache;
-	if (!busVoltageExtents) {
-		busVoltageExtents = idxvgsCache.busVoltageExtents =
+	let { variableSubIndices } = idxvgsCache;
+
+	if (!variableSubIndices) {
+		variableSubIndices = idxvgsCache.variableSubIndices =
 			Idxvgs.Bus.V.extents();
 
-		busVoltageExtents.end -= busVoltageExtents.begin - 1;
-		busVoltageExtents.begin = 0;
+		variableSubIndices.end -= variableSubIndices.begin - 1;
+		variableSubIndices.begin = 0;
 	}
 
 	let gl = this._cache.get(canvas);
@@ -137,45 +138,52 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 			min: gl.LINEAR_MIPMAP_LINEAR,
 		});
 	}
-	
+
 	const uProjection = [
 		2.0 / +gl.canvas.width, 0, 0, 0,
 		0, -2.0 / +gl.canvas.height, 0, 0,
 		0, 0, 0, 0,
 		-1, 1, 0, 1,
 	];
-	
-	const busVoltage = vars.subarray(busVoltageExtents);
 
-	let maxVoltageDifference = Math.abs(busVoltage.get(0, 0) - 1.0);
-	for (let i=1, l=busVoltage.shape[1]; i<l; ++i) {
-		const v = Math.abs(busVoltage.get(0, i) - 1.0);
+	const variableValue = vars.subarray(this._variableRange);
+
+	let maxVoltageDifference = Math.abs(variableValue.get(0, 0) - 1.0);
+	for (let i=1, l=variableValue.shape[1]; i<l; ++i) {
+		const v = Math.abs(variableValue.get(0, i) - 1.0);
 		maxVoltageDifference = Math.max(maxVoltageDifference, v);
 	}
-	const uScaleMin = 0.75; //1.0 - maxVoltageDifference;
-	const uScaleMax = 1.25; //1.0 + maxVoltageDifference;
+
+	const uScaleMin = this._uScaleMin;
+	const uScaleMax = this._uScaleMax;
 
 	const aValueBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 		aValue: {
-			data: busVoltage.typedArray,
+			data: variableValue.typedArray,
 			numComponents: 1,
 		},
 	});
 
-	gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-	gl.enable(gl.BLEND);
-	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-	gl.useProgram(programInfo.program);
-	twgl.setBuffersAndAttributes(gl, programInfo, aPositionBufferInfo);
-	twgl.setBuffersAndAttributes(gl, programInfo, aValueBufferInfo);
-	twgl.setBuffersAndAttributes(gl, programInfo, aIndicesBufferInfo);
-	twgl.setUniforms(programInfo, {
-		uScaleMin,
-		uScaleMax,
-		uProjection,
-		uColormapSampler,
-	});
-	twgl.drawBufferInfo(gl, aIndicesBufferInfo, gl.TRIANGLES);
+    if(this._render) {
+        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.useProgram(programInfo.program);
+        twgl.setBuffersAndAttributes(gl, programInfo, aPositionBufferInfo);
+        twgl.setBuffersAndAttributes(gl, programInfo, aValueBufferInfo);
+        twgl.setBuffersAndAttributes(gl, programInfo, aIndicesBufferInfo);
+        twgl.setUniforms(programInfo, {
+            uScaleMin,
+            uScaleMax,
+            uProjection,
+            uColormapSampler,
+        });
+        twgl.drawBufferInfo(gl, aIndicesBufferInfo, gl.TRIANGLES);
+
+    }
+    else {
+        gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+    }
 }
 
 L.ContourLayer = L.CanvasLayer.extend({
@@ -185,14 +193,40 @@ L.ContourLayer = L.CanvasLayer.extend({
 
 	initialize(options) {
 		this._context = null;
+		this._variableRange = null;
+		this._variableRelIndices = null;
+		this._uScaleMin = 0.8;
+		this._uScaleMax = 1.2;
 		this._cache = new WeakMap();
+        this._render = true;
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
 
 	update(context) {
 		this._context = context;
-		this.redraw();
+            this.redraw();
+    },
+
+	storeRelativeIndices(idx) {
+		this._variableRelIndices = idx;
 	},
+
+	showVariable(name) {
+		// updates the name of variables for the contour map
+		this._variableRange = this._variableRelIndices[name];
+            this.redraw();
+    },
+
+	updateRange(lower, upper){
+		this._uScaleMax = upper;
+		this._uScaleMin = lower;
+	},
+
+    toggleRender() {
+        this._render = !this._render;
+        console.log("Contour rendering: ", this._render);
+    }
+
 });
 
 L.contourLayer = function(options) {

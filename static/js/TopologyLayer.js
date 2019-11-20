@@ -58,7 +58,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 			synToExcLookup.set(synNumber, i);
 		}
 	}
-	
+
 	let { excToPssLookup } = paramCache;
 	if (!excToPssLookup) {
 		excToPssLookup = paramCache.excToPssLookup = new Map();
@@ -73,7 +73,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!busLatLngCoords) {
 		busLatLngCoords = paramCache.busLatLngCoords =
 			new NDArray('C', [Bus.shape[0], 2]);
-		
+
 		for (let i=0; i<Bus.shape[0]; ++i) {
 			const lat = Bus.get(i, 6);
 			const lng = Bus.get(i, 7);
@@ -107,7 +107,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	let { busToImageLookup } = paramCache;
 	if (!busToImageLookup) {
 		busToImageLookup = paramCache.busToImageLookup = new Map();
-		
+
 		for (let i=0; i<Bus.shape[0]; ++i) {
 			const busNumber = Bus.get(i, 0);
 			const syn = busToSynLookup.get(busNumber);
@@ -124,11 +124,11 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 				syn !== undefined ? images.syn :
 				dfig !== undefined ? images.dfig :
 				images.bus;
-			
+
 			busToImageLookup.set(busNumber, image);
 		}
 	}
-	
+
 	let { lineVoltageRating } = paramCache;
 	if (!lineVoltageRating) {
 		lineVoltageRating = paramCache.lineVoltageRating = Line.column(3);
@@ -144,8 +144,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 
 	let { zoomToLineVoltageRatingMinLookup } = paramCache;
 	if (!zoomToLineVoltageRatingMinLookup) {
-		const minZoom = 3;
-		const maxZoom = 10;
+		const minZoom = 1;
+		const maxZoom = 7;
 		const minVoltageRating = lineVoltageRatingExtents.min;
 		const maxVoltageRating = lineVoltageRatingExtents.max;
 		const voltageRatingStep = (maxVoltageRating - minVoltageRating) / (maxZoom - minZoom + 1);
@@ -164,8 +164,9 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	const ctx = canvas.getContext('2d');
 	ctx.clearRect(0, 0, size.x, size.y);
 
-	ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
-	ctx.lineWidth = 3;
+    if(this._render) {
+	ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+	ctx.lineWidth = 2;
 	ctx.beginPath();
 	for (let i=0; i<Line.shape[0]; ++i){
 		const voltageRating = Line.get(i, 3);
@@ -195,6 +196,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 		const size = 12;
 		ctx.drawImage(image, x - size/2, y - size/2, size, size);
 	}
+
+}
 }
 
 L.TopologyLayer = L.CanvasLayer.extend({
@@ -205,17 +208,18 @@ L.TopologyLayer = L.CanvasLayer.extend({
 	initialize(options) {
 		this._context = null;
 		this._cache = new WeakMap();
+        this._render = true;
 
 		const images = {};
 		for (let { name, src } of [
 			{ name: 'bus', src: '/static/img/bus.svg' },
 			{ name: 'syn', src: '/static/img/syn.svg' },
 			{ name: 'dfig', src: '/static/img/dfig.svg' },
-			{ name: 'synT', src: '/static/img/synT.png' },
-			{ name: 'synTE', src: '/static/img/synTE.png' },
-			{ name: 'synTEP', src: '/static/img/synTEP.png' },
-			{ name: 'synEP', src: '/static/img/synEP.png' },
-			{ name: 'synE', src: '/static/img/synE.png' },
+			{ name: 'synT', src: '/static/img/synT.svg' },
+			{ name: 'synTE', src: '/static/img/synTE.svg' },
+			{ name: 'synTEP', src: '/static/img/synTEP.svg' },
+			{ name: 'synEP', src: '/static/img/synEP.svg' },
+			{ name: 'synE', src: '/static/img/synE.svg' },
 		]) {
 			const image = new Image();
 			image.src = src;
@@ -244,6 +248,10 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._context = context;
 		this.redraw();
 	},
+    toggleRender() {
+        this._render = !this._render;
+        console.log("Topology rendering: ", this._render);
+    }
 });
 
 L.topologyLayer = function(options) {

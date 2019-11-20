@@ -82,4 +82,23 @@ class NDArray {
 	subarray({ begin, end }) {
 		return new NDArray(this.order, [1, end - begin - 1], this.typedArray.subarray(begin, end));
 	}
+
+	subindex(idx){
+		if (this.shape[0] !== 1) {
+			throw 'extents: expected column vector';
+		}
+
+		if (idx.shape[0] !== 1) {
+			throw 'extents: expected column vector';
+		}
+
+		const out_values = new Float64Array(idx.shape[1]);
+		
+		for (let i=0; i<idx.typedArray.length; i++){
+			const pos = idx.typedArray[i];
+			out_values[i] = this.get(0, pos);
+		}
+
+		return new NDArray(this.order, [1, idx.shape[1]], out_values)
+	}
 }

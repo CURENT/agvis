@@ -14,7 +14,7 @@ const S_VALUE = 1;
 
 class DimeClient {
 	constructor(url) {
-		const ws = new WebSocket(`ws://${window.location.hostname}:${+window.location.port+1}`);
+		const ws = new WebSocket(url);
 
 		let readyResolve, readyReject;
 		const ready = new Promise((resolve, reject) => {

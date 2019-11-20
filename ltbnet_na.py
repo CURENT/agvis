@@ -9,10 +9,10 @@ import pprint
 
 def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
     root = Path(rootFolder)
-    flow = root / 'stats' / 'net_stats_flow.csv'
-    port = root / 'stats' / 'net_stats_port.csv'
-    wecc = root / 'topology' / 'config_wecc_full.csv'
-    node = root / 'topology' / 'sw_port_node.csv'
+    flow = root / 'na' / 'stats' / 'net_stats_flow.csv'
+    port = root / 'na' / 'stats' / 'net_stats_port.csv'
+    wecc = root / 'na' / 'topology' / 'config_na_full.csv'
+    node = root / 'na' / 'topology' / 'sw_port_node.csv'
 
     switches: Dict[Idx, Tuple[Longitude, Latitude]] = {}
     pmus: Dict[Idx, Tuple[Longitude, Latitude]] = {}
