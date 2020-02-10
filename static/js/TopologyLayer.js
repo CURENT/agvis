@@ -162,6 +162,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	const zoomLevel = this._map.getZoom();
 
 	const ctx = canvas.getContext('2d');
+
 	ctx.clearRect(0, 0, size.x, size.y);
 
     if(this._render) {
@@ -188,6 +189,28 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	ctx.closePath();
 	ctx.stroke();
 
+    /*if (!hasprinted) {
+        const a = [];
+        for (let i=0; i<Bus.shape[0]; ++i) {
+            const b = [];
+
+            for (let j = 0; j < Bus.shape[1]; ++j) {
+                b.push(Bus.get(i, j).toString());
+            }
+
+            a.push(b);
+        }
+
+        console.log(a.map(b => b.join(" ")).join("\n"));
+        console.log("Voltage: " + zoomToLineVoltageRatingMinLookup.get(zoomLevel).toString());
+
+        hasprinted = true;
+    }*/
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+
+    // Draws the buses (vertices)
 	for (let i=0; i<Bus.shape[0]; ++i) {
 		const x = busPixelCoords.get(i, 0);
 		const y = busPixelCoords.get(i, 1);
@@ -195,6 +218,12 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 		const image = busToImageLookup.get(busNumber);
 		const size = 12;
 		ctx.drawImage(image, x - size/2, y - size/2, size, size);
+
+        //const voltageRating = Bus.get(i, 1); Mic
+
+		if (zoomLevel >= 7) {
+            ctx.fillText(busNumber.toString(), x, y + size/2);
+        }
 	}
 
 }
