@@ -60,15 +60,14 @@
         #configpanel {
             visibility: hidden;
             position: absolute;
-            left: 50px;
-            top: 50px;
+            left: 70px;
+            top: 25px;
+            z-index: 1000;
+
             background-color: white;
             color: black;
-            z-index: 1000;
-        }
-
-        #configpanel table {
-            border: 0px;
+            padding: 7px;
+            border-radius: 6px;
         }
     </style>
 </head>
@@ -112,29 +111,16 @@
         <h3>Configuration settings</h3>
 
         <div>
-            <input type="checkbox" id="toggle2ndwindow">
-            <label for="toggle2ndwindow">Toggle 2<sup>nd</sup> Window</label>
-        </div>
-
-        <div>
-            <input type="checkbox" id="toggle3rdwindow">
-            <label for="toggle3rdwindow">Toggle 3<sup>rd</sup> Window</label>
+            <input type="checkbox" id="opt_togglemap2">
+            <label for="opt_togglemap2">Toggle 2<sup>nd</sup> Window</label>
         </div>
     </div>
 
     <script>
         const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
 
-        function ToggleSecond() {
-            var x1 = document.getElementById("map");
-            var x2 = document.getElementById("map2");
-
-            if (x2.style.display === "none") {
-                x2.style.display = "block";
-            } else {
-                x2.style.display = "none";
-            }
-        }
+        var x1 = document.getElementById("map");
+        var x2 = document.getElementById("map2");
 
         const dimec1 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+1}`);
         const dimec2 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+2}`);
@@ -142,10 +128,21 @@
         const map1 = CreateWindow('map', dimec1, 'geovis');
         const map2 = CreateWindow('map2', dimec2, 'geovis2');
 
-        const toggleSecondWindow= L.easyButton('<span>2</span>', function(btn, map1){
+        function ToggleSecond() {
+            if (x2.style.display === "none") {
+                x2.style.display = "block";
+            } else {
+                x2.style.display = "none";
+            }
+
+            map1.invalidateSize();
+            map2.invalidateSize();
+        }
+
+        /*const toggleSecondWindow= L.easyButton('<span>2</span>', function(btn, map1){
             ToggleSecond();
             map1.invalidateSize();
-        }).addTo(map1);
+        }).addTo(map1);*/
 
         // reset time button
         const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map1){
@@ -155,16 +152,18 @@
 
         // Toggle config panel button
         const panel = document.getElementById("configpanel");
-        panel.style.visibility = "hidden";
+        panel.style.visibility = "hidden"; // TODO: this is empty by default?
 
-        const toggleConfigButton = L.easyButton('<span>\u2699</span>', function(btn, map1){
+        L.easyButton('<span>\u2699</span>', function(btn, map1) {
             panel.style.visibility = (panel.style.visibility === "hidden" ? "visible" : "hidden");
         }).addTo(map1);
+
+        const opt_togglemap2 = document.getElementById("opt_togglemap2");
+        opt_togglemap2.onclick = ToggleSecond;
 
         // set the number of map views
         if (options.nview > 1){
             ToggleSecond();
+            opt_togglemap2.checked = true;
         }
-
-        map1.invalidateSize();
     </script>
