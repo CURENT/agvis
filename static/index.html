@@ -125,10 +125,12 @@
             map2.resetTime();
         }).addTo(map1);
 
+        ToggleSecond();
+
         // set the number of map views
-        if (options.nview == 1){
+        if (options.nview > 1){
             ToggleSecond();
-            map1.invalidateSize();
         }
 
+        map1.invalidateSize();
     </script>
