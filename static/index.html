@@ -75,7 +75,7 @@
         }
 
         #configpanel tr {
-            padding: 2px;
+            padding-top: 2px;
         }
     </style>
 </head>
@@ -93,6 +93,11 @@
 <script>exports = undefined</script>
 <script src="https://rawcdn.githack.com/greggman/twgl.js/0e14d352a4062e9c2242cd6fa971f738ad763a38/dist/4.x/twgl-full.min.js"></script>
 <script src="https://unpkg.com/d3-delaunay@5.1.3/dist/d3-delaunay.min.js"></script>
+
+<script>
+var TOREMOVE_show_buses = true;
+</script>
+
 <script src="/static/js/NDArray.js"></script>
 <script src="/static/js/DimeClient.js"></script>
 <script src="/static/js/CanvasLayer.js"></script>
@@ -124,6 +129,10 @@
                 <td><input type="checkbox" id="opt_togglemap2"></td>
             </tr>
             <tr>
+                <!--
+                Does this make sense? Wouldn't it be better to have the user
+                select what zoom layer they want the bus labels to appear on?
+                -->
                 <td><label for="opt_togglebuslabels">Toggle Bus Labels</label></td>
                 <td><input type="checkbox" id="opt_togglebuslabels" checked></td>
             </tr>
@@ -166,6 +175,13 @@
 
         const opt_togglemap2 = document.getElementById("opt_togglemap2");
         opt_togglemap2.onclick = ToggleSecond;
+
+        document.getElementById("opt_togglebuslabels").onclick = function() {
+            //TOREMOVE_show_buses = !TOREMOVE_show_buses;
+
+            map1.invalidateSize();
+            map2.invalidateSize();
+        }
 
         document.getElementById("opt_resettime").onclick = function() {
             map1.resetTime();
