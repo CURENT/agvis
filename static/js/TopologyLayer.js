@@ -221,7 +221,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 
         //const voltageRating = Bus.get(i, 1); Mic
 
-		if (zoomLevel >= 7) {
+		if (this._render_bus_ids && zoomLevel >= 7) {
             ctx.fillText(busNumber.toString(), x, y + size/2);
         }
 	}
@@ -238,6 +238,7 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._context = null;
 		this._cache = new WeakMap();
         this._render = true;
+        this._render_bus_ids = true;
 
 		const images = {};
 		for (let { name, src } of [

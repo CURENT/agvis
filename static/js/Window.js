@@ -305,6 +305,13 @@ function CreateWindow(map_name, dimec, dimec_name){
     }
     })();
 
-    return map;
+    const layers = {
+        tileLayer,
+        topologyLayer,
+        contourLayer,
+        communicationLayer
+    };
+
+    return [map, layers];
 
 }
