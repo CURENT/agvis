@@ -69,6 +69,14 @@
             padding: 7px;
             border-radius: 6px;
         }
+
+        #configpanel table {
+            width: 100%;
+        }
+
+        #configpanel tr {
+            padding: 2px;
+        }
     </style>
 </head>
 
@@ -110,17 +118,27 @@
     <div class="overlay" id="configpanel">
         <h3>Configuration settings</h3>
 
-        <div>
-            <input type="checkbox" id="opt_togglemap2">
-            <label for="opt_togglemap2">Toggle 2<sup>nd</sup> Window</label>
-        </div>
+        <table>
+            <tr>
+                <td><label for="opt_togglemap2">Toggle 2<sup>nd</sup> Window</label></td>
+                <td><input type="checkbox" id="opt_togglemap2"></td>
+            </tr>
+            <tr>
+                <td><label for="opt_togglebuslabels">Toggle Bus Labels</label></td>
+                <td><input type="checkbox" id="opt_togglebuslabels" checked></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><input type="button" id="opt_resettime" value="Reset time"></td>
+            <tr>
+        </table>
     </div>
 
     <script>
         const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
 
-        var x1 = document.getElementById("map");
-        var x2 = document.getElementById("map2");
+        const x1 = document.getElementById("map");
+        const x2 = document.getElementById("map2");
 
         const dimec1 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+1}`);
         const dimec2 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+2}`);
@@ -146,19 +164,13 @@
             map2.invalidateSize();
         }
 
-        /*const toggleSecondWindow= L.easyButton('<span>2</span>', function(btn, map1){
-            ToggleSecond();
-            map1.invalidateSize();
-        }).addTo(map1);*/
-
-        // reset time button
-        const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map1){
-            map1.resetTime();
-            map2.resetTime();
-        }).addTo(map1);
-
         const opt_togglemap2 = document.getElementById("opt_togglemap2");
         opt_togglemap2.onclick = ToggleSecond;
+
+        document.getElementById("opt_resettime").onclick = function() {
+            map1.resetTime();
+            map2.resetTime();
+        }
 
         // set the number of map views
         if (options.nview > 1){
