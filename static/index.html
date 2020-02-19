@@ -62,7 +62,7 @@
             position: absolute;
             left: 70px;
             top: 25px;
-            z-index: 1000;
+            z-index: 9999;
 
             background-color: white;
             color: black;
@@ -128,6 +128,13 @@
         const map1 = CreateWindow('map', dimec1, 'geovis');
         const map2 = CreateWindow('map2', dimec2, 'geovis2');
 
+        // Toggle config panel button
+        const panel = document.getElementById("configpanel");
+
+        L.easyButton('<span>\u2699</span>', function(btn, map1) {
+            panel.style.visibility = (panel.style.visibility === "visible" ? "hidden" : "visible");
+        }).addTo(map1);
+
         function ToggleSecond() {
             if (x2.style.display === "none") {
                 x2.style.display = "block";
@@ -148,14 +155,6 @@
         const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map1){
             map1.resetTime();
             map2.resetTime();
-        }).addTo(map1);
-
-        // Toggle config panel button
-        const panel = document.getElementById("configpanel");
-        panel.style.visibility = "hidden"; // TODO: this is empty by default?
-
-        L.easyButton('<span>\u2699</span>', function(btn, map1) {
-            panel.style.visibility = (panel.style.visibility === "hidden" ? "visible" : "hidden");
         }).addTo(map1);
 
         const opt_togglemap2 = document.getElementById("opt_togglemap2");
