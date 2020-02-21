@@ -166,67 +166,66 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	ctx.clearRect(0, 0, size.x, size.y);
 
     if(this._render) {
-	ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
-	ctx.lineWidth = 2;
-	ctx.beginPath();
-	for (let i=0; i<Line.shape[0]; ++i){
-		const voltageRating = Line.get(i, 3);
-		if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i=0; i<Line.shape[0]; ++i){
+            const voltageRating = Line.get(i, 3);
+            if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
 
-		const fromNumber = Line.get(i, 0);
-		const fromIndex = busToIndexLookup.get(fromNumber);
-		const fromX = busPixelCoords.get(fromIndex, 0);
-		const fromY = busPixelCoords.get(fromIndex, 1);
+            const fromNumber = Line.get(i, 0);
+            const fromIndex = busToIndexLookup.get(fromNumber);
+            const fromX = busPixelCoords.get(fromIndex, 0);
+            const fromY = busPixelCoords.get(fromIndex, 1);
 
-		const toNumber = Line.get(i, 1);
-		const toIndex = busToIndexLookup.get(toNumber);
-		const toX = busPixelCoords.get(toIndex, 0);
-		const toY = busPixelCoords.get(toIndex, 1);
+            const toNumber = Line.get(i, 1);
+            const toIndex = busToIndexLookup.get(toNumber);
+            const toX = busPixelCoords.get(toIndex, 0);
+            const toY = busPixelCoords.get(toIndex, 1);
 
-		ctx.moveTo(fromX, fromY);
-		ctx.lineTo(toX, toY);
-	}
-	ctx.closePath();
-	ctx.stroke();
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+        }
+        ctx.closePath();
+        ctx.stroke();
 
-    /*if (!hasprinted) {
-        const a = [];
-        for (let i=0; i<Bus.shape[0]; ++i) {
-            const b = [];
+        /*if (!hasprinted) {
+            const a = [];
+            for (let i=0; i<Bus.shape[0]; ++i) {
+                const b = [];
 
-            for (let j = 0; j < Bus.shape[1]; ++j) {
-                b.push(Bus.get(i, j).toString());
+                for (let j = 0; j < Bus.shape[1]; ++j) {
+                    b.push(Bus.get(i, j).toString());
+                }
+
+                a.push(b);
             }
 
-            a.push(b);
+            console.log(a.map(b => b.join(" ")).join("\n"));
+            console.log("Voltage: " + zoomToLineVoltageRatingMinLookup.get(zoomLevel).toString());
+
+            hasprinted = true;
+        }*/
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+
+        // Draws the buses (vertices)
+        for (let i=0; i<Bus.shape[0]; ++i) {
+            const x = busPixelCoords.get(i, 0);
+            const y = busPixelCoords.get(i, 1);
+            const busNumber = Bus.get(i, 0);
+            const image = busToImageLookup.get(busNumber);
+            const size = 12;
+            ctx.drawImage(image, x - size/2, y - size/2, size, size);
+
+            //const voltageRating = Bus.get(i, 1); Mic
+
+            if (this._render_bus_ids) {
+                ctx.fillText(busNumber.toString(), x, y + size/2);
+            }
         }
-
-        console.log(a.map(b => b.join(" ")).join("\n"));
-        console.log("Voltage: " + zoomToLineVoltageRatingMinLookup.get(zoomLevel).toString());
-
-        hasprinted = true;
-    }*/
-
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-
-    // Draws the buses (vertices)
-	for (let i=0; i<Bus.shape[0]; ++i) {
-		const x = busPixelCoords.get(i, 0);
-		const y = busPixelCoords.get(i, 1);
-		const busNumber = Bus.get(i, 0);
-		const image = busToImageLookup.get(busNumber);
-		const size = 12;
-		ctx.drawImage(image, x - size/2, y - size/2, size, size);
-
-        //const voltageRating = Bus.get(i, 1); Mic
-
-		if (this._render_bus_ids) {
-            ctx.fillText(busNumber.toString(), x, y + size/2);
-        }
-	}
-
-}
+    }
 }
 
 L.TopologyLayer = L.CanvasLayer.extend({
