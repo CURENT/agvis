@@ -1,9 +1,17 @@
-
 L.SearchLayer = L.LayerGroup.extend({
 	initialize(options) {
 		this._context = null;
 		this._cache = new WeakMap();
+
 		L.LayerGroup.prototype.initialize.call(this, options);
+
+        this.control = new L.Control.Search({
+            layer: this,
+            position:'topright',
+            initial: false,
+            zoom: 12,
+            marker: false
+        });
 	},
 
 	update(context) {
@@ -31,33 +39,26 @@ L.SearchLayer = L.LayerGroup.extend({
             }
         }
 
+        this.clearLayers();
+
         for (let i = 0; i < Bus.shape[0]; i++) {
             const lat = busLatLngCoords.get(i, 0);
             const lng = busLatLngCoords.get(i, 1);
-            const busNumber = Bus.get(i, 0);
+            const title = Bus.get(i, 0).toString();
 
-            const coords = new L.latLng(loc);
-            let marker = new L.Marker(coords, {icon: L.divIcon(/*{className: "__unused"}*/). title: title});
+            const coords = new L.latLng(lat, lng);
+            let marker = new L.Marker(coords, {icon: L.divIcon(), opacity: 0, title: title});
 
-            addLayer(marker);
+            this.addLayer(marker);
         }
 	}
 });
 
-L.searchBox = function(opts) {
-	return new L.Control.Search({
-		position:'topright',
-		layer: markersLayer,
-		initial: false,
-		zoom: 12,
-		marker: false,
-        ...opts
-	});
+L.searchLayer = function(options) {
+    return new L.SearchLayer(options);
 }
 
 /*
-
-
 	//sample data values for populate map
 	var data = [
 		{"loc":[41.575330,13.102411], "title":"aquamarine"},

@@ -46,6 +46,17 @@ function CreateWindow(map_name, dimec, dimec_name){
     const communicationLayer = L.communicationLayer()
         .addTo(map);
 
+    const searchLayer = L.searchLayer()
+        .addTo(map);
+
+    map.addControl(new L.Control.Search({
+            layer: searchLayer,
+            position: 'topleft',
+            initial: false,
+            zoom: 12,
+            marker: false
+    }));
+
     const simTimeBox = L.simTimeBox({ position: 'topright'  })
         .addTo(map);
 
@@ -155,6 +166,7 @@ function CreateWindow(map_name, dimec, dimec_name){
             topologyLayer.update(workspace);
             contourLayer.update(workspace);
             communicationLayer.update(workspace);
+            searchLayer.update(workspace);
             if (workspace.Varvgs){
                 simTimeBox.update(workspace.Varvgs.t.toFixed(2));
 
