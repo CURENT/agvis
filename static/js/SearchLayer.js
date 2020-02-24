@@ -7,7 +7,6 @@ L.SearchLayer = L.LayerGroup.extend({
 
         this.control = new L.Control.Search({
             layer: this,
-            position:'topright',
             initial: false,
             zoom: 12,
             marker: false

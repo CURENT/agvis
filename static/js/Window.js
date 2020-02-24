@@ -49,13 +49,7 @@ function CreateWindow(map_name, dimec, dimec_name){
     const searchLayer = L.searchLayer()
         .addTo(map);
 
-    map.addControl(new L.Control.Search({
-            layer: searchLayer,
-            position: 'topleft',
-            initial: false,
-            zoom: 12,
-            marker: false
-    }));
+    map.addControl(searchLayer.control);
 
     const simTimeBox = L.simTimeBox({ position: 'topright'  })
         .addTo(map);
