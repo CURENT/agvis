@@ -124,6 +124,8 @@ dev-benchmark() {
 }
 
 dev() {
+    google-chrome --incognito http://localhost:8810/ &!
+
 	tmux split-window -v
 	tmux split-window -v
 	tmux split-window -v
