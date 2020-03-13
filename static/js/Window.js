@@ -1,23 +1,23 @@
-function CreateWindow(map_name, dimec, dimec_name){
-        const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
+function CreateWindow(map_name, dimec, dimec_name) {
+    const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
 
-        const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
-        const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
+    const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
+    const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
 
-        const amin = (options.amin === undefined) ? -1.0 : options.amin;
-        const amax = (options.amax === undefined) ?  1.0 : options.amax;
+    const amin = (options.amin === undefined) ? -1.0 : options.amin;
+    const amax = (options.amax === undefined) ?  1.0 : options.amax;
 
-        const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
-        const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
+    const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
+    const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
 
-        const p1 = options.p1;
-        const p2 = options.p2;
-        const p3 = options.p3;
+    const p1 = options.p1;
+    const p2 = options.p2;
+    const p3 = options.p3;
 
-        const p1min = (options.p1min === undefined) ? 0 : options.p1min;
-        const p1max = (options.p1max === undefined) ? 0 : options.p1max;
+    const p1min = (options.p1min === undefined) ? 0 : options.p1min;
+    const p1max = (options.p1max === undefined) ? 0 : options.p1max;
 
-        const arch = "LTB Modules and Data Flow"
+    const arch = "LTB Modules and Data Flow"
 
     let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?' +
                          'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
@@ -35,24 +35,16 @@ function CreateWindow(map_name, dimec, dimec_name){
     const workspace = {};
     const history = {};
 
-    const tileLayer = L.tileLayer(TILE_LAYER_URL)
-        .addTo(map);
-    const topologyLayer = L.topologyLayer()
-        .addTo(map);
+    const tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(map);
 
-    const contourLayer = L.contourLayer()
-        .addTo(map);
-
-    const communicationLayer = L.communicationLayer()
-        .addTo(map);
-
-    const searchLayer = L.searchLayer()
-        .addTo(map);
+    const topologyLayer = L.topologyLayer().addTo(map);
+    const contourLayer = L.contourLayer().addTo(map);
+    const communicationLayer = L.communicationLayer().addTo(map);
+    const searchLayer = L.searchLayer().addTo(map);
 
     map.addControl(searchLayer.control);
 
-    const simTimeBox = L.simTimeBox({ position: 'topright'  })
-        .addTo(map);
+    const simTimeBox = L.simTimeBox({ position: 'topright' }).addTo(map);
 
     const lineSpec = {
         "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -80,16 +72,17 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     /* add a new panel */
     let visPlotName = map_name + "Vis";
-
     let visPane = '';
 
-    if (p1 !== undefined){
+    if (p1 !== undefined) {
         visPane = visPane + '<div id="' + visPlotName + p1 + '"></div>'
     }
-    if (p2 !== undefined){
+
+    if (p2 !== undefined) {
         visPane = visPane + '<div id="' + visPlotName + p2 + '"></div>'
     }
-    if (p3 !== undefined){
+
+    if (p3 !== undefined) {
         visPane = visPane + '<div id="' + visPlotName + p3 + '"></div>'
     }
 
@@ -128,25 +121,26 @@ function CreateWindow(map_name, dimec, dimec_name){
     }
 
     async function updateThread(workspace) {
-
-        if (p1 !== undefined){
+        if (p1 !== undefined) {
             const { view } = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true})
             workspace.p1 = view;
         }
 
-        if (p2 !== undefined){
+        if (p2 !== undefined) {
             const { view } = await vegaEmbed('#' + map_name + 'Vis' + p2, lineSpec, {defaultStyle: true})
             workspace.p2 = view;
         }
 
-        if (p3 !== undefined){
+        if (p3 !== undefined) {
             const { view } = await vegaEmbed('#' + map_name + 'Vis' + p3, lineSpec, {defaultStyle: true})
             workspace.p3 = view;
         }
 
         let firstTime = null;
+
         function step(currentTime) {
             requestAnimationFrame(step);
+
             if (firstTime === null) {
                 firstTime = currentTime;
                 return;
@@ -161,7 +155,8 @@ function CreateWindow(map_name, dimec, dimec_name){
             contourLayer.update(workspace);
             communicationLayer.update(workspace);
             searchLayer.update(workspace);
-            if (workspace.Varvgs){
+
+            if (workspace.Varvgs) {
                 simTimeBox.update(workspace.Varvgs.t.toFixed(2));
 
                 // determine the number of plots
@@ -182,9 +177,9 @@ function CreateWindow(map_name, dimec, dimec_name){
                     workspace.p2.insert("table", {"Time": workspace.Varvgs.t, "Value": workspace.Varvgs.vars.get(0, nVariables - nPlots + 1) }).run();
                 if (p3 !== undefined)
                     workspace.p3.insert("table", {"Time": workspace.Varvgs.t, "Value": workspace.Varvgs.vars.get(0, nVariables - nPlots + 2) }).run();
-
             }
         }
+
         function reset() {
             firstTime = null;
             if (p1 !== undefined)
@@ -194,6 +189,7 @@ function CreateWindow(map_name, dimec, dimec_name){
             if (p3 !== undefined)
                 workspace.p3.remove('table', function(d) { return true; }).run();
         }
+
         requestAnimationFrame(step);
         return reset;
     }
@@ -240,6 +236,9 @@ function CreateWindow(map_name, dimec, dimec_name){
 
     for (;;) {
         const { name, value } = await dimec.sync();
+
+        console.log([name, value]);
+
         workspace[name] = value;
 
         if (!history[name]) history[name] = [];

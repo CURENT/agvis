@@ -120,7 +120,7 @@
 </div>
 
     <div class="overlay" id="configpanel">
-        <h3>Configuration settings</h3>
+        <strong>Configuration settings</strong><br />
 
         <table>
             <tr>
@@ -162,7 +162,7 @@
         }).addTo(map1);
 
         function ToggleSecond() {
-            if (x2.style.display === "none") {
+            if (opt_togglemap2.checked) {
                 x2.style.display = "block";
             } else {
                 x2.style.display = "none";
@@ -191,7 +191,7 @@
 
         // set the number of map views
         if (options.nview > 1){
-            ToggleSecond();
             opt_togglemap2.checked = true;
+            ToggleSecond();
         }
     </script>
