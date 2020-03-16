@@ -166,9 +166,35 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	ctx.clearRect(0, 0, size.x, size.y);
 
     if(this._render) {
+        if (this._states) {
+            for (let feature of this._states.features) {
+                ctx.strokeStyle = 'rgba(1, 0, 0, 1)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+
+                for (let path of feature.geometry.coordinates) {
+                    for (let i in path) {
+                        const [lon, lat] = path[i];
+                        const {x, y} = project(L.latLng(lat, lon));
+
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                }
+
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+        // TODO: Render zones
+
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
         ctx.lineWidth = 2;
         ctx.beginPath();
+
         for (let i=0; i<Line.shape[0]; ++i){
             const voltageRating = Line.get(i, 3);
             if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
@@ -186,26 +212,9 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
             ctx.moveTo(fromX, fromY);
             ctx.lineTo(toX, toY);
         }
+
         ctx.closePath();
         ctx.stroke();
-
-        /*if (!hasprinted) {
-            const a = [];
-            for (let i=0; i<Bus.shape[0]; ++i) {
-                const b = [];
-
-                for (let j = 0; j < Bus.shape[1]; ++j) {
-                    b.push(Bus.get(i, j).toString());
-                }
-
-                a.push(b);
-            }
-
-            console.log(a.map(b => b.join(" ")).join("\n"));
-            console.log("Voltage: " + zoomToLineVoltageRatingMinLookup.get(zoomLevel).toString());
-
-            hasprinted = true;
-        }*/
 
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
@@ -268,6 +277,15 @@ L.TopologyLayer = L.CanvasLayer.extend({
 			},
 		});
 		this._images = images;
+
+        this._states = null;
+
+        (async () => {
+            let request = await fetch("/static/js/us_states.json");
+            request = await request.json();
+
+            this._states = request;
+        })();
 
 
 		L.CanvasLayer.prototype.initialize.call(this, options);
