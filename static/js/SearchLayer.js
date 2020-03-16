@@ -14,18 +14,25 @@ L.SearchLayer = L.LayerGroup.extend({
 	},
 
 	update(context) {
-        if (!context) return;
+        if (!context) {
+            return;
+        }
 		this._context = context;
 
         const SysParam = context.SysParam;
-        if (!SysParam) return;
-        const Bus = SysParam.Bus;
+        if (!SysParam) {
+            return;
+        }
 
         let paramCache = this._cache.get(SysParam);
         if (!paramCache) {
             paramCache = {};
             this._cache.set(SysParam, paramCache);
+        } else {
+            return;
         }
+
+        const Bus = SysParam.Bus;
 
         let { busLatLngCoords } = paramCache;
         if (!busLatLngCoords) {

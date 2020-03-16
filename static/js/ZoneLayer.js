@@ -3,7 +3,7 @@ L.ZoneLayer = L.LayerGroup.extend({
 		this._context = null;
 		this._cache = new WeakMap();
 
-		L.LayerGroup.prototype.initialize.call(this, options);
+		L.FeatureGroup.prototype.initialize.call(this, options);
 
         this._states = null;
 
@@ -16,17 +16,22 @@ L.ZoneLayer = L.LayerGroup.extend({
 	},
 
 	update(context) {
-        if (!context) return;
+        if (!context) {
+            return;
+        }
 		this._context = context;
 
         const SysParam = context.SysParam;
-        if (!SysParam) return;
-        const Bus = SysParam.Bus;
+        if (!SysParam) {
+            return;
+        }
 
         let paramCache = this._cache.get(SysParam);
         if (!paramCache) {
             paramCache = {};
             this._cache.set(SysParam, paramCache);
+        } else {
+            return;
         }
 
         //let { zoneCoords } = paramCache;
@@ -36,7 +41,11 @@ L.ZoneLayer = L.LayerGroup.extend({
             this.clearLayers();
 
             for (let feature of features) {
-                L.geoJSON(feature).addTo(this);
+                L.geoJSON(feature, {
+                    style: function (feature) {
+                        return {z_index: -9999};
+                    }
+                }).addTo(this);
             }
         }
 	}
