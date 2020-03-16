@@ -37,12 +37,21 @@ function CreateWindow(map_name, dimec, dimec_name) {
 
     const tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(map);
 
+    const zoneLayer = L.zoneLayer().addTo(map);
     const topologyLayer = L.topologyLayer().addTo(map);
     const contourLayer = L.contourLayer().addTo(map);
     const communicationLayer = L.communicationLayer().addTo(map);
     const searchLayer = L.searchLayer().addTo(map);
 
     map.addControl(searchLayer.control);
+
+    const layers = {
+        zoneLayer,
+        tileLayer,
+        topologyLayer,
+        contourLayer,
+        communicationLayer
+    };
 
     const simTimeBox = L.simTimeBox({ position: 'topright' }).addTo(map);
 
@@ -151,6 +160,7 @@ function CreateWindow(map_name, dimec, dimec_name) {
             ready = historyKeeper(workspace, history, workspace.currentTimeInSeconds, 'Varvgs');
             if (!ready) return;
 
+            zoneLayer.update(workspace);
             topologyLayer.update(workspace);
             contourLayer.update(workspace);
             communicationLayer.update(workspace);
@@ -237,8 +247,6 @@ function CreateWindow(map_name, dimec, dimec_name) {
     for (;;) {
         const { name, value } = await dimec.sync();
 
-        console.log([name, value]);
-
         workspace[name] = value;
 
         if (!history[name]) history[name] = [];
@@ -309,13 +317,6 @@ function CreateWindow(map_name, dimec, dimec_name) {
 
     }
     })();
-
-    const layers = {
-        tileLayer,
-        topologyLayer,
-        contourLayer,
-        communicationLayer
-    };
 
     return [map, layers];
 

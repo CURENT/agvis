@@ -4,6 +4,15 @@ L.ZoneLayer = L.LayerGroup.extend({
 		this._cache = new WeakMap();
 
 		L.LayerGroup.prototype.initialize.call(this, options);
+
+        this._states = null;
+
+        (async () => {
+            let request = await fetch("/static/js/us_states.json");
+            request = await request.json();
+
+            this._states = request;
+        })();
 	},
 
 	update(context) {
@@ -21,26 +30,13 @@ L.ZoneLayer = L.LayerGroup.extend({
         }
 
         //let { zoneCoords } = paramCache;
+        if (this._states) {
+            let { features } = this._states;
 
-        let zoneCoords = [
-            {
-                name: "Zone A",
-                color: "#8000FF",
-                coords: new NDArray('C', [40, 2]);
-            },
-            {
-                name: "Zone B",
-                color: "#FF0080",
-                coords: new NDArray('C', [50, 2]);
-            },
-        ];
+            this.clearLayers();
 
-        this.clearLayers();
-
-        for (let zone in zoneCoords) {
-            for (let i = 0; i < zone.coords.shape[0]; i++) {
-                //const geojson = L.geoJSON(...);
-                //geojson.addTo(this);
+            for (let feature of features) {
+                L.geoJSON(feature).addTo(this);
             }
         }
 	}
