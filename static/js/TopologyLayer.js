@@ -168,28 +168,38 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
     if(this._render) {
         if (this._states) {
             for (let feature of this._states.features) {
-                ctx.strokeStyle = 'rgba(1, 0, 0, 1)';
-                ctx.lineWidth = 2;
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
                 ctx.beginPath();
 
-                for (let path of feature.geometry.coordinates) {
-                    for (let i in path) {
-                        const [lon, lat] = path[i];
-                        const {x, y} = project(L.latLng(lat, lon));
+                let polygons;
 
-                        if (i === 0) {
-                            ctx.moveTo(x, y);
-                        } else {
-                            ctx.lineTo(x, y);
+                if (feature.geometry.type === "MultiPolygon") {
+                    polygons = feature.geometry.coordinates;
+                } else if (feature.geometry.type === "Polygon") {
+                    polygons = [feature.geometry.coordinates];
+                } else {
+
+                }
+
+                for (let polygon of polygons) {
+                    for (let path of polygon) {
+                        for (let i in path) {
+                            const [lon, lat] = path[i];
+                            const {x, y} = project(L.latLng(lat, lon));
+
+                            if (i === 0) {
+                                ctx.moveTo(x, y);
+                            } else {
+                                ctx.lineTo(x, y);
+                            }
                         }
                     }
                 }
 
                 ctx.closePath();
-                ctx.stroke();
+                ctx.fill("evenodd");
             }
         }
-        // TODO: Render zones
 
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
         ctx.lineWidth = 2;
@@ -234,6 +244,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
                 ctx.fillText(busNumber.toString(), x, y + size/2);
             }
         }
+        // TODO: Render zones
     }
 }
 
