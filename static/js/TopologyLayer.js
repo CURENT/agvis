@@ -280,7 +280,7 @@ L.TopologyLayer = L.CanvasLayer.extend({
         this._states = null;
 
         (async () => {
-            let request = await fetch("/static/js/us_states.json");
+            let request = await fetch("/static/js/us_states.geojson");
             request = await request.json();
 
             console.log(request.features[42].properties.name);
