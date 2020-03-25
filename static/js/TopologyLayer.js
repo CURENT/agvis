@@ -166,6 +166,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	ctx.clearRect(0, 0, size.x, size.y);
 
     if(this._render) {
+        /*
         if (this._states) {
             for (let zone of this._states) {
                 ctx.fillStyle = zone.color;
@@ -188,6 +189,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
                 ctx.fill("evenodd");
             }
         }
+        */
 
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
         ctx.lineWidth = 2;
@@ -279,6 +281,7 @@ L.TopologyLayer = L.CanvasLayer.extend({
 
         this._states = null;
 
+        /*
         (async () => {
             let request = await fetch("/static/js/us_states.geojson");
             request = await request.json();
@@ -305,7 +308,7 @@ L.TopologyLayer = L.CanvasLayer.extend({
 
             console.log(this._states);
         })();
-
+        */
 
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
