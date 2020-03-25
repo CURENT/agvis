@@ -167,32 +167,20 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 
     if(this._render) {
         if (this._states) {
-            for (let feature of this._states.features) {
-                ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
-                ctx.beginPath();
+            for (let zone of this._states) {
+                ctx.fillStyle = zone.color;
 
-                let polygons;
+                for (let i = 0; i < zone.coords.shape[0]; i++) {
+                    const lat = zone.coords.get(i, 0);
+                    const lon = zone.coords.get(i, 1);
 
-                if (feature.geometry.type === "MultiPolygon") {
-                    polygons = feature.geometry.coordinates;
-                } else if (feature.geometry.type === "Polygon") {
-                    polygons = [feature.geometry.coordinates];
-                } else {
+                    const {x, y} = project(L.latLng(lat, lon));
 
-                }
-
-                for (let polygon of polygons) {
-                    for (let path of polygon) {
-                        for (let i in path) {
-                            const [lon, lat] = path[i];
-                            const {x, y} = project(L.latLng(lat, lon));
-
-                            if (i === 0) {
-                                ctx.moveTo(x, y);
-                            } else {
-                                ctx.lineTo(x, y);
-                            }
-                        }
+                    if (i === 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
                     }
                 }
 
@@ -295,7 +283,27 @@ L.TopologyLayer = L.CanvasLayer.extend({
             let request = await fetch("/static/js/us_states.json");
             request = await request.json();
 
-            this._states = request;
+            console.log(request.features[42].properties.name);
+
+            let coords_old = request.features[42].geometry.coordinates[0];
+            let coords = new NDArray("C", [coords_old.length, 2]);
+
+            for (let i in coords_old) {
+                let [lon, lat] = coords_old[i];
+
+                coords.set(lat, i, 0);
+                coords.set(lon, i, 1);
+            }
+
+            this._states = [
+                {
+                    name: "Tennessee",
+                    color: "rgba(255, 0, 0, 0.3)",
+                    coords
+                }
+            ];
+
+            console.log(this._states);
         })();
 
 
