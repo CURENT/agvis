@@ -279,37 +279,6 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		});
 		this._images = images;
 
-        this._states = null;
-
-        /*
-        (async () => {
-            let request = await fetch("/static/js/us_states.geojson");
-            request = await request.json();
-
-            console.log(request.features[42].properties.name);
-
-            let coords_old = request.features[42].geometry.coordinates[0];
-            let coords = new NDArray("C", [coords_old.length, 2]);
-
-            for (let i in coords_old) {
-                let [lon, lat] = coords_old[i];
-
-                coords.set(lat, i, 0);
-                coords.set(lon, i, 1);
-            }
-
-            this._states = [
-                {
-                    name: "Tennessee",
-                    color: "rgba(255, 0, 0, 0.3)",
-                    coords
-                }
-            ];
-
-            console.log(this._states);
-        })();
-        */
-
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
 
@@ -317,6 +286,12 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._context = context;
 		this.redraw();
 	},
+
+    onAdd(map) {
+        L.CanvasLayer.prototype.onAdd.call(this, map);
+        this.getPane().classList.add("topology-pane");
+    },
+
     toggleRender() {
         this._render = !this._render;
         console.log("Topology rendering: ", this._render);

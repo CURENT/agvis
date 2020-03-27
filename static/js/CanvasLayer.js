@@ -38,7 +38,7 @@ L.CanvasLayer = L.Layer.extend({
 	},
 
 	onRemove(map) {
-		map.getPane('overlayPane').removeChild(this._canvas);
+		this._map.getPane('overlayPane').removeChild(this._canvas);
 
 		map.off('moveend', this._reset, this);
 		map.off('resize', this._resize, this);

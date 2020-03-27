@@ -207,6 +207,11 @@ L.ContourLayer = L.CanvasLayer.extend({
             this.redraw();
     },
 
+    onAdd(map) {
+        L.CanvasLayer.prototype.onAdd.call(this, map);
+        this.getPane().classList.add("contour-pane");
+    },
+
 	storeRelativeIndices(idx) {
 		this._variableRelIndices = idx;
 	},
