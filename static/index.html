@@ -102,6 +102,7 @@
 <script src="/static/js/ContourLayer.js"></script>
 <script src="/static/js/CommunicationLayer.js"></script>
 <script src="/static/js/SearchLayer.js"></script>
+<script src="/static/js/ZoneLayer.js"></script>
 <script src="/static/js/Window.js"></script>
 <script src="/static/js/TimeBox.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
@@ -194,24 +195,4 @@
             opt_togglemap2.checked = true;
             ToggleSecond();
         }
-
-        (async () => {
-            let geojson = await fetch("/static/js/nerc_regions.geojson");
-            geojson = await geojson.json();
-
-            L.geoJSON(geojson.features, {
-                style: function(feature) {
-                    switch (feature.properties.NERC) {
-                        case 'MRO':  return {color: "#ff0000"};
-                        case 'NPCC': return {color: "#ff8000"};
-                        case 'RFC':  return {color: "#ffff00"};
-                        case 'SERC': return {color: "#00ff00"};
-                        case 'SPP':  return {color: "#00ffff"};
-                        case 'TRE':  return {color: "#0000ff"};
-                        case 'WECC': return {color: "#8000ff"};
-                        case '-':    return {color: "#808080"};
-                    }
-                }
-            }).addTo(map1);
-        })();
     </script>

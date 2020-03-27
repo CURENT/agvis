@@ -37,7 +37,7 @@ function CreateWindow(map_name, dimec, dimec_name) {
 
     const tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(map);
 
-    //const zoneLayer = L.zoneLayer().addTo(map);
+    const zoneLayer = L.zoneLayer().addTo(map);
     const topologyLayer = L.topologyLayer().addTo(map);
     const contourLayer = L.contourLayer().addTo(map);
     const communicationLayer = L.communicationLayer().addTo(map);
@@ -46,8 +46,7 @@ function CreateWindow(map_name, dimec, dimec_name) {
     map.addControl(searchLayer.control);
 
     const layers = {
-        //zoneLayer,
-        tileLayer,
+        zoneLayer,
         topologyLayer,
         contourLayer,
         communicationLayer
