@@ -1,6 +1,5 @@
 from __future__ import annotations
-#from andes_addon.dime import Dime
-from dime_wrapper import Dime
+from andes_addon.dime import Dime
 import numpy as np
 from pathlib import Path
 from csv import DictReader
@@ -8,7 +7,7 @@ from timeit import default_timer as timer
 import pprint
 
 
-def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime.sock'):
+def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
     root = Path(rootFolder)
     flow = root / 'stats' / 'net_stats_flow.csv'
     port = root / 'stats' / 'net_stats_port.csv'
@@ -148,8 +147,12 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime.sock'):
     LTBNET_vars = {}
 
     dimec = Dime('LTBNET', dime_address)
+    ok = dimec.start()
+    if not ok:
+        print('bad!')
+        exit()
 
-    dimec.broadcast_r(LTBNET_params=LTBNET_params)
+    dimec.broadcast('LTBNET_params', LTBNET_params)
 
     '''
     Here we garner the port information from the sw_port_node file,
@@ -280,7 +283,7 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime.sock'):
                         flowDict[newTime]):
                     Transfer[i] = (flowTime, FromType, FromIndex, ToType, ToIndex, flowPackets, flowBytes)
                 print(len(flowDict[newTime]))
-                dimec.broadcast_r(LTBNET_vars=LTBNET_vars)
+                dimec.broadcast('LTBNET_vars', LTBNET_vars)
 
             oldTime = newTime
             # If the file is coming to a close, exit
@@ -298,7 +301,7 @@ def cli():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--root', default='./')
-    parser.add_argument('--dime_address', default='/tmp/dime.sock')
+    parser.add_argument('--dime_address', default='ipc:///tmp/dime')
     args = vars(parser.parse_args())
 
     main(**args)

@@ -147,8 +147,12 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
     LTBNET_vars = {}
 
     dimec = Dime('LTBNET', dime_address)
+    ok = dimec.start()
+    if not ok:
+        print('bad!')
+        exit()
 
-    dimec.broadcast_r(LTBNET_params=LTBNET_params)
+    dimec.broadcast('LTBNET_params', LTBNET_params)
 
     '''
     Here we garner the port information from the sw_port_node file,
@@ -279,7 +283,7 @@ def broadcastCommFiles(rootFolder="./", dime_address='ipc:///tmp/dime'):
                         flowDict[newTime]):
                     Transfer[i] = (flowTime, FromType, FromIndex, ToType, ToIndex, flowPackets, flowBytes)
                 print(len(flowDict[newTime]))
-                dimec.broadcast_r(LTBNET_vars=LTBNET_vars)
+                dimec.broadcast('LTBNET_vars', LTBNET_vars)
 
             oldTime = newTime
             # If the file is coming to a close, exit

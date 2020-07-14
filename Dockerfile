@@ -52,8 +52,6 @@ RUN make install
 WORKDIR /opt/dime2/client/python
 RUN python3.7 setup.py install
 
-COPY dime_wrapper.py /usr/local/lib/python3.7/dist_packages
-
 RUN python3.7 -m pip install \
         websockets
 
