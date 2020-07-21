@@ -55,6 +55,13 @@ RUN python3.7 setup.py install
 RUN python3.7 -m pip install \
         websockets
 
+ARG websockify_version=master
+WORKDIR /opt
+RUN git clone https://github.com/novnc/websockify
+WORKDIR /opt/websockify
+RUN git reset --hard $websockify_version
+RUN python3.7 setup.py install
+
 RUN sed -ie 's/# Fault/Fault/g' /opt/andes/cases/curent/WECC_WIND0.dm
 RUN python3.7 -m pip install \
         netaddr \
