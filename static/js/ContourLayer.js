@@ -72,7 +72,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		const delaunay = new d3.Delaunay(busLatLngCoords.typedArray);
 
 		busTriangles = paramCache.busTriangles =
-			new NDArray('C', [delaunay.triangles.length/3, 3], delaunay.triangles);
+			new NDArray('C', [delaunay.triangles.length/3, 3], false, delaunay.triangles);
 	}
 
 	let idxvgsCache = this._cache.get(Idxvgs);
