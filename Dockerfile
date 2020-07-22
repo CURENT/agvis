@@ -42,9 +42,7 @@ RUN python3.7 -m pip install \
 
 ARG dime2_version=master
 WORKDIR /opt
-RUN git clone https://github.com/TheHashTableSlasher/dime2
-WORKDIR /opt/dime2
-RUN git reset --hard $dime2_version
+COPY dime2 /opt/dime2
 WORKDIR /opt/dime2/server
 RUN make clean
 RUN make
