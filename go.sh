@@ -22,7 +22,7 @@ piptrustedhost=
 build() {
     cp -rf ../andes .
     cp -rf ../andes_addon .
-    cp -rf ../dime .
+    #cp -rf ../dime .
     cp -f dime.py andes_addon/andes_addon
 	docker build \
 		${target:+--target $target} \
@@ -102,9 +102,8 @@ logs() {
 }
 
 python() { python3 "$@"; }
-python3() { python3.7 "$@"; }
-python3.7() { run python3.7 -u "$@"; }
-server() { python3.7 server.py --port=$port "$@"; }
+python3() { run python3 -u "$@"; }
+server() { python3 server.py --port=$port "$@"; }
 andes() { run andes "$@"; }
 reader() {
 	python benchmark.py --dime tcp://127.0.0.1:$port,reader,writer "$@" reader
@@ -113,7 +112,7 @@ writer() {
 	python benchmark.py --dime tcp://127.0.0.1:$port,writer,reader "$@" writer
 }
 dime() {
-	run dime -vv $@
+	run dime ${1:-tcp://0.0.0.0:8819} --debug
 }
 
 dev-benchmark() {
@@ -125,7 +124,7 @@ dev-benchmark() {
 }
 
 dev() {
-    google-chrome --incognito http://localhost:8810/ &!
+    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &!
 
 	tmux split-window -v
 	tmux split-window -v
@@ -133,9 +132,9 @@ dev() {
 	tmux split-window -v
 	tmux select-layout tiled
 	tmux send-keys -t0 "./go.sh run_8819 dime -vv -P tcp -p $((port+9))" Enter
-	tmux send-keys -t1 "./go.sh run_8810 python3.7 server.py --port $((port+0)) --bind 0.0.0.0" Enter
-	tmux send-keys -t2 "sleep 1 && ./go.sh run_8811 python3.7 wsdime.py --port $((port+1)) --dhost tcp://127.0.0.1:$((port+9))" Enter
-	tmux send-keys -t3 "sleep 1 && ./go.sh run_8812 python3.7 wsdime.py --port $((port+2)) --dhost tcp://127.0.0.1:$((port+9)) --name geovis2" Enter
+	tmux send-keys -t1 "./go.sh run_8810 python3 server.py --port $((port+0)) --bind 0.0.0.0" Enter
+	tmux send-keys -t2 "sleep 1 && ./go.sh run_8811 python3 wsdime.py --port $((port+1)) --dhost tcp://127.0.0.1:$((port+9))" Enter
+	tmux send-keys -t3 "sleep 1 && ./go.sh run_8812 python3 wsdime.py --port $((port+2)) --dhost tcp://127.0.0.1:$((port+9)) --name geovis2" Enter
 	tmux send-keys -t4 "./go.sh andes --routine=tds /opt/andes/cases/curent/WECC_WIND0.dm --dime=tcp://127.0.0.1:$((port+9))"
 }
 
