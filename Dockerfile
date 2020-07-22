@@ -40,7 +40,7 @@ RUN python3.7 -m pip install \
 #RUN python3.7 -m pip install \
 #        /opt/dime
 
-ARG dime2_version=36e2c93
+ARG dime2_version=master
 WORKDIR /opt
 RUN git clone https://github.com/TheHashTableSlasher/dime2
 WORKDIR /opt/dime2
