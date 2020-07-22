@@ -95,9 +95,8 @@
 <script src="https://rawcdn.githack.com/greggman/twgl.js/0e14d352a4062e9c2242cd6fa971f738ad763a38/dist/4.x/twgl-full.min.js"></script>
 <script src="https://unpkg.com/d3-delaunay@5.1.3/dist/d3-delaunay.min.js"></script>
 
-<script src="/static/js/dime.js"></script>
-<script>const { NDArray } = dime;</script>
-
+<script src="/static/js/NDArray.js"></script>
+<script src="/static/js/DimeClient.js"></script>
 <script src="/static/js/CanvasLayer.js"></script>
 <script src="/static/js/TopologyLayer.js"></script>
 <script src="/static/js/ContourLayer.js"></script>
@@ -150,8 +149,8 @@
         const x1 = document.getElementById("map");
         const x2 = document.getElementById("map2");
 
-        const dimec1 = new dime.DimeClient(window.location.hostname, Number(window.location.port) + 1);
-        const dimec2 = new dime.DimeClient(window.location.hostname, Number(window.location.port) + 2);
+        const dimec1 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+1}`);
+        const dimec2 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+2}`);
 
         const [map1, layers1] = CreateWindow('map', dimec1, 'geovis');
         const [map2, layers2] = CreateWindow('map2', dimec2, 'geovis2');

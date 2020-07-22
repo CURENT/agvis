@@ -205,8 +205,6 @@ function CreateWindow(map_name, dimec, dimec_name) {
 
     (async () => {
 
-    await dimec.join(dimec_name);
-
     const resetTime = await updateThread(workspace);
     workspace.resetTime = resetTime;
     map.resetTime = resetTime;
@@ -240,18 +238,13 @@ function CreateWindow(map_name, dimec, dimec_name) {
     const toggleLayerButtons = [rendContourButton, rendCommunicationButton];
     const toggleLayerBar = L.easyBar(toggleLayerButtons).addTo(map);
 
+    await dimec.ready;
     console.time(map_name);
 
     let sentHeader = false;
 
     for (;;) {
-        await dimec.wait();
-        const nameandvalue = Object.entries(await dimec.sync_r(1));
-        if (nameandvalue.length == 0) {
-            continue;
-        }
-
-        const [[name, value]] = nameandvalue;
+        const { name, value } = await dimec.sync();
 
         workspace[name] = value;
 
@@ -262,13 +255,9 @@ function CreateWindow(map_name, dimec, dimec_name) {
             console.log({ name, value });
 
         if (!sentHeader && name === 'Idxvgs') {
-            const busVoltageIndices = workspace.Idxvgs.Bus.V.array;
-            const busThetaIndices = workspace.Idxvgs.Bus.theta.array;
-            const busfreqIndices = workspace.Idxvgs.Bus.w_Busfreq.array;
-
-            console.log(busVoltageIndices);
-            console.log(busThetaIndices);
-            console.log(busfreqIndices);
+            const busVoltageIndices = workspace.Idxvgs.Bus.V.typedArray;
+            const busThetaIndices = workspace.Idxvgs.Bus.theta.typedArray;
+            const busfreqIndices= workspace.Idxvgs.Bus.w_Busfreq.typedArray;
 
             const nBus = busVoltageIndices.length;
 
@@ -281,7 +270,7 @@ function CreateWindow(map_name, dimec, dimec_name) {
                 nPlotVariable += 1;
             }
 
-            const variableAbsIndices = new BigInt64Array(nBus * 3 + nPlotVariable);
+            const variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
             const variableRelIndices = {};
 
             for (let i=0; i<busVoltageIndices.length; ++i) {
@@ -310,10 +299,14 @@ function CreateWindow(map_name, dimec, dimec_name) {
             contourLayer.showVariable("freq");
             contourLayer.updateRange(0.9998, 1.0002);
 
-            const dimec_msg = {};
-            dimec_msg[dimec_name] = new NDArray('F', [1, variableAbsIndices.length], false, variableAbsIndices)
-
-            dimec.send_r('sim', dimec_msg);
+            dimec.send_var('sim', dimec_name, {
+                vgsvaridx: {
+                    ndarray: true,
+                    shape: [1, variableAbsIndices.length],
+                    data: base64arraybuffer.encode(variableAbsIndices.buffer),
+                },
+            }
+            );
             sentHeader = true;
 
         } else if (name === 'DONE') {
