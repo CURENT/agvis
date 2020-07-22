@@ -1,6 +1,5 @@
 #!/usr/bin/env python3.7
 """
-
 """
 
 from __future__ import annotations
@@ -10,8 +9,77 @@ from asyncio import get_event_loop, ensure_future, wait, FIRST_COMPLETED, sleep
 from websockets import serve
 from andes_addon.dime import Dime
 from andes_addon.pymatbridge import _Session
+import numpy as np
+import base64
+
+def encode_ndarray(obj):
+    """Write a numpy array and its shape to base64 buffers"""
+    shape = obj.shape
+    if len(shape) == 1:
+        shape = (1, obj.shape[0])
+    if obj.flags.c_contiguous:
+        obj = obj.T
+    elif not obj.flags.f_contiguous:
+        obj = np.asfortranarray(obj.T)
+    else:
+        obj = obj.T
+    try:
+        data = obj.astype(np.float64).tobytes()
+    except AttributeError:
+        data = obj.astype(np.float64).tostring()
+
+    data = base64.b64encode(data).decode('utf-8')
+    return data, shape
 
 
+# JSON encoder extension to handle complex numbers and numpy arrays
+class PymatEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray) and obj.dtype.kind in 'uif':
+            data, shape = encode_ndarray(obj)
+            return {'ndarray': True, 'shape': shape, 'data': data}
+        elif isinstance(obj, ndarray) and obj.dtype.kind == 'c':
+            real, shape = encode_ndarray(obj.real.copy())
+            imag, _ = encode_ndarray(obj.imag.copy())
+            return {
+                'ndarray': True,
+                'shape': shape,
+                'real': real,
+                'imag': imag
+            }
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, complex):
+            return {'real': obj.real, 'imag': obj.imag}
+        elif isinstance(obj, generic):
+            return obj.item()
+        # Handle the default case
+        return json.JSONEncoder.default(self, obj)
+
+
+def decode_arr(data):
+    """Extract a numpy array from a base64 buffer"""
+    data = data.encode('utf-8')
+    return np.frombuffer(base64.b64decode(data), np.float64)
+
+
+# JSON decoder for arrays and complex numbers
+def decode_pymat(dct):
+    if 'ndarray' in dct and 'data' in dct:
+        value = decode_arr(dct['data'])
+        shape = dct['shape']
+        if type(dct['shape']) is not list:
+            shape = decode_arr(dct['shape']).astype(int)
+        return value.reshape(shape, order='F')
+    elif 'ndarray' in dct and 'imag' in dct:
+        real = decode_arr(dct['real'])
+        imag = decode_arr(dct['imag'])
+        shape = decode_arr(dct['shape']).astype(int)
+        data = real + 1j * imag
+        return data.reshape(shape, order='F')
+    elif 'real' in dct and 'imag' in dct:
+        return complex(dct['real'], dct['imag'])
+    return dct
 
 # Patch Dime's decode function to not do special processing
 _Session.json_decode = lambda self, x: json.loads(x)
@@ -51,7 +119,7 @@ async def consumer(message: str):
         _g_cons_target = message
         _g_cons_state = S_CONS_DATA
     elif _g_cons_state == S_CONS_DATA:
-        _g_cons_data = json.loads(message)
+        _g_cons_data = json.loads(message, object_hook = decode_pymat)
 
         _g_dimec.send_var(_g_cons_target, _g_cons_name, _g_cons_data)
 
@@ -77,7 +145,7 @@ async def producer() -> str:
             break
 
         _g_prod_name = name
-        _g_prod_value = _g_dimec.workspace[name]
+        _g_prod_value = json.dumps(_g_dimec.workspace[name], cls=PymatEncoder)
         _g_prod_state = S_PROD_VALUE
         return _g_prod_name
 
