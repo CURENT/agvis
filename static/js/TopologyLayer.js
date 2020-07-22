@@ -162,42 +162,80 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	const zoomLevel = this._map.getZoom();
 
 	const ctx = canvas.getContext('2d');
+
 	ctx.clearRect(0, 0, size.x, size.y);
 
     if(this._render) {
-	ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
-	ctx.lineWidth = 2;
-	ctx.beginPath();
-	for (let i=0; i<Line.shape[0]; ++i){
-		const voltageRating = Line.get(i, 3);
-		if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
+        /*
+        if (this._states) {
+            for (let zone of this._states) {
+                ctx.fillStyle = zone.color;
 
-		const fromNumber = Line.get(i, 0);
-		const fromIndex = busToIndexLookup.get(fromNumber);
-		const fromX = busPixelCoords.get(fromIndex, 0);
-		const fromY = busPixelCoords.get(fromIndex, 1);
+                for (let i = 0; i < zone.coords.shape[0]; i++) {
+                    const lat = zone.coords.get(i, 0);
+                    const lon = zone.coords.get(i, 1);
 
-		const toNumber = Line.get(i, 1);
-		const toIndex = busToIndexLookup.get(toNumber);
-		const toX = busPixelCoords.get(toIndex, 0);
-		const toY = busPixelCoords.get(toIndex, 1);
+                    const {x, y} = project(L.latLng(lat, lon));
 
-		ctx.moveTo(fromX, fromY);
-		ctx.lineTo(toX, toY);
-	}
-	ctx.closePath();
-	ctx.stroke();
+                    if (i === 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
 
-	for (let i=0; i<Bus.shape[0]; ++i) {
-		const x = busPixelCoords.get(i, 0);
-		const y = busPixelCoords.get(i, 1);
-		const busNumber = Bus.get(i, 0);
-		const image = busToImageLookup.get(busNumber);
-		const size = 12;
-		ctx.drawImage(image, x - size/2, y - size/2, size, size);
-	}
+                ctx.closePath();
+                ctx.fill("evenodd");
+            }
+        }
+        */
 
-}
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        for (let i=0; i<Line.shape[0]; ++i){
+            const voltageRating = Line.get(i, 3);
+            if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
+
+            const fromNumber = Line.get(i, 0);
+            const fromIndex = busToIndexLookup.get(fromNumber);
+            const fromX = busPixelCoords.get(fromIndex, 0);
+            const fromY = busPixelCoords.get(fromIndex, 1);
+
+            const toNumber = Line.get(i, 1);
+            const toIndex = busToIndexLookup.get(toNumber);
+            const toX = busPixelCoords.get(toIndex, 0);
+            const toY = busPixelCoords.get(toIndex, 1);
+
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+        }
+
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+
+        // Draws the buses (vertices)
+        for (let i=0; i<Bus.shape[0]; ++i) {
+            const x = busPixelCoords.get(i, 0);
+            const y = busPixelCoords.get(i, 1);
+            const busNumber = Bus.get(i, 0);
+            const image = busToImageLookup.get(busNumber);
+            const size = 12;
+            ctx.drawImage(image, x - size/2, y - size/2, size, size);
+
+            //const voltageRating = Bus.get(i, 1); Mic
+
+            if (this._render_bus_ids) {
+                ctx.fillText(busNumber.toString(), x, y + size/2);
+            }
+        }
+        // TODO: Render zones
+    }
 }
 
 L.TopologyLayer = L.CanvasLayer.extend({
@@ -209,6 +247,7 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._context = null;
 		this._cache = new WeakMap();
         this._render = true;
+        this._render_bus_ids = false;
 
 		const images = {};
 		for (let { name, src } of [
@@ -240,7 +279,6 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		});
 		this._images = images;
 
-
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
 
@@ -248,6 +286,12 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._context = context;
 		this.redraw();
 	},
+
+    onAdd(map) {
+        L.CanvasLayer.prototype.onAdd.call(this, map);
+        this.getPane().classList.add("topology-pane");
+    },
+
     toggleRender() {
         this._render = !this._render;
         console.log("Topology rendering: ", this._render);

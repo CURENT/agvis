@@ -319,6 +319,11 @@ L.CommunicationLayer = L.CanvasLayer.extend({
         this.redraw();
     },
 
+    onAdd(map) {
+        L.CanvasLayer.prototype.onAdd.call(this, map);
+        this.getPane().classList.add("communication-pane");
+    },
+
     toggleRender() {
         this._render = !this._render;
     }

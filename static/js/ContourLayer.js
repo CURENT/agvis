@@ -72,7 +72,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		const delaunay = new d3.Delaunay(busLatLngCoords.typedArray);
 
 		busTriangles = paramCache.busTriangles =
-			new NDArray('C', [delaunay.triangles.length/3, 3], delaunay.triangles);
+			new NDArray('C', [delaunay.triangles.length/3, 3], false, delaunay.triangles);
 	}
 
 	let idxvgsCache = this._cache.get(Idxvgs);
@@ -205,6 +205,11 @@ L.ContourLayer = L.CanvasLayer.extend({
 	update(context) {
 		this._context = context;
             this.redraw();
+    },
+
+    onAdd(map) {
+        L.CanvasLayer.prototype.onAdd.call(this, map);
+        this.getPane().classList.add("contour-pane");
     },
 
 	storeRelativeIndices(idx) {

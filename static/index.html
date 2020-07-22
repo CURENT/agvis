@@ -24,15 +24,15 @@
   /* We first create a flex layout context */
     width: 25%;
   display: flex;
-  
-  /* Then we define the flow direction 
-     and if we allow the items to wrap 
+
+  /* Then we define the flow direction
+     and if we allow the items to wrap
    * Remember this is the same as:
    * flex-direction: row;
    * flex-wrap: wrap;
    */
   flex-flow: row wrap;
-  
+
   /* Then we define how is distributed the remaining space */
   justify-content: flex-end;
 }
@@ -55,7 +55,29 @@
           z-index: 9999;
         }
       </style>
-  
+
+    <style>
+        #configpanel {
+            visibility: hidden;
+            position: absolute;
+            left: 70px;
+            top: 25px;
+            z-index: 9999;
+
+            background-color: white;
+            color: black;
+            padding: 7px;
+            border-radius: 6px;
+        }
+
+        #configpanel table {
+            width: 100%;
+        }
+
+        #configpanel tr {
+            padding-top: 2px;
+        }
+    </style>
 </head>
 
 <body>
@@ -63,6 +85,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-dialog@1.0.5/Leaflet.Dialog.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2@3.2.1/css/leaflet-sidebar.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search.css">
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js" crossorigin=""></script>
@@ -71,21 +94,26 @@
 <script>exports = undefined</script>
 <script src="https://rawcdn.githack.com/greggman/twgl.js/0e14d352a4062e9c2242cd6fa971f738ad763a38/dist/4.x/twgl-full.min.js"></script>
 <script src="https://unpkg.com/d3-delaunay@5.1.3/dist/d3-delaunay.min.js"></script>
-<script src="/static/js/NDArray.js"></script>
-<script src="/static/js/DimeClient.js"></script>
+
+<script src="/static/js/dime.js"></script>
+<script>const { NDArray } = dime;</script>
+
 <script src="/static/js/CanvasLayer.js"></script>
 <script src="/static/js/TopologyLayer.js"></script>
 <script src="/static/js/ContourLayer.js"></script>
 <script src="/static/js/CommunicationLayer.js"></script>
+<script src="/static/js/SearchLayer.js"></script>
+<script src="/static/js/ZoneLayer.js"></script>
 <script src="/static/js/Window.js"></script>
 <script src="/static/js/TimeBox.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-dialog@1.0.5/Leaflet.Dialog.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2@3.2.1/js/leaflet-sidebar.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min.js"></script>
 
 <div class="row">
-	<div class="column", id="map"></div>
-    <div class="column", id="map2"></div>
+	<div class="column" id="map"></div>
+    <div class="column" id="map2" style="display: none;"></div>
     <!-- <div class="flex-container", id="plots">
         <div class="row", id="vis"> </div>
         <div class="row", id="vis2"> </div>
@@ -93,42 +121,79 @@
     </div> -->
 </div>
 
+    <div class="overlay" id="configpanel">
+        <strong>Configuration settings</strong><br />
+
+        <table>
+            <tr>
+                <td><label for="opt_togglemap2">Toggle 2<sup>nd</sup> Window</label></td>
+                <td><input type="checkbox" id="opt_togglemap2"></td>
+            </tr>
+            <tr>
+                <!--
+                Does this make sense? Wouldn't it be better to have the user
+                select what zoom layer they want the bus labels to appear on?
+                -->
+                <td><label for="opt_togglebuslabels">Toggle Bus Labels</label></td>
+                <td><input type="checkbox" id="opt_togglebuslabels"></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><input type="button" id="opt_resettime" value="Reset time"></td>
+            <tr>
+        </table>
+    </div>
+
     <script>
         const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
-        
-        function ToggleSecond() {
-            var x1 = document.getElementById("map");
-            var x2 = document.getElementById("map2");
 
-            if (x2.style.display === "none") {
+        const x1 = document.getElementById("map");
+        const x2 = document.getElementById("map2");
+
+        const dimec1 = new dime.DimeClient(window.location.hostname, Number(window.location.port) + 1);
+        const dimec2 = new dime.DimeClient(window.location.hostname, Number(window.location.port) + 2);
+
+        const [map1, layers1] = CreateWindow('map', dimec1, 'geovis');
+        const [map2, layers2] = CreateWindow('map2', dimec2, 'geovis2');
+
+        // Toggle config panel button
+        const panel = document.getElementById("configpanel");
+
+        L.easyButton('<span>\u2699</span>', function(btn, map1) {
+            panel.style.visibility = (panel.style.visibility === "visible" ? "hidden" : "visible");
+        }).addTo(map1);
+
+        function ToggleSecond() {
+            if (opt_togglemap2.checked) {
                 x2.style.display = "block";
             } else {
                 x2.style.display = "none";
             }
+
+            map1.invalidateSize();
+            map2.invalidateSize();
         }
 
+        const opt_togglemap2 = document.getElementById("opt_togglemap2");
+        opt_togglemap2.onclick = ToggleSecond;
 
-        const dimec1 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+1}`);
-        const dimec2 = new DimeClient(`ws://${window.location.hostname}:${+window.location.port+2}`);
+        const opt_togglebuslabels = document.getElementById("opt_togglebuslabels");
+        opt_togglebuslabels.onclick = function() {
+            layers1.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
+            layers2.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
 
-        const map1 = CreateWindow('map', dimec1, 'geovis');
-        const map2 = CreateWindow('map2', dimec2, 'geovis2');
+            layers1.topologyLayer.redraw();
+            layers2.topologyLayer.redraw();
+        }
 
-        const toggleSecondWindow= L.easyButton('<span>2</span>', function(btn, map1){
-            ToggleSecond();
-            map1.invalidateSize();
-        }).addTo(map1);
-
-        // reset time button
-        const resetButton = L.easyButton('<span><i>R</i></span>', function(btn, map1){
+        document.getElementById("opt_resettime").onclick = function() {
             map1.resetTime();
             map2.resetTime();
-        }).addTo(map1);
-
-        // set the number of map views
-        if (options.nview == 1){
-            ToggleSecond();
-            map1.invalidateSize();
         }
 
+        // set the number of map views
+        if (options.nview > 1){
+            opt_togglemap2.checked = true;
+            ToggleSecond();
+        }
     </script>
