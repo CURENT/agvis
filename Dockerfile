@@ -1,4 +1,4 @@
-FROM python:3.8-buster AS base
+FROM python:3.7-buster AS base
 
 RUN apt-get update
 RUN apt-get install -y build-essential libjansson-dev libssl-dev zlib1g-dev
