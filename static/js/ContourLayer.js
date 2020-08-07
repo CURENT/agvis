@@ -229,7 +229,7 @@ L.ContourLayer = L.CanvasLayer.extend({
 
     toggleRender() {
         this._render = !this._render;
-        console.log("Contour rendering: ", this._render);
+        //console.log("Contour rendering: ", this._render);
     }
 
 });

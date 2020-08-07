@@ -88,7 +88,7 @@ class DimeClient {
 		const { ws } = this;
 		ws.send(name);
 		ws.send(target);
-		console.log({ target, name, value });
+		//console.log({ target, name, value });
 		ws.send(JSON.stringify(value));
 	}
 

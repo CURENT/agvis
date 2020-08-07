@@ -138,7 +138,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!lineVoltageRatingExtents) {
 		const min = Math.min(...lineVoltageRating);
 		const max = Math.max(...lineVoltageRating);
-		console.log({ min, max });
+		//console.log({ min, max });
 		lineVoltageRatingExtents = paramCache.lineVoltageRatingExtents = { min, max };
 	}
 
@@ -156,7 +156,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 			zoomToLineVoltageRatingMinLookup.set(i, voltageRatingMin);
 			voltageRatingMin -= voltageRatingStep;
 		}
-		console.log(zoomToLineVoltageRatingMinLookup);
+		//console.log(zoomToLineVoltageRatingMinLookup);
 	}
 
 	const zoomLevel = this._map.getZoom();
@@ -294,7 +294,7 @@ L.TopologyLayer = L.CanvasLayer.extend({
 
     toggleRender() {
         this._render = !this._render;
-        console.log("Topology rendering: ", this._render);
+        //console.log("Topology rendering: ", this._render);
     }
 });
 

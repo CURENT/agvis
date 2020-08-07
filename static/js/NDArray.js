@@ -49,7 +49,7 @@ class NDArray {
 		}
 		const start = this._makeIndex([0, n], false);
 		const end = this._makeIndex([0, n+1], false);
-		console.log({ start, end });
+		//console.log({ start, end });
 		return this.typedArray.slice(start, end);
 	}
 
@@ -59,7 +59,7 @@ class NDArray {
 		}
 		const start = this._makeIndex([n, 0], false);
 		const end = this._makeIndex([n+1, 0], false);
-		console.log({ start, end });
+		//console.log({ start, end });
 		return this.typedArray.slice(start, end);
 	}
 
@@ -93,7 +93,7 @@ class NDArray {
 		}
 
 		const out_values = new Float64Array(idx.shape[1]);
-		
+
 		for (let i=0; i<idx.typedArray.length; i++){
 			const pos = idx.typedArray[i];
 			out_values[i] = this.get(0, pos);

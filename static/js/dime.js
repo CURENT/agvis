@@ -116,7 +116,7 @@ class NDArray {
 
 		const start = this._makeIndex([0, n], false);
 		const end = this._makeIndex([0, n+1], false);
-		console.log({ start, end });
+		//console.log({ start, end });
 		return this.array.slice(start, end);
 	}
 
@@ -131,7 +131,7 @@ class NDArray {
 
 		const start = this._makeIndex([n, 0], false);
 		const end = this._makeIndex([n+1, 0], false);
-		console.log({ start, end });
+		//console.log({ start, end });
 		return this.array.slice(start, end);
 	}
 
