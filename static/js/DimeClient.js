@@ -13,8 +13,9 @@ const S_NAME = 0;
 const S_VALUE = 1;
 
 class DimeClient {
-	constructor(url) {
-		const ws = new WebSocket(url);
+	constructor(hostname, port) {
+		const ws = new WebSocket(`ws://${hostname}:${port}`);
+        const group = (port == 8811 ? "geovis" : "geovis2");
 
 		let readyResolve, readyReject;
 		const ready = new Promise((resolve, reject) => {
@@ -37,6 +38,7 @@ class DimeClient {
 
 		Object.assign(this, {
 			ws,
+            group,
 			ready,
 			readyResolve,
 			readyReject,
@@ -46,6 +48,9 @@ class DimeClient {
 			syncName,
 			syncValue,
 		});
+
+        this.d = new dime.DimeClient(hostname, 8818);
+        this.d.join(group);
 	}
 
 	_onopen() {
@@ -76,12 +81,26 @@ class DimeClient {
 	}
 
 	sync() {
-		return new Promise((resolve, reject) => {
-			Object.assign(this, {
-				syncResolve: resolve,
-				syncReject: reject,
-			});
-		});
+        const { d, group } = this;
+
+        const promise = new Promise((resolve, reject) => {
+            Object.assign(this, {
+                syncResolve: resolve,
+                syncReject: reject,
+            });
+        });
+
+		return (async function() {
+            let ret1 = await promise;
+            let ret2 = await d.sync_r();
+
+            if (group === "geovis") {
+                console.log(ret1);
+                console.log(ret2);
+            }
+
+            return ret1;
+        })();
 	}
 
 	send_var(target, name, value) {

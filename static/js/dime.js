@@ -250,7 +250,7 @@ function __loadsmat(bytes, dtype, complex) {
         array[i] = dview[method](i * itemsize);
     }
 
-    let obj = new NDArray("F", shape, complex, array);
+    let obj = new dime.NDArray("F", shape, complex, array);
     let nread = 2 + 4 * rank + nelems * itemsize;
 
     return [obj, nread];
@@ -344,7 +344,7 @@ function __loads(bytes) {
 
     case TYPE_DOUBLE:
         obj = dview.getFloat64(0);
-        nread = 5;
+        nread = 9;
 
         break;
 
@@ -464,6 +464,9 @@ function __loads(bytes) {
         }
 
         break;
+
+    default:
+        throw "Invalid dimeb data";
     }
 
     return [obj, nread];
