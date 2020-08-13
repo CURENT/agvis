@@ -51,6 +51,9 @@ class DimeClient {
 
         this.d = new dime.DimeClient(hostname, 8818);
         this.d.join(group);
+
+        this.syncResolve = function() {}
+        this.syncReject = function() {}
 	}
 
 	_onopen() {
@@ -80,8 +83,15 @@ class DimeClient {
 		}
 	}
 
-	sync() {
-        const { d, group } = this;
+	async sync() {
+        /*return new Promise((resolve, reject) => {
+            Object.assign(this, {
+                syncResolve: resolve,
+                syncReject: reject,
+            });
+        });*/
+
+        /*const { d, group } = this;
 
         const promise = new Promise((resolve, reject) => {
             Object.assign(this, {
@@ -100,15 +110,32 @@ class DimeClient {
             }
 
             return ret1;
-        })();
+        })();*/
+
+        let kvpair = {};
+
+        while (Object.keys(kvpair).length === 0) {
+            await this.d.wait();
+            kvpair = await this.d.sync_r(1);
+        }
+
+        console.log(kvpair);
+
+        let [[name, value]] = Object.entries(kvpair);
+        return {name, value};
 	}
 
-	send_var(target, name, value) {
+	async send_var(target, name, value) {
 		const { ws } = this;
 		ws.send(name);
 		ws.send(target);
 		//console.log({ target, name, value });
 		ws.send(JSON.stringify(value));
+
+        /*let kvpair = {};
+        kvpair[name] = value;
+
+        await this.d.send_r(target, kvpair);*/
 	}
 
 	close() {

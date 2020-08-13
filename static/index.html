@@ -151,10 +151,10 @@
         const x2 = document.getElementById("map2");
 
         const dimec1 = new DimeClient(window.location.hostname, +window.location.port+1);
-        const dimec2 = new DimeClient(window.location.hostname, +window.location.port+2);
+        //const dimec2 = new DimeClient(window.location.hostname, +window.location.port+2);
 
         const [map1, layers1] = CreateWindow('map', dimec1, 'geovis');
-        const [map2, layers2] = CreateWindow('map2', dimec2, 'geovis2');
+        //const [map2, layers2] = CreateWindow('map2', dimec2, 'geovis2');
 
         // Toggle config panel button
         const panel = document.getElementById("configpanel");
@@ -171,7 +171,7 @@
             }
 
             map1.invalidateSize();
-            map2.invalidateSize();
+            //map2.invalidateSize();
         }
 
         const opt_togglemap2 = document.getElementById("opt_togglemap2");
@@ -180,15 +180,15 @@
         const opt_togglebuslabels = document.getElementById("opt_togglebuslabels");
         opt_togglebuslabels.onclick = function() {
             layers1.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
-            layers2.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
+            //layers2.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
 
             layers1.topologyLayer.redraw();
-            layers2.topologyLayer.redraw();
+            //layers2.topologyLayer.redraw();
         }
 
         document.getElementById("opt_resettime").onclick = function() {
             map1.resetTime();
-            map2.resetTime();
+            //map2.resetTime();
         }
 
         // set the number of map views

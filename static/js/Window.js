@@ -255,9 +255,9 @@ function CreateWindow(map_name, dimec, dimec_name) {
             //console.log({ name, value });
 
         if (!sentHeader && name === 'Idxvgs') {
-            const busVoltageIndices = workspace.Idxvgs.Bus.V.typedArray;
-            const busThetaIndices = workspace.Idxvgs.Bus.theta.typedArray;
-            const busfreqIndices= workspace.Idxvgs.Bus.w_Busfreq.typedArray;
+            const busVoltageIndices = workspace.Idxvgs.Bus.V.array;
+            const busThetaIndices = workspace.Idxvgs.Bus.theta.array;
+            const busfreqIndices= workspace.Idxvgs.Bus.w_Busfreq.array;
 
             const nBus = busVoltageIndices.length;
 
@@ -274,13 +274,13 @@ function CreateWindow(map_name, dimec, dimec_name) {
             const variableRelIndices = {};
 
             for (let i=0; i<busVoltageIndices.length; ++i) {
-                variableAbsIndices[i] = busVoltageIndices[i];
+                variableAbsIndices[i] = Number(busVoltageIndices[i]);
             }
             for (let i=0; i<busThetaIndices.length; ++i) {
-                variableAbsIndices[nBus + i] = busThetaIndices[i];
+                variableAbsIndices[nBus + i] = Number(busThetaIndices[i]);
             }
             for (let i=0; i<busfreqIndices.length; ++i) {
-                variableAbsIndices[2*nBus + i] = busfreqIndices[i];
+                variableAbsIndices[2*nBus + i] = Number(busfreqIndices[i]);
             }
             if (p1 !== undefined)
                 variableAbsIndices[3*nBus] = parseInt(p1);

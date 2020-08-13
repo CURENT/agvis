@@ -843,9 +843,30 @@ class DimeClient {
         if (jsondata.status < 0) {
             throw status.error;
         }
+
+        return jsondata.n;
+    }
+
+    async devices() {
+        if (this.connected) {
+            await this.connected;
+            this.connected = null;
+        }
+
+        this.__send({command: "devices"})
+
+        let [jsondata, bindata] = await this.__recv();
+
+        if (jsondata.status < 0) {
+            throw status.error;
+        }
+
+        return jsondata.devices;
     }
 
     __send(jsondata, bindata = new ArrayBuffer(0)) {
+        console.log("-> " + JSON.stringify(jsondata));
+
         jsondata = new TextEncoder().encode(JSON.stringify(jsondata));
         bindata = new Uint8Array(bindata);
 
@@ -882,6 +903,8 @@ class DimeClient {
                     if (self.recvbuffer.byteLength >= 12 + jsondata_len + bindata_len) {
                         let jsondata = self.recvbuffer.slice(12, 12 + jsondata_len);
                         let bindata = self.recvbuffer.slice(12 + jsondata_len, 12 + jsondata_len + bindata_len);
+
+                        console.log("<- " + new TextDecoder().decode(jsondata));
 
                         jsondata = JSON.parse(new TextDecoder().decode(jsondata));
 
