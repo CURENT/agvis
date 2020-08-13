@@ -91,35 +91,12 @@ class DimeClient {
             });
         });*/
 
-        /*const { d, group } = this;
-
-        const promise = new Promise((resolve, reject) => {
-            Object.assign(this, {
-                syncResolve: resolve,
-                syncReject: reject,
-            });
-        });
-
-		return (async function() {
-            let ret1 = await promise;
-            let ret2 = await d.sync_r();
-
-            if (group === "geovis") {
-                console.log(ret1);
-                console.log(ret2);
-            }
-
-            return ret1;
-        })();*/
-
         let kvpair = {};
 
         while (Object.keys(kvpair).length === 0) {
             await this.d.wait();
             kvpair = await this.d.sync_r(1);
         }
-
-        console.log(kvpair);
 
         let [[name, value]] = Object.entries(kvpair);
         return {name, value};

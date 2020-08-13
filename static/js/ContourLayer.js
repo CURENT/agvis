@@ -34,7 +34,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!Idxvgs) return;
 	const Varvgs = context.Varvgs;
 	if (!Varvgs) return;
-	const vars = Varvgs.vars;
+	let vars = Varvgs.vars;
 
 	let paramCache = this._cache.get(SysParam);
 	if (!paramCache) {
@@ -69,7 +69,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 
 	let { busTriangles } = paramCache;
 	if (!busTriangles || needsProjectionUpdate) {
-		const delaunay = new d3.Delaunay(busLatLngCoords.typedArray);
+		const delaunay = new d3.Delaunay(busLatLngCoords.array);
 
 		busTriangles = paramCache.busTriangles =
 			new NDArray('C', [delaunay.triangles.length/3, 3], delaunay.triangles);
@@ -113,7 +113,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!aPositionBufferInfo || needsProjectionUpdate) {
 		aPositionBufferInfo = glCache.aPositionBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 			aPosition: {
-				data: busPixelCoords.typedArray,
+				data: Float32Array.from(busPixelCoords.array),
 				numComponents: 2,
 			},
 		});
@@ -123,7 +123,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!aIndicesBufferInfo) {
 		aIndicesBufferInfo = glCache.aIndicesBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 			indices: {
-				data: busTriangles.typedArray,
+				data: Float32Array.from(busTriangles.array),
 				numComponents: 3,
 			},
 		});
@@ -159,7 +159,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 
 	const aValueBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 		aValue: {
-			data: variableValue.typedArray,
+			data: Float32Array.from(variableValue.array),
 			numComponents: 1,
 		},
 	});

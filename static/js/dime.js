@@ -34,7 +34,7 @@ class Complex {
 }
 
 class NDArray {
-	constructor(order, shape, complex = false, array = null) {
+	constructor(order, shape, array = null, complex = false) {
 		this.order = order;
 		this.shape = shape;
         this.complex = complex;
@@ -140,7 +140,7 @@ class NDArray {
             throw "Complex matrices are currently unsuppoerted";
         }
 
-		if (this.shape[0] !== 1) {
+		if (!(this.shape.length === 1 || (this.shape.length === 2 && this.shape[0] === 1))) {
 			throw 'extents: expected column vector';
 		}
 
@@ -169,22 +169,23 @@ class NDArray {
             throw "Complex matrices are currently unsuppoerted";
         }
 
-		if (this.shape[0] !== 1) {
+		if (!(this.shape.length === 1 || (this.shape.length === 2 && this.shape[0] === 1))) {
 			throw 'extents: expected column vector';
 		}
 
-		if (idx.shape[0] !== 1) {
+		if (!(idx.shape.length === 1 || (idx.shape.length === 2 && idx.shape[0] === 1))) {
 			throw 'extents: expected column vector';
 		}
 
-		const out_values = new Float64Array(idx.shape[1]);
+        const len = idx.shape[idx.shape.length - 1];
+		const out_values = new Float64Array(len);
 
-		for (let i=0; i<idx.array.length; i++){
+		for (let i=0; i < idx.array.length; i++){
 			const pos = idx.array[i];
 			out_values[i] = this.get(0, pos);
 		}
 
-		return new NDArray(this.order, [1, idx.shape[1]], out_values)
+		return new NDArray(this.order, [1, len], out_values)
 	}
 }
 
@@ -241,6 +242,10 @@ function __loadsmat(bytes, dtype, complex) {
         shape.push(dview.getUint32(i * 4));
     }
 
+    if (shape.length === 1) {
+        shape = [1, shape[0]];
+    }
+
     let nelems = shape.reduce((a, b) => a * b) * (complex ? 2 : 1);
 
     dview = new DataView(bytes, 2 + 4 * rank);
@@ -250,7 +255,7 @@ function __loadsmat(bytes, dtype, complex) {
         array[i] = dview[method](i * itemsize);
     }
 
-    let obj = new dime.NDArray("F", shape, complex, array);
+    let obj = new dime.NDArray("F", shape, array, complex);
     let nread = 2 + 4 * rank + nelems * itemsize;
 
     return [obj, nread];
@@ -384,6 +389,12 @@ function __loads(bytes) {
 
     case TYPE_MAT_I64:
         [obj, nread] = __loadsmat(bytes, [BigInt64Array, "getBigInt64", 8], false);
+
+        if (obj.array.every((i) => BigInt(-Number.MAX_SAFE_INTEGER) <= i && i <= BigInt(Number.MAX_SAFE_INTEGER))) {
+            let array = new Float64Array(Array.from(obj.array).map(Number));
+            obj = new NDArray(obj.order, obj.shape, array, obj.complex);
+        }
+
         break;
 
     case TYPE_MAT_U8:
@@ -400,6 +411,12 @@ function __loads(bytes) {
 
     case TYPE_MAT_U64:
         [obj, nread] = __loadsmat(bytes, [BigUint64Array, "getBigUint64", 8], false);
+
+        if (obj.array.every((i) => i <= BigInt(Number.MAX_SAFE_INTEGER))) {
+            let array = new Float64Array.from(Array.from(obj.array).map(Number));
+            obj = new NDArray(obj.order, obj.shape, array, obj.complex);
+        }
+
         break;
 
     case TYPE_MAT_SINGLE:
@@ -865,7 +882,7 @@ class DimeClient {
     }
 
     __send(jsondata, bindata = new ArrayBuffer(0)) {
-        console.log("-> " + JSON.stringify(jsondata));
+        //console.log("-> " + JSON.stringify(jsondata));
 
         jsondata = new TextEncoder().encode(JSON.stringify(jsondata));
         bindata = new Uint8Array(bindata);
@@ -904,7 +921,7 @@ class DimeClient {
                         let jsondata = self.recvbuffer.slice(12, 12 + jsondata_len);
                         let bindata = self.recvbuffer.slice(12 + jsondata_len, 12 + jsondata_len + bindata_len);
 
-                        console.log("<- " + new TextDecoder().decode(jsondata));
+                        //console.log("<- " + new TextDecoder().decode(jsondata));
 
                         jsondata = JSON.parse(new TextDecoder().decode(jsondata));
 
