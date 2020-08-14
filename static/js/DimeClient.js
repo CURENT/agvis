@@ -14,8 +14,8 @@ const S_VALUE = 1;
 
 class DimeClient {
 	constructor(hostname, port) {
-		const ws = new WebSocket(`ws://${hostname}:${port}`);
         const group = (port == 8811 ? "geovis" : "geovis2");
+		/*const ws = new WebSocket(`ws://${hostname}:${port}`);
 
 		let readyResolve, readyReject;
 		const ready = new Promise((resolve, reject) => {
@@ -47,7 +47,7 @@ class DimeClient {
 			syncState,
 			syncName,
 			syncValue,
-		});
+		});*/
 
         this.d = new dime.DimeClient(hostname, 8818);
         this.d.join(group);
@@ -56,7 +56,7 @@ class DimeClient {
         this.syncReject = function() {}
 	}
 
-	_onopen() {
+	/*_onopen() {
 		const { readyResolve } = this;
 		readyResolve(this);
 	}
@@ -81,10 +81,10 @@ class DimeClient {
 				value: syncValue,
 			});
 		}
-	}
+	}*/
 
 	async sync() {
-        /*return new Promise((resolve, reject) => {
+        /*return await new Promise((resolve, reject) => {
             Object.assign(this, {
                 syncResolve: resolve,
                 syncReject: reject,
@@ -103,20 +103,20 @@ class DimeClient {
 	}
 
 	async send_var(target, name, value) {
-		const { ws } = this;
+		/*const { ws } = this;
 		ws.send(name);
 		ws.send(target);
 		//console.log({ target, name, value });
-		ws.send(JSON.stringify(value));
+		ws.send(JSON.stringify(value));*/
 
-        /*let kvpair = {};
+        let kvpair = {};
         kvpair[name] = value;
 
-        await this.d.send_r(target, kvpair);*/
+        await this.d.send_r(target, kvpair);
 	}
 
 	close() {
-		const { ws } = this;
-		ws.close();
+		/*const { ws } = this;
+		ws.close();*/
 	}
 };

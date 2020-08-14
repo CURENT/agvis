@@ -300,11 +300,11 @@ function CreateWindow(map_name, dimec, dimec_name) {
             contourLayer.updateRange(0.9998, 1.0002);
 
             await dimec.send_var('sim', dimec_name, {
-                vgsvaridx: {
+                vgsvaridx: new dime.NDArray('F', [1, variableAbsIndices.length], variableAbsIndices) /*{
                     ndarray: true,
                     shape: [1, variableAbsIndices.length],
                     data: base64arraybuffer.encode(variableAbsIndices.buffer),
-                },
+                },*/
             }
             );
             sentHeader = true;

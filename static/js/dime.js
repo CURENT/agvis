@@ -522,7 +522,7 @@ function dimebdumps(obj) {
         bytes[0] = TYPE_COMPLEX_DOUBLE;
         dview.setFloat64(0, obj.real);
         dview.setFloat64(8, obj.imag);
-    } else if (obj instanceof NDArray) {
+    } else if (obj instanceof dime.NDArray) {
 		if (obj.order !== 'F') {
 			throw "C-order NDArrays are currently not supported for dimebdumps";
 		}
