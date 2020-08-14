@@ -185,7 +185,7 @@ class NDArray {
 			out_values[i] = this.get(0, pos);
 		}
 
-		return new NDArray(this.order, [1, len], out_values)
+		return new NDArray(this.order, [1, len], out_values);
 	}
 }
 

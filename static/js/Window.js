@@ -299,7 +299,7 @@ function CreateWindow(map_name, dimec, dimec_name) {
             contourLayer.showVariable("freq");
             contourLayer.updateRange(0.9998, 1.0002);
 
-            dimec.send_var('sim', dimec_name, {
+            await dimec.send_var('sim', dimec_name, {
                 vgsvaridx: {
                     ndarray: true,
                     shape: [1, variableAbsIndices.length],

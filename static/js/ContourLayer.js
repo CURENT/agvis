@@ -34,7 +34,6 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!Idxvgs) return;
 	const Varvgs = context.Varvgs;
 	if (!Varvgs) return;
-	let vars = Varvgs.vars;
 
 	let paramCache = this._cache.get(SysParam);
 	if (!paramCache) {
@@ -113,7 +112,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!aPositionBufferInfo || needsProjectionUpdate) {
 		aPositionBufferInfo = glCache.aPositionBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 			aPosition: {
-				data: Float32Array.from(busPixelCoords.array),
+				data: busPixelCoords.array,
 				numComponents: 2,
 			},
 		});
@@ -123,7 +122,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!aIndicesBufferInfo) {
 		aIndicesBufferInfo = glCache.aIndicesBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 			indices: {
-				data: Float32Array.from(busTriangles.array),
+				data: busTriangles.array,
 				numComponents: 3,
 			},
 		});
@@ -146,6 +145,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		-1, 1, 0, 1,
 	];
 
+	const vars = new dime.NDArray(Varvgs.vars.order, Varvgs.vars.shape, Float32Array.from(Varvgs.vars.array));
 	const variableValue = vars.subarray(this._variableRange);
 
 	let maxVoltageDifference = Math.abs(variableValue.get(0, 0) - 1.0);
@@ -159,7 +159,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 
 	const aValueBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 		aValue: {
-			data: Float32Array.from(variableValue.array),
+			data: variableValue.array,
 			numComponents: 1,
 		},
 	});
@@ -229,7 +229,7 @@ L.ContourLayer = L.CanvasLayer.extend({
 
     toggleRender() {
         this._render = !this._render;
-        //console.log("Contour rendering: ", this._render);
+        console.log("Contour rendering: ", this._render);
     }
 
 });
