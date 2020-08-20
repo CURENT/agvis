@@ -42,6 +42,22 @@ run() {
 		rm -f $xauth
 		xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $xauth nmerge -
 	fi
+
+
+    echo "docker run --rm \
+		${interactive:+-it} \
+		${script:+-a stdin -a stdout -a stderr --sig-proxy=true} \
+		${ipc:+--ipc=$ipc} \
+		${net:+--net=$net} \
+		${user:+-u $(id -u):$(id -g)} \
+		${cwd:+-v $PWD:$PWD -w $PWD} \
+		${port:+-p $port:$port} \
+		${port2:+-p $port2:$port2} \
+		${data:+-v $data:$data} \
+		${xauth:+-e DISPLAY -v /etc/group:/etc/group:ro -v /etc/passwd:/etc/passwd:ro -v /etc/shadow:/etc/shadow:ro -v /etc/sudoers.d:/etc/sudoers.d:ro -v $xauth:$xauth -e XAUTHORITY=$xauth} \
+		${entrypoint:+--entrypoint $entrypoint} \
+		$tag $@"
+
 	docker run --rm \
 		${interactive:+-it} \
 		${script:+-a stdin -a stdout -a stderr --sig-proxy=true} \
