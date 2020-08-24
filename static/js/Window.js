@@ -160,10 +160,11 @@ function CreateWindow(map_name, dimec, dimec_name) {
             if (!ready) return;
 
             //zoneLayer.update(workspace);
+
             topologyLayer.update(workspace);
-            contourLayer.update(workspace);
-            communicationLayer.update(workspace);
-            searchLayer.update(workspace);
+            //contourLayer.update(workspace);
+            //communicationLayer.update(workspace);
+            //searchLayer.update(workspace);
 
             if (workspace.Varvgs) {
                 simTimeBox.update(workspace.Varvgs.t.toFixed(2));
@@ -299,14 +300,13 @@ function CreateWindow(map_name, dimec, dimec_name) {
             contourLayer.showVariable("freq");
             contourLayer.updateRange(0.9998, 1.0002);
 
-            await dimec.send_var('sim', dimec_name, {
+            await dimec.send_var('andes', dimec_name, {
                 vgsvaridx: new dime.NDArray('F', [1, variableAbsIndices.length], variableAbsIndices) /*{
                     ndarray: true,
                     shape: [1, variableAbsIndices.length],
                     data: base64arraybuffer.encode(variableAbsIndices.buffer),
                 },*/
-            }
-            );
+            });
             sentHeader = true;
 
         } else if (name === 'DONE') {

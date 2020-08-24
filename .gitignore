@@ -1,6 +1,3 @@
 env.sh
 *.zip
 *_out*.*
-/andes/
-/andes_addon/
-/dime/

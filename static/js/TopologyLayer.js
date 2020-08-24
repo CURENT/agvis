@@ -13,6 +13,9 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	const Exc = SysParam.Exc;
 	const Pss = SysParam.Pss;
 
+    //console.log(Bus);
+    //console.log(Line);
+
 	let paramCache = this._cache.get(SysParam);
 	if (!paramCache) {
 		paramCache = {};
@@ -69,14 +72,16 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 		}
 	}
 
+    const nelems = Bus.idx.length;
+
 	let { busLatLngCoords } = paramCache;
 	if (!busLatLngCoords) {
 		busLatLngCoords = paramCache.busLatLngCoords =
-			new NDArray('C', [Bus.shape[0], 2]);
+			new NDArray('C', [nelems, 2]);
 
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const lat = Bus.get(i, 6);
-			const lng = Bus.get(i, 7);
+		for (let i=0; i < nelems; ++i) {
+			const lat = Bus.ycoord[i];
+			const lng = Bus.xcoord[i];
 			busLatLngCoords.set(lat, i, 0);
 			busLatLngCoords.set(lng, i, 1);
 		}
@@ -84,8 +89,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 
 	let { busPixelCoords } = paramCache;
 	if (!busPixelCoords || needsProjectionUpdate) {
-		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [Bus.shape[0], 2]);
-		for (let i=0; i<Bus.shape[0]; ++i) {
+		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [nelems, 2]);
+		for (let i=0; i < nelems; ++i) {
 			const lat = busLatLngCoords.get(i, 0);
 			const lng = busLatLngCoords.get(i, 1);
 			const point = project(L.latLng(lat, lng));
@@ -98,8 +103,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!busToIndexLookup) {
 		busToIndexLookup = paramCache.busToIndexLookup =
 			new Map();
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const busNumber = Bus.get(i, 0);
+		for (let i=0; i < nelems; ++i) {
+			const busNumber = Bus.idx[i];
 			busToIndexLookup.set(busNumber, i);
 		}
 	}
@@ -108,8 +113,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!busToImageLookup) {
 		busToImageLookup = paramCache.busToImageLookup = new Map();
 
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const busNumber = Bus.get(i, 0);
+		for (let i=0; i < nelems; ++i) {
+			const busNumber = Bus.idx[i];
 			const syn = busToSynLookup.get(busNumber);
 			const exc = synToExcLookup.get(syn);
 			const tg = synToTgLookup.get(syn);
@@ -131,7 +136,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 
 	let { lineVoltageRating } = paramCache;
 	if (!lineVoltageRating) {
-		lineVoltageRating = paramCache.lineVoltageRating = Line.column(3);
+		lineVoltageRating = paramCache.lineVoltageRating = Line.Vn1.column(0);
 	}
 
 	let { lineVoltageRatingExtents } = paramCache;
@@ -195,16 +200,16 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
         ctx.lineWidth = 2;
         ctx.beginPath();
 
-        for (let i=0; i<Line.shape[0]; ++i){
-            const voltageRating = Line.get(i, 3);
+        for (let i=0; i < Line.idx.length; ++i){
+            const voltageRating = Line.Vn1.get(0, i);
             if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
 
-            const fromNumber = Line.get(i, 0);
+            const fromNumber = Line.bus1[i];
             const fromIndex = busToIndexLookup.get(fromNumber);
             const fromX = busPixelCoords.get(fromIndex, 0);
             const fromY = busPixelCoords.get(fromIndex, 1);
 
-            const toNumber = Line.get(i, 1);
+            const toNumber = Line.bus2[i];
             const toIndex = busToIndexLookup.get(toNumber);
             const toX = busPixelCoords.get(toIndex, 0);
             const toY = busPixelCoords.get(toIndex, 1);
@@ -220,10 +225,10 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
         ctx.textBaseline = "top";
 
         // Draws the buses (vertices)
-        for (let i=0; i<Bus.shape[0]; ++i) {
+        for (let i=0; i < nelems; ++i) {
             const x = busPixelCoords.get(i, 0);
             const y = busPixelCoords.get(i, 1);
-            const busNumber = Bus.get(i, 0);
+            const busNumber = Bus.idx[i];
             const image = busToImageLookup.get(busNumber);
             const size = 12;
             ctx.drawImage(image, x - size/2, y - size/2, size, size);
