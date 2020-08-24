@@ -15,7 +15,8 @@ RUN apt install -y --no-install-recommends \
 
 RUN rm -rf /var/lib/apt/lists/*
 
-RUN python3 -m pip install andes cvxoptklu --no-cache-dir
+RUN python3 -m pip install cvxoptklu --no-cache-dir
+RUN python3 -m pip install https://github.com/cuihantao/andes/zipball/develop --no-cache-dir
 RUN python3 -m pip install https://github.com/curent/cvxopt/zipball/master --no-cache-dir
 
 RUN useradd -ms /bin/bash cui
@@ -24,6 +25,7 @@ RUN python3 -m andes selftest
 RUN mv /root/.andes /home/cui
 COPY wecc_vis.xlsx /home/cui
 RUN chown -R cui:cui /home/cui/.andes
+COPY andes.rc /home/cui/.andes
 
 WORKDIR /tmp
 RUN git clone https://github.com/TheHashTableSlasher/dime2

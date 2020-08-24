@@ -1,0 +1,104 @@
+[System]
+freq = 60
+mva = 100
+store_z = 0
+ipadd = 1
+diag_eps = 1e-08
+warn_limits = 1
+warn_abnormal = 1
+dime_enabled = 1
+dime_name = andes
+dime_protocol = ipc
+dime_address = /tmp/dime2
+
+[PFlow]
+sparselib = klu
+linsolve = 0
+tol = 1e-06
+max_iter = 25
+method = NR
+n_factorize = 4
+report = 1
+degree = 0
+init_tds = 0
+
+[TDS]
+sparselib = klu
+linsolve = 0
+tol = 1e-06
+t0 = 0.0
+tf = 20.0
+fixt = 1
+shrinkt = 1
+honest = 0
+tstep = 0.03333333333333333
+max_iter = 15
+refresh_event = 0
+g_scale = 1
+
+[EIG]
+sparselib = klu
+linsolve = 0
+plot = 0
+
+[Fault]
+restore = 1
+scale = 1.0
+
+[Bus]
+flat_start = 0
+
+[PQ]
+pq2z = 1
+p2p = 0.0
+p2i = 0.0
+p2z = 1.0
+q2q = 0.0
+q2i = 0.0
+q2z = 1.0
+
+[PV]
+pv2pq = 0
+npv2pq = 1
+
+[Slack]
+pv2pq = 0
+npv2pq = 1
+av2pv = 0
+
+[ACE]
+freq_model = BusFreq
+interval = 4.0
+offset = 0.0
+
+[GENCLS]
+vf_lower = 1.0
+vf_upper = 5.0
+
+[GENROU]
+vf_lower = 1.0
+vf_upper = 5.0
+
+[TG2]
+deadband = 0
+hardlimit = 1
+
+[IEEEST]
+freq_model = BusFreq
+
+[ST2CUT]
+freq_model = BusFreq
+
+[Node]
+flat_start = 0
+
+[REECA1]
+kqs = 2
+kvs = 2
+tpfilt = 0.02
+
+[REPCA1]
+kqs = 2
+ksg = 2
+freeze = 1
+
