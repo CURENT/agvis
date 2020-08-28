@@ -164,7 +164,6 @@ function CreateWindow(map_name, dimec, dimec_name) {
             topologyLayer.update(workspace);
             contourLayer.update(workspace);
             //communicationLayer.update(workspace);
-            //searchLayer.update(workspace);
 
             if (workspace.Varvgs) {
                 simTimeBox.update(workspace.Varvgs.t.toFixed(2));
@@ -251,6 +250,9 @@ function CreateWindow(map_name, dimec, dimec_name) {
 
         if (!history[name]) history[name] = [];
         history[name].push(value);
+
+        // Update this here so that it's not in the animation loop
+        searchLayer.update(workspace);
 
         //if (name !== 'Varvgs' && name !== 'pmudata' && name !== 'LTBNET_vars')
             //console.log({ name, value });

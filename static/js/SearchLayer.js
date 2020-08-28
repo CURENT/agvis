@@ -34,25 +34,12 @@ L.SearchLayer = L.LayerGroup.extend({
 
         const Bus = SysParam.Bus;
 
-        let { busLatLngCoords } = paramCache;
-        if (!busLatLngCoords) {
-            busLatLngCoords = paramCache.busLatLngCoords =
-                new NDArray('C', [Bus.shape[0], 2]);
-
-            for (let i=0; i<Bus.shape[0]; ++i) {
-                const lat = Bus.get(i, 6);
-                const lng = Bus.get(i, 7);
-                busLatLngCoords.set(lat, i, 0);
-                busLatLngCoords.set(lng, i, 1);
-            }
-        }
-
         this.clearLayers();
 
-        for (let i = 0; i < Bus.shape[0]; i++) {
-            const lat = busLatLngCoords.get(i, 0);
-            const lng = busLatLngCoords.get(i, 1);
-            const title = Bus.get(i, 0).toString();
+        for (let i = 0; i < Bus.idx.length; i++) {
+			const lat = Bus.ycoord[i];
+			const lng = Bus.xcoord[i];
+			const title = Bus.name[i];
 
             const coords = new L.latLng(lat, lng);
             let marker = new L.Marker(coords, {icon: L.divIcon(), opacity: 0, title: title});
