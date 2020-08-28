@@ -39,10 +39,11 @@ L.SearchLayer = L.LayerGroup.extend({
         for (let i = 0; i < Bus.idx.length; i++) {
 			const lat = Bus.ycoord[i];
 			const lng = Bus.xcoord[i];
+			const idx = Bus.idx[i];
 			const title = Bus.name[i];
 
             const coords = new L.latLng(lat, lng);
-            let marker = new L.Marker(coords, {icon: L.divIcon(), opacity: 0, title: title});
+            let marker = new L.Marker(coords, {icon: L.divIcon(), opacity: 0, title: idx + ", " + title});
 
             this.addLayer(marker);
         }

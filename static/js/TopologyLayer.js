@@ -13,8 +13,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	const Exc = SysParam.Exc;
 	const Pss = SysParam.Pss;
 
-    //console.log(Bus);
-    //console.log(Line);
+    const GENROU = SysParam.GENROU;
 
 	let paramCache = this._cache.get(SysParam);
 	if (!paramCache) {
@@ -113,7 +112,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!busToImageLookup) {
 		busToImageLookup = paramCache.busToImageLookup = new Map();
 
-		for (let i=0; i < nelems; ++i) {
+		/*for (let i=0; i < nelems; ++i) {
 			const busNumber = Bus.idx[i];
 			const syn = busToSynLookup.get(busNumber);
 			const exc = synToExcLookup.get(syn);
@@ -131,7 +130,19 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 				images.bus;
 
 			busToImageLookup.set(busNumber, image);
-		}
+		}*/
+
+        for (let i = 0; i < nelems; i++) {
+			const busNumber = Bus.idx[i];
+			busToImageLookup.set(busNumber, images.bus);
+        }
+
+        if (GENROU) {
+            for (let i = 0; i < GENROU.bus.length; i++) {
+                const busNumber = GENROU.bus[i];
+                busToImageLookup.set(busNumber, images.syn);
+            }
+        }
 	}
 
 	let { lineVoltageRating } = paramCache;
