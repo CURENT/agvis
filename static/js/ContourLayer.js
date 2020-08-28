@@ -41,14 +41,16 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		this._cache.set(SysParam, paramCache);
 	}
 
+    const nelems = Bus.idx.length;
+
 	let { busLatLngCoords } = paramCache;
 	if (!busLatLngCoords) {
 		busLatLngCoords = paramCache.busLatLngCoords =
-			new NDArray('C', [Bus.shape[0], 2]);
+			new NDArray('C', [nelems, 2]);
 
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const lat = Bus.get(i, 6);
-			const lng = Bus.get(i, 7);
+		for (let i=0; i < nelems; ++i) {
+			const lat = Bus.ycoord[i];
+			const lng = Bus.xcoord[i];
 			busLatLngCoords.set(lat, i, 0);
 			busLatLngCoords.set(lng, i, 1);
 		}
@@ -56,8 +58,8 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 
 	let { busPixelCoords } = paramCache;
 	if (!busPixelCoords || needsProjectionUpdate) {
-		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [Bus.shape[0], 2]);
-		for (let i=0; i<Bus.shape[0]; ++i) {
+		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [nelems, 2]);
+		for (let i=0; i < nelems; ++i) {
 			const lat = busLatLngCoords.get(i, 0);
 			const lng = busLatLngCoords.get(i, 1);
 			const point = project(L.latLng(lat, lng));

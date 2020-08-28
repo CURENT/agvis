@@ -162,7 +162,7 @@ function CreateWindow(map_name, dimec, dimec_name) {
             //zoneLayer.update(workspace);
 
             topologyLayer.update(workspace);
-            //contourLayer.update(workspace);
+            contourLayer.update(workspace);
             //communicationLayer.update(workspace);
             //searchLayer.update(workspace);
 
