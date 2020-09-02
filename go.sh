@@ -20,10 +20,8 @@ piptrustedhost=
 [ -f env.sh ] && . env.sh
 
 build() {
-    #cp -rf ../andes .
-    #cp -rf ../andes_addon .
-    #cp -rf ../dime .
-    #cp -f dime.py andes_addon/andes_addon
+    cp -rf ../andes .
+    cp -rf ../dime2 .
 	docker build \
 		${target:+--target $target} \
 		${pipindex:+--build-arg PIP_INDEX_URL=$pipindex} \
@@ -134,7 +132,7 @@ dev() {
 	tmux select-layout tiled
 	tmux send-keys -t0 "docker run -t -v /tmp:/tmp -p 8818:8818 $tag dime -vv -l unix:/tmp/dime2 -l ws:$((port+8))" Enter
 	tmux send-keys -t1 "./go.sh run_8810 python3 server.py --port $((port+0)) --bind 0.0.0.0" Enter
-	tmux send-keys -t2 "docker run -t -v /tmp:/tmp $tag andes -v 10 run /home/cui/wecc_vis.xlsx -r tds"
+	tmux send-keys -t2 "docker run -t -v /tmp:/tmp $tag andes -v 10 run /home/cui/wecc_vis.xlsx -r tds --qrt --kqrt=1"
 }
 
 "$@"

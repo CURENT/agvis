@@ -35,6 +35,8 @@ tstep = 0.03333333333333333
 max_iter = 15
 refresh_event = 0
 g_scale = 1
+qrt = 1
+kqrt = 1
 
 [EIG]
 sparselib = klu
