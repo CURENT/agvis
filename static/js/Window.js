@@ -32,6 +32,9 @@ function CreateWindow(map_name, dimec, dimec_name) {
         zoom: 5,
     });
 
+    map.timescale = 1.0;
+    map.streaming = true;
+
     const workspace = {};
     const history = {};
 
@@ -153,7 +156,12 @@ function CreateWindow(map_name, dimec, dimec_name) {
                 firstTime = currentTime;
                 return;
             }
+
             workspace.currentTimeInSeconds = (currentTime - firstTime) / 1000.0;
+
+            if (!map.streaming) {
+                workspace.currentTimeInSeconds *= map.timescale;
+            }
 
             // get data from history, update contour, simulation time, and plots
             ready = historyKeeper(workspace, history, workspace.currentTimeInSeconds, 'Varvgs');
@@ -314,6 +322,8 @@ function CreateWindow(map_name, dimec, dimec_name) {
         } else if (name === 'DONE') {
             dimec.close();
             console.timeEnd(map_name);
+
+            map.streaming = false;
         }
 
     }

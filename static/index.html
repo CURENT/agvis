@@ -137,6 +137,10 @@
                 <td><label for="opt_togglebuslabels">Toggle Bus Labels</label></td>
                 <td><input type="checkbox" id="opt_togglebuslabels"></td>
             </tr>
+            <tr>
+                <td><label for="opt_timescale">Time multiplier</label></td>
+                <td><input type="text" id="opt_timescale" pattern="[0-9]*(\.[0-9]*)?" value="1"></td>
+            </tr>
 
             <tr>
                 <td colspan="2"><input type="button" id="opt_resettime" value="Reset time"></td>
@@ -184,6 +188,15 @@
 
             layers1.topologyLayer.redraw();
             //layers2.topologyLayer.redraw();
+        }
+
+        const opt_timescale = document.getElementById("opt_timescale");
+
+        opt_timescale.oninput = function() {
+            const val = Number(opt_timescale.value);
+            if (val > 0) {
+                map1.timescale = val;
+            }
         }
 
         document.getElementById("opt_resettime").onclick = function() {
