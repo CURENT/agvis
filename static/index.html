@@ -138,8 +138,11 @@
                 <td><input type="checkbox" id="opt_togglebuslabels"></td>
             </tr>
             <tr>
-                <td><label for="opt_timescale">Time multiplier</label></td>
-                <td><input type="text" id="opt_timescale" pattern="[0-9]*(\.[0-9]*)?" value="1"></td>
+                <td rowspan="2"><label for="opt_timescale_range">Time multiplier</label></td>
+                <td><input type="range" id="opt_timescale_range" min="-1" max="6" step="1" value="2"><div  style="display:inline;" id="timescale_div">1</div></td>
+            </tr>
+            <tr>
+                <td><input type="text" id="opt_timescale_text" pattern="[0-9]*(\.[0-9]*)?" value="1" disabled></td>
             </tr>
 
             <tr>
@@ -190,10 +193,43 @@
             //layers2.topologyLayer.redraw();
         }
 
-        const opt_timescale = document.getElementById("opt_timescale");
+        const opt_timescale_range = document.getElementById("opt_timescale_range");
+        const opt_timescale_text = document.getElementById("opt_timescale_text");
+        const timescale_div = document.getElementById("timescale_div");
 
-        opt_timescale.oninput = function() {
-            const val = Number(opt_timescale.value);
+        opt_timescale_range.oninput = function() {
+            if (opt_timescale_range.value < 0) {
+                opt_timescale_text.disabled = false;
+                timescale_div.innerHTML = "Custom";
+
+                const val = Number(opt_timescale_text.value);
+
+                if (val > 0) {
+                    map1.timescale = val;
+                }
+            } else {
+                opt_timescale_text.disabled = true;
+
+                const vals = [
+                    0.25,
+                    0.5,
+                    1,
+                    1.5,
+                    2,
+                    3,
+                    4
+                ];
+
+                const val = vals[Number(opt_timescale_range.value)];
+
+                map1.timescale = val;
+                timescale_div.innerHTML = "" + val;
+            }
+        }
+
+        opt_timescale_text.oninput = function() {
+            const val = Number(opt_timescale_text.value);
+
             if (val > 0) {
                 map1.timescale = val;
             }
@@ -205,7 +241,7 @@
         }
 
         // set the number of map views
-        if (options.nview > 1){
+        if (options.nview > 1) {
             opt_togglemap2.checked = true;
             ToggleSecond();
         }
