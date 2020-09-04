@@ -153,15 +153,19 @@ function CreateWindow(map_name, dimec, dimec_name) {
             requestAnimationFrame(step);
 
             if (firstTime === null) {
+                workspace.currentTimeInSeconds = 0.0;
                 firstTime = currentTime;
                 return;
             }
 
-            workspace.currentTimeInSeconds = (currentTime - firstTime) / 1000.0;
+            let dt = (currentTime - firstTime) / 1000.0;
 
             if (!map.streaming) {
-                workspace.currentTimeInSeconds *= map.timescale;
+                dt *= map.timescale;
             }
+
+            workspace.currentTimeInSeconds += dt;
+            firstTime = currentTime;
 
             // get data from history, update contour, simulation time, and plots
             ready = historyKeeper(workspace, history, workspace.currentTimeInSeconds, 'Varvgs');
