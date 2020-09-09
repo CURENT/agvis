@@ -16,13 +16,15 @@ L.ZoneLayer = L.GeoJSON.extend({
 
     initialize(options) {
         L.GeoJSON.prototype.initialize.call(this, null, options);
-        this._layers = {};
+        this._render = false;
+        this._geojson = null;
 
         (async function(zonelayer) {
             let geojson = await fetch("/static/js/nerc_regions.geojson");
             geojson = await geojson.json();
 
-            zonelayer.addData(geojson);
+            zonelayer._geojson = geojson;
+            zonelayer.toggleRender();
         })(this);
     },
 
@@ -45,6 +47,17 @@ L.ZoneLayer = L.GeoJSON.extend({
             parent.insertBefore(pane, topologypane);
         } else {
             parent.prepend(pane);
+        }
+    },
+
+    toggleRender() {
+        this._render = !this._render;
+        console.log("Zone rendering: ", this._render);
+
+        if (this._render) {
+            this.addData(this._geojson);
+        } else {
+            this.clearLayers();
         }
     }
 });
