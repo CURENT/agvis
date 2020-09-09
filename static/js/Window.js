@@ -1,12 +1,12 @@
 function CreateWindow(options, map_name, dimec, dimec_name) {
-    const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
+    /*const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
     const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
 
     const amin = (options.amin === undefined) ? -1.0 : options.amin;
     const amax = (options.amax === undefined) ?  1.0 : options.amax;
 
     const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
-    const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
+    const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;*/
 
     const p1 = options.p1;
     const p2 = options.p2;
@@ -14,13 +14,6 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
 
     const p1min = (options.p1min === undefined) ? 0 : options.p1min;
     const p1max = (options.p1max === undefined) ? 0 : options.p1max;
-
-    console.log(options);
-    console.log(options.fmin);
-    console.log(options.fmax);
-
-    console.log("fmin = " + fmin);
-    console.log("fmax = " + fmax);
 
     const arch = "LTB Modules and Data Flow"
 
@@ -228,16 +221,25 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
 
     /// Bar of icons for voltage, theta and frequency
     const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
+        const amin = (options.amin === undefined) ? -1.0 : options.amin;
+        const amax = (options.amax === undefined) ?  1.0 : options.amax;
+
         contourLayer.showVariable("theta");
-        contourLayer.updateRange(-1, 1);
+        contourLayer.updateRange(amin, amax);
     });
     const voltageButton = L.easyButton('<span>V</span>', function(btn, map){
+        const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
+        const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
+
         contourLayer.showVariable("V");
-        contourLayer.updateRange(0.8, 1.2);
+        contourLayer.updateRange(vmin, vmax);
     });
     const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map){
+        const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
+        const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
+
         contourLayer.showVariable("freq");
-        contourLayer.updateRange(0.9998, 1.0002);
+        contourLayer.updateRange(fmin, fmax);
     });
 
     /// Added toggle buttons for different layer views
@@ -317,7 +319,11 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
             // Update variable Range
             contourLayer.storeRelativeIndices(variableRelIndices);
             contourLayer.showVariable("freq");
-            contourLayer.updateRange(0.9998, 1.0002);
+
+            const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
+            const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
+
+            contourLayer.updateRange(fmin, fmax);
 
             await dimec.send_var('andes', dimec_name, {
                 vgsvaridx: new dime.NDArray('F', [1, variableAbsIndices.length], variableAbsIndices) /*{

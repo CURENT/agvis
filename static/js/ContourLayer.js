@@ -201,6 +201,8 @@ L.ContourLayer = L.CanvasLayer.extend({
 		this._uScaleMax = 1.2;
 		this._cache = new WeakMap();
         this._render = true;
+
+        this.variableName = null;
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
 
@@ -220,6 +222,8 @@ L.ContourLayer = L.CanvasLayer.extend({
 
 	showVariable(name) {
 		// updates the name of variables for the contour map
+        this.variableName = name;
+
 		this._variableRange = this._variableRelIndices[name];
             this.redraw();
     },
