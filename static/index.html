@@ -152,7 +152,8 @@
     </div>
 
     <script>
-        const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
+        let options = document.cookie.split('; ').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc; }, {});
+        Object.assign(options, window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc; }, {}));
 
         const x1 = document.getElementById("map");
         const x2 = document.getElementById("map2");
@@ -160,8 +161,8 @@
         const dimec1 = new DimeClient(window.location.hostname, +window.location.port+1);
         //const dimec2 = new DimeClient(window.location.hostname, +window.location.port+2);
 
-        const [map1, layers1] = CreateWindow('map', dimec1, 'geovis');
-        //const [map2, layers2] = CreateWindow('map2', dimec2, 'geovis2');
+        const [map1, layers1] = CreateWindow(options, 'map', dimec1, 'geovis');
+        //const [map2, layers2] = CreateWindow(options, 'map2', dimec2, 'geovis2');
 
         // Toggle config panel button
         const panel = document.getElementById("configpanel");

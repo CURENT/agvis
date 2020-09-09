@@ -1,6 +1,4 @@
-function CreateWindow(map_name, dimec, dimec_name) {
-    const options = window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc;  }, {});
-
+function CreateWindow(options, map_name, dimec, dimec_name) {
     const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
     const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
 
@@ -16,6 +14,13 @@ function CreateWindow(map_name, dimec, dimec_name) {
 
     const p1min = (options.p1min === undefined) ? 0 : options.p1min;
     const p1max = (options.p1max === undefined) ? 0 : options.p1max;
+
+    console.log(options);
+    console.log(options.fmin);
+    console.log(options.fmax);
+
+    console.log("fmin = " + fmin);
+    console.log("fmax = " + fmax);
 
     const arch = "LTB Modules and Data Flow"
 
