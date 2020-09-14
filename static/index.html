@@ -142,6 +142,10 @@
                 <td><input type="checkbox" id="opt_togglemap2"></td>
             </tr>
             <tr>
+                <td><label for="opt_togglezones">Toggle Zones</label></td>
+                <td><input type="checkbox" id="opt_togglezones" checked></td>
+            </tr>
+            <tr>
                 <!--
                 Does this make sense? Wouldn't it be better to have the user
                 select what zoom layer they want the bus labels to appear on?
@@ -334,6 +338,12 @@
 
         const opt_togglemap2 = document.getElementById("opt_togglemap2");
         opt_togglemap2.onclick = ToggleSecond;
+
+        const opt_togglezones = document.getElementById("opt_togglezones");
+        opt_togglezones.onclick = function() {
+            layers1.zoneLayer.toggleRender();
+            opt_togglezones.checked = layers1.zoneLayer._render;
+        }
 
         const opt_togglebuslabels = document.getElementById("opt_togglebuslabels");
         opt_togglebuslabels.onclick = function() {
