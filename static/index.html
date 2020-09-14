@@ -181,7 +181,7 @@
             window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = v; return acc; }, options);
         }
 
-        window.onbeforeunload = function() {
+        /*window.onbeforeunload = function() {
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
@@ -189,7 +189,7 @@
             for (let [k, v] of Object.entries(options)) {
                 document.cookie = k + "=" + v + ";expires=" + dt + ";path=/";
             }
-        }
+        }*/
 
         const x1 = document.getElementById("map");
         const x2 = document.getElementById("map2");
@@ -225,6 +225,12 @@
             if (val === val) {
                 options.amin = val;
 
+                let dt = new Date();
+                dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+                dt = dt.toUTCString();
+
+                document.cookie = "amin=" + val + ";expires=" + dt + ";path=/";
+
                 if (layers1.contourLayer.variableName === "theta") {
                     layers1.contourLayer.updateRange(options.amin, options.amax);
                 }
@@ -237,6 +243,12 @@
 
             if (val === val) {
                 options.amax = val;
+
+                let dt = new Date();
+                dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+                dt = dt.toUTCString();
+
+                document.cookie = "amax=" + val + ";expires=" + dt + ";path=/";
 
                 if (layers1.contourLayer.variableName === "theta") {
                     layers1.contourLayer.updateRange(options.amin, options.amax);
@@ -251,6 +263,12 @@
             if (val === val) {
                 options.vmin = val;
 
+                let dt = new Date();
+                dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+                dt = dt.toUTCString();
+
+                document.cookie = "vmin=" + val + ";expires=" + dt + ";path=/";
+
                 if (layers1.contourLayer.variableName === "V") {
                     layers1.contourLayer.updateRange(options.vmin, options.vmax);
                 }
@@ -263,6 +281,12 @@
 
             if (val === val) {
                 options.vmax = val;
+
+                let dt = new Date();
+                dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+                dt = dt.toUTCString();
+
+                document.cookie = "vmax=" + val + ";expires=" + dt + ";path=/";
 
                 if (layers1.contourLayer.variableName === "V") {
                     layers1.contourLayer.updateRange(options.vmin, options.vmax);
@@ -277,7 +301,13 @@
             if (val === val) {
                 options.fmin = val;
 
-                if (layers1.contourLayer.variableName === "V") {
+                let dt = new Date();
+                dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+                dt = dt.toUTCString();
+
+                document.cookie = "fmin=" + val + ";expires=" + dt + ";path=/";
+
+                if (layers1.contourLayer.variableName === "fred") {
                     layers1.contourLayer.updateRange(options.fmin, options.fmax);
                 }
             }
@@ -289,6 +319,12 @@
 
             if (val === val) {
                 options.fmax = val;
+
+                let dt = new Date();
+                dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+                dt = dt.toUTCString();
+
+                document.cookie = "fmax=" + val + ";expires=" + dt + ";path=/";
 
                 if (layers1.contourLayer.variableName === "freq") {
                     layers1.contourLayer.updateRange(options.fmin, options.fmax);
