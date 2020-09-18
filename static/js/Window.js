@@ -31,7 +31,7 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
     });
 
     map.timescale = 1.0;
-    map.streaming = true;
+    map.end_time = null;
 
     const workspace = {};
     const history = {};
@@ -158,11 +158,20 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
 
             let dt = (currentTime - firstTime) / 1000.0;
 
-            if (!map.streaming) {
+            if (map.end_time !== null) {
                 dt *= map.timescale;
             }
 
             workspace.currentTimeInSeconds += dt;
+
+            if (map.end_time !== null && workspace.currentTimeInSeconds > map.end_time) {
+                workspace.currentTimeInSeconds = map.end_time;
+            }
+
+            if (pbar && !pbar.disabled && pbar.keep_ticking) {
+                pbar.value = workspace.currentTimeInSeconds;
+            }
+
             firstTime = currentTime;
 
             // get data from history, update contour, simulation time, and plots
@@ -338,7 +347,31 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
             dimec.close();
             console.timeEnd(map_name);
 
-            map.streaming = false;
+            map.end_time = Number(workspace.Varvgs.t.toFixed(2));
+
+            if (pbar) {
+                pbar.min = 0;
+                pbar.max = map.end_time;
+                pbar.value = map.end_time;
+                pbar.keep_ticking = true;
+
+                pbar.addEventListener("input", function() {
+                    console.log("oninput!");
+                    workspace.currentTimeInSeconds = Number(pbar.value);
+                });
+
+                pbar.addEventListener("mousedown", function() {
+                    console.log("onmousedown!");
+                    pbar.keep_ticking = false;
+                });
+
+                pbar.addEventListener("mouseup", function() {
+                    console.log("onmouseup!");
+                    pbar.keep_ticking = true;
+                });
+
+                pbar.disabled = false;
+            }
         }
 
     }

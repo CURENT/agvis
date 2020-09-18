@@ -164,6 +164,11 @@
             <tr>
                 <td colspan="2"><input type="button" id="opt_resettime" value="Reset time"></td>
             <tr>
+
+            <tr>
+                <td rowspan="2"><label for="pbar">Progress bar</label></td>
+                <td><input type="range" id="pbar" step="0.01"></td>
+            </tr>
         </table>
     </div>
 
@@ -198,11 +203,13 @@
         const x1 = document.getElementById("map");
         const x2 = document.getElementById("map2");
 
+        const pbar = document.getElementById("pbar");
+
         const dimec1 = new DimeClient(window.location.hostname, +window.location.port+1);
         //const dimec2 = new DimeClient(window.location.hostname, +window.location.port+2);
 
-        const [map1, layers1] = CreateWindow(options, 'map', dimec1, 'geovis');
-        //const [map2, layers2] = CreateWindow(options, 'map2', dimec2, 'geovis2');
+        const [map1, layers1] = CreateWindow(options, x1, dimec1, 'geovis', pbar);
+        //const [map2, layers2] = CreateWindow(options, x2, dimec2, 'geovis2');
 
         // Toggle config panel button
         const panel = document.getElementById("configpanel");
