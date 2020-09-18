@@ -57,6 +57,20 @@
       </style>
 
     <style>
+        #playbackpanel {
+            /*visibility: hidden;*/
+            position: absolute;
+            left: 70px;
+            right: 70px;
+            bottom: 25px;
+            z-index: 9999;
+
+            background-color: white;
+            color: black;
+            padding: 7px;
+            border-radius: 6px;
+        }
+
         #configpanel {
             visibility: hidden;
             position: absolute;
@@ -170,6 +184,16 @@
                 <td><input type="range" id="pbar" step="0.01"></td>
             </tr>
         </table>
+    </div>
+
+    <div class="overlay" id="playbackpanel">
+        <input style="width: 100%;" type="range" id="playbackbar">
+        <input style="float: left;" type="button" value="Pause">
+        <div style="float: right;">
+            <label>Playback speed: </label>
+            <input type="range" min="-1" max="6" step="1" value="2">
+            <input type="text" pattern="[0-9]*(\.[0-9]*)?" value="1" size="8" disabled>
+        </div>
     </div>
 
     <script>
