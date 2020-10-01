@@ -274,6 +274,10 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
     for (;;) {
         const { name, value } = await dimec.sync();
 
+        if (dimec_name === "geovis2") {
+            continue;
+        }
+
         workspace[name] = value;
 
         if (!history[name]) history[name] = [];
