@@ -230,10 +230,10 @@
         const pbar = document.getElementById("pbar");
 
         const dimec1 = new DimeClient(window.location.hostname, +window.location.port+1);
-        //const dimec2 = new DimeClient(window.location.hostname, +window.location.port+2);
+        const dimec2 = new DimeClient(window.location.hostname, +window.location.port+1);
 
         const [map1, layers1] = CreateWindow(options, x1, dimec1, 'geovis', pbar);
-        //const [map2, layers2] = CreateWindow(options, x2, dimec2, 'geovis2');
+        const [map2, layers2] = CreateWindow(options, x2, dimec2, 'geovis2', pbar);
 
         // Toggle config panel button
         const panel = document.getElementById("configpanel");
@@ -250,7 +250,7 @@
             }
 
             map1.invalidateSize();
-            //map2.invalidateSize();
+            map2.invalidateSize();
         }
 
         opt_amin.value = options.amin;
@@ -268,6 +268,10 @@
 
                 if (layers1.contourLayer.variableName === "theta") {
                     layers1.contourLayer.updateRange(options.amin, options.amax);
+                }
+
+                if (layers2.contourLayer.variableName === "theta") {
+                    layers2.contourLayer.updateRange(options.amin, options.amax);
                 }
             }
         }
@@ -288,6 +292,10 @@
                 if (layers1.contourLayer.variableName === "theta") {
                     layers1.contourLayer.updateRange(options.amin, options.amax);
                 }
+
+                if (layers2.contourLayer.variableName === "theta") {
+                    layers2.contourLayer.updateRange(options.amin, options.amax);
+                }
             }
         }
 
@@ -306,6 +314,10 @@
 
                 if (layers1.contourLayer.variableName === "V") {
                     layers1.contourLayer.updateRange(options.vmin, options.vmax);
+                }
+
+                if (layers2.contourLayer.variableName === "V") {
+                    layers2.contourLayer.updateRange(options.vmin, options.vmax);
                 }
             }
         }
@@ -326,6 +338,10 @@
                 if (layers1.contourLayer.variableName === "V") {
                     layers1.contourLayer.updateRange(options.vmin, options.vmax);
                 }
+
+                if (layers2.contourLayer.variableName === "V") {
+                    layers2.contourLayer.updateRange(options.vmin, options.vmax);
+                }
             }
         }
 
@@ -342,8 +358,12 @@
 
                 document.cookie = "fmin=" + val + ";expires=" + dt + ";path=/";
 
-                if (layers1.contourLayer.variableName === "fred") {
+                if (layers1.contourLayer.variableName === "freq") {
                     layers1.contourLayer.updateRange(options.fmin, options.fmax);
+                }
+
+                if (layers2.contourLayer.variableName === "freq") {
+                    layers2.contourLayer.updateRange(options.fmin, options.fmax);
                 }
             }
         }
@@ -364,6 +384,10 @@
                 if (layers1.contourLayer.variableName === "freq") {
                     layers1.contourLayer.updateRange(options.fmin, options.fmax);
                 }
+
+                if (layers2.contourLayer.variableName === "freq") {
+                    layers2.contourLayer.updateRange(options.fmin, options.fmax);
+                }
             }
         }
 
@@ -373,16 +397,18 @@
         const opt_togglezones = document.getElementById("opt_togglezones");
         opt_togglezones.onclick = function() {
             layers1.zoneLayer.toggleRender();
+            layers2.zoneLayer.toggleRender();
+
             opt_togglezones.checked = layers1.zoneLayer._render;
         }
 
         const opt_togglebuslabels = document.getElementById("opt_togglebuslabels");
         opt_togglebuslabels.onclick = function() {
             layers1.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
-            //layers2.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
+            layers2.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
 
             layers1.topologyLayer.redraw();
-            //layers2.topologyLayer.redraw();
+            layers2.topologyLayer.redraw();
         }
 
         const opt_timescale_range = document.getElementById("opt_timescale_range");
@@ -398,6 +424,7 @@
 
                 if (val >= 0) {
                     map1.timescale = val;
+                    map2.timescale = val;
                 }
             } else {
                 opt_timescale_text.disabled = true;
@@ -415,6 +442,7 @@
                 const val = vals[Number(opt_timescale_range.value)];
 
                 map1.timescale = val;
+                map2.timescale = val;
                 timescale_div.innerHTML = " " + val + "x";
             }
         }
@@ -424,12 +452,13 @@
 
             if (val > 0) {
                 map1.timescale = val;
+                map2.timescale = val;
             }
         }
 
         document.getElementById("opt_resettime").onclick = function() {
             map1.resetTime();
-            //map2.resetTime();
+            map2.resetTime();
         }
 
         // set the number of map views
