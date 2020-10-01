@@ -32,6 +32,7 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
 
     map.timescale = 1.0;
     map.end_time = null;
+    map.handshake = true;
 
     const workspace = {};
     const history = {};
@@ -274,7 +275,7 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
     for (;;) {
         const { name, value } = await dimec.sync();
 
-        if (dimec_name === "geovis2") {
+        if (!map.handshake) {
             continue;
         }
 

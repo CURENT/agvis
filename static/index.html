@@ -156,6 +156,14 @@
                 <td><input type="checkbox" id="opt_togglemap2"></td>
             </tr>
             <tr>
+                <td><label for="opt_togglemap1handshake">Toggle 1<sup>st</sup> Window's Handshake</label></td>
+                <td><input type="checkbox" id="opt_togglemap1handshake" checked></td>
+            </tr>
+            <tr>
+                <td><label for="opt_togglemap2handshake">Toggle 2<sup>nd</sup> Window's Handshake</label></td>
+                <td><input type="checkbox" id="opt_togglemap2handshake" checked></td>
+            </tr>
+            <tr>
                 <td><label for="opt_togglezones">Toggle Zones</label></td>
                 <td><input type="checkbox" id="opt_togglezones" checked></td>
             </tr>
@@ -393,6 +401,16 @@
 
         const opt_togglemap2 = document.getElementById("opt_togglemap2");
         opt_togglemap2.onclick = ToggleSecond;
+
+        const opt_togglemap1handshake = document.getElementById("opt_togglemap1handshake");
+        opt_togglemap1handshake.onclick = function() {
+            map1.handshake = opt_togglemap1handshake.checked;
+        }
+
+        const opt_togglemap2handshake = document.getElementById("opt_togglemap2handshake");
+        opt_togglemap2handshake.onclick = function() {
+            map2.handshake = opt_togglemap2handshake.checked;
+        }
 
         const opt_togglezones = document.getElementById("opt_togglezones");
         opt_togglezones.onclick = function() {
