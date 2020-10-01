@@ -13,8 +13,7 @@ const S_NAME = 0;
 const S_VALUE = 1;
 
 class DimeClient {
-	constructor(hostname, port) {
-        const group = (port == 8811 ? "geovis" : "geovis2");
+	constructor(hostname, port, name) {
 		/*const ws = new WebSocket(`ws://${hostname}:${port}`);
 
 		let readyResolve, readyReject;
@@ -50,7 +49,7 @@ class DimeClient {
 		});*/
 
         this.d = new dime.DimeClient(hostname, 8818);
-        this.d.join(group);
+        this.d.join(name);
 
         this.syncResolve = function() {}
         this.syncReject = function() {}

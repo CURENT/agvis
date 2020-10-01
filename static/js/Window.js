@@ -1,4 +1,4 @@
-function CreateWindow(options, map_name, dimec, dimec_name) {
+function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
     /*const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
     const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
 
@@ -268,7 +268,7 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
     const toggleLayerBar = L.easyBar(toggleLayerButtons).addTo(map);
 
     await dimec.ready;
-    console.time(map_name);
+    console.time(dimec_name);
 
     let sentHeader = false;
 
@@ -350,7 +350,7 @@ function CreateWindow(options, map_name, dimec, dimec_name) {
 
         } else if (name === 'DONE') {
             dimec.close();
-            console.timeEnd(map_name);
+            console.timeEnd(dimec_name);
 
             map.end_time = Number(workspace.Varvgs.t.toFixed(2));
 

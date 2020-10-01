@@ -58,7 +58,7 @@
 
     <style>
         #playbackpanel {
-            /*visibility: hidden;*/
+            visibility: hidden;
             position: absolute;
             left: 25px;
             bottom: 25px;
@@ -237,8 +237,10 @@
 
         const pbar = document.getElementById("pbar");
 
-        const dimec1 = new DimeClient(window.location.hostname, +window.location.port+1);
-        const dimec2 = new DimeClient(window.location.hostname, +window.location.port+1);
+        console.log(+window.location.port);
+
+        const dimec1 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis');
+        const dimec2 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis2');
 
         const [map1, layers1] = CreateWindow(options, x1, dimec1, 'geovis', pbar);
         const [map2, layers2] = CreateWindow(options, x2, dimec2, 'geovis2', pbar);
