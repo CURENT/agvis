@@ -242,8 +242,9 @@
         const dimec1 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis');
         const dimec2 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis2');
 
-        const [map1, layers1] = CreateWindow(options, x1, dimec1, 'geovis', pbar);
-        const [map2, layers2] = CreateWindow(options, x2, dimec2, 'geovis2', pbar);
+        // Do NOT change these from strings to div elements!
+        const [map1, layers1] = CreateWindow(options, "map", dimec1, 'geovis', pbar);
+        const [map2, layers2] = CreateWindow(options, "map2", dimec2, 'geovis2', pbar);
 
         // Toggle config panel button
         const panel = document.getElementById("configpanel");
