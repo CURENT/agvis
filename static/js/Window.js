@@ -67,7 +67,10 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
             "x": {"field": "Time",  "type": "quantitative"},
             "y": {"field": "Value", "type": "quantitative", "scale": {"domain": {"data": "table", "field": "Value"}}},
         },
-        "autosize": {"type": "fit", "contains": "padding"}
+        "autosize": {
+            resize: true
+        }
+        //"autosize": {"type": "fit", "contains": "padding"}
     };
 
     // side bar
