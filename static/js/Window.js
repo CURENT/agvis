@@ -64,12 +64,10 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
         "data": {"name": "table"},
         "mark": "line",
         "encoding": {
-            "x": {"field": "Time",  "type": "quantitative" },
-            "y": {"field": "Value", "type": "quantitative"},
+            "x": {"field": "Time",  "type": "quantitative"},
+            "y": {"field": "Value", "type": "quantitative", "scale": {"domain": {"data": "table", "field": "Value"}}},
         },
-        "autosize": {
-            resize: true
-        }
+        "autosize": {"type": "fit", "contains": "padding"}
     };
 
     // side bar
@@ -132,17 +130,21 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
 
     async function updateThread(workspace) {
         if (p1 !== undefined) {
-            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true})
+            let vega = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true});
+            console.log(vega);
+            const { view } = vega;
             workspace.p1 = view;
+
+            console.log(workspace.p1);
         }
 
         if (p2 !== undefined) {
-            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p2, lineSpec, {defaultStyle: true})
+            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p2, lineSpec, {defaultStyle: true});
             workspace.p2 = view;
         }
 
         if (p3 !== undefined) {
-            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p3, lineSpec, {defaultStyle: true})
+            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p3, lineSpec, {defaultStyle: true});
             workspace.p3 = view;
         }
 

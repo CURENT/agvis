@@ -24,6 +24,8 @@ RUN useradd -ms /bin/bash cui
 RUN python3 -m andes selftest
 RUN mv /root/.andes /home/cui
 COPY wecc_vis.xlsx /home/cui
+COPY ieee39.xlsx /home/cui
+COPY ACTIVSg2000.xlsx /home/cui
 RUN chown -R cui:cui /home/cui/.andes
 COPY andes.rc /home/cui/.andes
 
