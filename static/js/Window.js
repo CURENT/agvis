@@ -130,12 +130,8 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
 
     async function updateThread(workspace) {
         if (p1 !== undefined) {
-            let vega = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true});
-            console.log(vega);
-            const { view } = vega;
+            const { view } = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true});
             workspace.p1 = view;
-
-            console.log(workspace.p1);
         }
 
         if (p2 !== undefined) {
