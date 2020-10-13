@@ -1,52 +1,3 @@
-const table_html = `
-<div>
-    <table style="width: 100%;">
-        <tr>
-            <td>V Angle (rad) min/max</td>
-            <td><input type="text" name="opt_amin" pattern="[0-9]*(\.[0-9]*)?"> - <input type="text" name="opt_amax" pattern="[0-9]*(\.[0-9]*)?"></td>
-        </tr>
-        <tr>
-            <td>V Magnitude (p.u.) min/max</td>
-            <td><input type="text" name="opt_vmin" pattern="[0-9]*(\.[0-9]*)?"> - <input type="text" name="opt_vmax" pattern="[0-9]*(\.[0-9]*)?"></td>
-        </tr>
-        <tr>
-            <td>Frequency (p.u.) min/max</td>
-            <td><input type="text" name="opt_fmin" pattern="[0-9]*(\.[0-9]*)?"> - <input type="text" name="opt_fmax" pattern="[0-9]*(\.[0-9]*)?"></td>
-        </tr>
-        <tr>
-            <td><label for="opt_togglemap2">Toggle 2<sup>nd</sup> Window</label></td>
-            <td><input type="checkbox" name="opt_togglemap2"></td>
-        </tr>
-        <tr>
-            <td><label for="opt_togglemap1handshake">Toggle 1<sup>st</sup> Window's Handshake</label></td>
-            <td><input type="checkbox" name="opt_togglemap1handshake" checked></td>
-        </tr>
-        <tr>
-            <td><label for="opt_togglemap2handshake">Toggle 2<sup>nd</sup> Window's Handshake</label></td>
-            <td><input type="checkbox" name="opt_togglemap2handshake" checked></td>
-        </tr>
-        <tr>
-            <td><label for="opt_togglezones">Toggle Zones</label></td>
-            <td><input type="checkbox" name="opt_togglezones" checked></td>
-        </tr>
-        <tr>
-            <!--
-            Does this make sense? Wouldn't it be better to have the user
-            select what zoom layer they want the bus labels to appear on?
-            -->
-            <td><label for="opt_togglebuslabels">Toggle Bus Labels</label></td>
-            <td><input type="checkbox" name="opt_togglebuslabels"></td>
-        </tr>
-        <tr>
-            <td rowspan="2"><label for="opt_timescale_range">Time multiplier</label></td>
-            <td><input type="range" name="opt_timescale_range" min="-1" max="6" step="1" value="2"><div style="display:inline;" name="timescale_div"> 1x</div></td>
-        </tr>
-        <tr>
-            <td><input type="text" name="opt_timescale_text" pattern="[0-9]*(\.[0-9]*)?" value="1" disabled></td>
-        </tr>
-    </table>
-</div>`
-
 function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
     /*const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
     const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
@@ -147,13 +98,7 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
     }
 
 
-    sidebar.addPanel({
-        id: '__tmp',
-        tab: '<span>\u2699</span>',
-        pane: table_html,
-        title: 'Configuration settings'
-
-    });
+    addSidebarConfig(options, map, layers, sidebar);
 
     var plotPanel = {
         id: 'plotPanel',                     // UID, used to access the panel
