@@ -17,7 +17,7 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
 
     const arch = "LTB Modules and Data Flow"
 
-    let TILE_LAYER_URL = 'https://api.mapbox.com/v4/mapbox.streets/{z}/{x}/{y}.png?' +
+    let TILE_LAYER_URL = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?' +
                          'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
 
     let plotOpen = false;
