@@ -59,7 +59,7 @@ function addSidebarConfig(options, map, layers, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `amin=#{val};expires=#{dt};path=/`;
+            document.cookie = `amin=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "theta") {
                 layers.contourLayer.updateRange(options.amin, options.amax);
@@ -80,7 +80,7 @@ function addSidebarConfig(options, map, layers, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `amax=#{val};expires=#{dt};path=/`;
+            document.cookie = `amax=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "theta") {
                 layers.contourLayer.updateRange(options.amax, options.amax);
@@ -101,7 +101,7 @@ function addSidebarConfig(options, map, layers, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `vmin=#{val};expires=#{dt};path=/`;
+            document.cookie = `vmin=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "V") {
                 layers.contourLayer.updateRange(options.vmin, options.vmax);
@@ -122,7 +122,7 @@ function addSidebarConfig(options, map, layers, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `vmax=#{val};expires=#{dt};path=/`;
+            document.cookie = `vmax=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "V") {
                 layers.contourLayer.updateRange(options.vmin, options.vmax);
@@ -143,7 +143,7 @@ function addSidebarConfig(options, map, layers, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `fmin=#{val};expires=#{dt};path=/`;
+            document.cookie = `fmin=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "freq") {
                 layers.contourLayer.updateRange(options.fmin, options.fmax);
@@ -164,7 +164,7 @@ function addSidebarConfig(options, map, layers, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `fmax=#{val};expires=#{dt};path=/`;
+            document.cookie = `fmax=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "freq") {
                 layers.contourLayer.updateRange(options.fmin, options.fmax);
