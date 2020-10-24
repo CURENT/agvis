@@ -13,10 +13,6 @@ const table_html = `
         <td style="white-space: nowrap;"><input type="text" name="opt_fmin" pattern="[0-9]*(\.[0-9]*)?" size="7"> - <input type="text" name="opt_fmax" pattern="[0-9]*(\.[0-9]*)?" size="7"></td>
     </tr>
     <tr>
-        <td><label for="opt_togglemap2">Toggle 2<sup>nd</sup> Window</label></td>
-        <td><input type="checkbox" name="opt_togglemap2"></td>
-    </tr>
-    <tr>
         <td><label for="opt_togglehandshake">Toggle Handshake</label></td>
         <td><input type="checkbox" name="opt_togglehandshake" checked></td>
     </tr>
@@ -33,7 +29,7 @@ const table_html = `
 
 function addSidebarConfig(num, options, map, layers, sidebar) {
     // Generate a UUID for the config panel's ID
-    table_id = "configpanel" + num;
+    const table_id = "configpanel" + num;
 
     sidebar.addPanel({
         id: table_id,
@@ -45,126 +41,126 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
 
     const opt_amin = document.querySelector(`#${table_id} input[name='opt_amin']`);
 
-    opt_amin.value = options.amin;
+    opt_amin.value = options["amin" + num];
     opt_amin.oninput = function() {
         const val = Number(opt_amin.value);
 
         if (val === val) {
-            options.amin = val;
+            options["amin" + num] = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `amin=${val};expires=${dt};path=/`;
+            document.cookie = `amin${num}=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "theta") {
-                layers.contourLayer.updateRange(options.amin, options.amax);
+                layers.contourLayer.updateRange(options["amin" + num], options["amax" + num]);
             }
         }
     }
 
     const opt_amax = document.querySelector(`#${table_id} input[name='opt_amax']`);
 
-    opt_amax.value = options.amax;
+    opt_amax.value = options["amax" + num];
     opt_amax.oninput = function() {
         const val = Number(opt_amax.value);
 
         if (val === val) {
-            options.amax = val;
+            options["amax" + num] = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `amax=${val};expires=${dt};path=/`;
+            document.cookie = `amax${num}=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "theta") {
-                layers.contourLayer.updateRange(options.amax, options.amax);
+                layers.contourLayer.updateRange(options["amax" + num], options["amax" + num]);
             }
         }
     }
 
     const opt_vmin = document.querySelector(`#${table_id} input[name='opt_vmin']`);
 
-    opt_vmin.value = options.vmin;
+    opt_vmin.value = options["vmin" + num];
     opt_vmin.oninput = function() {
         const val = Number(opt_vmin.value);
 
         if (val === val) {
-            options.vmin = val;
+            options["vmin" + num] = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `vmin=${val};expires=${dt};path=/`;
+            document.cookie = `vmin${num}=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "V") {
-                layers.contourLayer.updateRange(options.vmin, options.vmax);
+                layers.contourLayer.updateRange(options["vmin" + num], options["vmax" + num]);
             }
         }
     }
 
     const opt_vmax = document.querySelector(`#${table_id} input[name='opt_vmax']`);
 
-    opt_vmax.value = options.vmax;
+    opt_vmax.value = options["vmax" + num];
     opt_vmax.oninput = function() {
         const val = Number(opt_vmax.value);
 
         if (val === val) {
-            options.vmax = val;
+            options["vmax" + num] = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `vmax=${val};expires=${dt};path=/`;
+            document.cookie = `vmax${num}=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "V") {
-                layers.contourLayer.updateRange(options.vmin, options.vmax);
+                layers.contourLayer.updateRange(options["vmin" + num], options["vmax" + num]);
             }
         }
     }
 
     const opt_fmin = document.querySelector(`#${table_id} input[name='opt_fmin']`);
 
-    opt_fmin.value = options.fmin;
+    opt_fmin.value = options["fmin" + num];
     opt_fmin.oninput = function() {
         const val = Number(opt_fmin.value);
 
         if (val === val) {
-            options.fmin = val;
+            options["fmin" + num] = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `fmin=${val};expires=${dt};path=/`;
+            document.cookie = `fmin${num}=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "freq") {
-                layers.contourLayer.updateRange(options.fmin, options.fmax);
+                layers.contourLayer.updateRange(options["fmin" + num], options["fmax" + num]);
             }
         }
     }
 
     const opt_fmax = document.querySelector(`#${table_id} input[name='opt_fmax']`);
 
-    opt_fmax.value = options.fmax;
+    opt_fmax.value = options["fmax" + num];
     opt_fmax.oninput = function() {
         const val = Number(opt_fmax.value);
 
         if (val === val) {
-            options.fmax = val;
+            options["fmax" + num] = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `fmax=${val};expires=${dt};path=/`;
+            document.cookie = `fmax${num}=${val};expires=${dt};path=/`;
 
             if (layers.contourLayer.variableName === "freq") {
-                layers.contourLayer.updateRange(options.fmin, options.fmax);
+                layers.contourLayer.updateRange(options["fmin" + num], options["fmax" + num]);
             }
         }
     }

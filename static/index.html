@@ -251,8 +251,6 @@
         const x1 = document.getElementById("map1");
         const x2 = document.getElementById("map2");
 
-        const pbar = document.getElementById("pbar");
-
         const dimec1 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis1');
         const dimec2 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis2');
 
@@ -267,7 +265,7 @@
             map2.invalidateSize();
         }
 
-        L.easyButton('2<span>nd</span>', toggleSecondMap).addTo(map1);
+        L.easyButton('<span>2nd</span>', toggleSecondMap).addTo(map1);
 
         /*// Toggle config panel button
         const panel = document.getElementById("configpanel");
