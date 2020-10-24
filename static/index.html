@@ -1,49 +1,54 @@
 <!DOCTYPE html>
-<title>CURENT LTBWeb</title>
-<style>
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
+<head>
+    <title>CURENT LTBWeb</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-#map {
-	width: 100vw;
-	height: 100vh;
-}
+    #map1 {
+        width: 100vw;
+        height: 100vh;
+    }
 
-.row {
-  display: flex;
-  flex-grow: 1;
-}
+    #map2 {
+        display: none;
+    }
 
-.column {
-  flex: 50%;
-}
-.flex-container {
-  /* We first create a flex layout context */
-    width: 25%;
-  display: flex;
+    .row {
+      display: flex;
+      flex-grow: 1;
+    }
 
-  /* Then we define the flow direction
-     and if we allow the items to wrap
-   * Remember this is the same as:
-   * flex-direction: row;
-   * flex-wrap: wrap;
-   */
-  flex-flow: row wrap;
+    .column {
+      flex: 50%;
+    }
 
-  /* Then we define how is distributed the remaining space */
-  justify-content: flex-end;
-}
+    .flex-container {
+      /* We first create a flex layout context */
+        width: 25%;
+        display: flex;
 
-.vega-actions a {
+      /* Then we define the flow direction
+         and if we allow the items to wrap
+       * Remember this is the same as:
+       * flex-direction: row;
+       * flex-wrap: wrap;
+       */
+        flex-flow: row wrap;
+
+      /* Then we define how is distributed the remaining space */
+        justify-content: flex-end;
+    }
+
+    .vega-actions a {
         margin-right: 5px;
         z-index: 9999;
-      }
+    }
 
-</style>
-<head>
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/vega@5.6.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0-beta.10"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@5.1.2"></script>
@@ -54,7 +59,7 @@
           margin-right: 500px;
           z-index: 9999;
         }
-      </style>
+    </style>
 
     <style>
 
@@ -128,8 +133,8 @@
 <script src="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min.js"></script>
 
 <div class="row">
-	<div class="column" id="map"></div>
-    <div class="column" id="map2" style="display: none;"></div>
+	<div class="column" id="map1"></div>
+    <div class="column" id="map2"></div>
     <!-- <div class="flex-container", id="plots">
         <div class="row", id="vis"> </div>
         <div class="row", id="vis2"> </div>
@@ -234,19 +239,17 @@
             }
         }*/
 
-        const x1 = document.getElementById("map");
+        const x1 = document.getElementById("map1");
         const x2 = document.getElementById("map2");
 
         const pbar = document.getElementById("pbar");
 
-        console.log(+window.location.port);
-
-        const dimec1 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis');
+        const dimec1 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis1');
         const dimec2 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis2');
 
         // Do NOT change these from strings to div elements!
-        const [map1, layers1] = CreateWindow(options, "map", dimec1, 'geovis', pbar);
-        const [map2, layers2] = CreateWindow(options, "map2", dimec2, 'geovis2', pbar);
+        const [map1, layers1] = CreateWindow(1, options, dimec1, pbar);
+        const [map2, layers2] = CreateWindow(2, options, dimec2, pbar);
 
         // Toggle config panel button
         const panel = document.getElementById("configpanel");

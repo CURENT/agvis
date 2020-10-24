@@ -31,12 +31,9 @@ const table_html = `
 </table>
 `
 
-function addSidebarConfig(options, map, layers, sidebar) {
+function addSidebarConfig(num, options, map, layers, sidebar) {
     // Generate a UUID for the config panel's ID
-    table_id = "configpanel-" + "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
+    table_id = "configpanel" + num;
 
     sidebar.addPanel({
         id: table_id,

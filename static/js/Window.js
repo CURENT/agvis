@@ -1,4 +1,4 @@
-function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
+function CreateWindow(num, options, dimec, pbar) {
     /*const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
     const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
 
@@ -15,7 +15,10 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
     const p1min = (options.p1min === undefined) ? 0 : options.p1min;
     const p1max = (options.p1max === undefined) ? 0 : options.p1max;
 
-    const arch = "LTB Modules and Data Flow"
+    const map_name = "map" + num;
+    const dimec_name = "geovis" + num;
+
+    const arch = "LTB Modules and Data Flow";
 
     let TILE_LAYER_URL = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?' +
                          'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
@@ -98,7 +101,7 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
     }
 
 
-    addSidebarConfig(options, map, layers, sidebar);
+    addSidebarConfig(num, options, map, layers, sidebar);
 
     var plotPanel = {
         id: 'plotPanel',                     // UID, used to access the panel
@@ -273,7 +276,7 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
     const toggleLayerBar = L.easyBar(toggleLayerButtons).addTo(map);
 
     await dimec.ready;
-    console.time(dimec_name);
+    console.time(map_name);
 
     let sentHeader = false;
 
@@ -355,7 +358,7 @@ function CreateWindow(options, map_name, dimec, dimec_name, pbar) {
 
         } else if (name === 'DONE') {
             dimec.close();
-            console.timeEnd(dimec_name);
+            console.timeEnd(map_name);
 
             map.end_time = Number(workspace.Varvgs.t.toFixed(2));
 
