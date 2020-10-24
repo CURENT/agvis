@@ -231,7 +231,9 @@ function CreateWindow(num, options, dimec, pbar) {
         return reset;
     }
 
-    (async () => {
+    const dimec_ready = dimec.join(dimec_name);
+
+    (async function() {
 
     const resetTime = await updateThread(workspace);
     workspace.resetTime = resetTime;
@@ -278,13 +280,20 @@ function CreateWindow(num, options, dimec, pbar) {
     const toggleLayerButtons = [rendContourButton, rendCommunicationButton];
     const toggleLayerBar = L.easyBar(toggleLayerButtons).addTo(map);
 
-    await dimec.ready;
+    await dimec_ready;
     console.time(map_name);
 
     let sentHeader = false;
 
     for (;;) {
-        const { name, value } = await dimec.sync();
+        let kvpair = {};
+
+        while (Object.keys(kvpair).length === 0) {
+            await dimec.wait();
+            kvpair = await dimec.sync_r(1);
+        }
+
+        const [[name, value]] = Object.entries(kvpair);
 
         if (!map.handshake) {
             continue;
@@ -350,17 +359,20 @@ function CreateWindow(num, options, dimec, pbar) {
 
             contourLayer.updateRange(fmin, fmax);
 
-            await dimec.send_var('andes', dimec_name, {
+            let kvpair = {};
+
+            kvpair[dimec_name] = {
                 vgsvaridx: new dime.NDArray('F', [1, variableAbsIndices.length], variableAbsIndices) /*{
                     ndarray: true,
                     shape: [1, variableAbsIndices.length],
                     data: base64arraybuffer.encode(variableAbsIndices.buffer),
                 },*/
-            });
+            };
+
+            await dimec.send_r('andes', kvpair);
             sentHeader = true;
 
         } else if (name === 'DONE') {
-            dimec.close();
             console.timeEnd(map_name);
 
             map.end_time = Number(workspace.Varvgs.t.toFixed(2));
