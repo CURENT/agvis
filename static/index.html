@@ -213,12 +213,21 @@
 
     <script>
         let options = {
-            vmin: 0.8,
-            vmax: 1.2,
-            amin: -1.0,
-            amax: 1.0,
-            fmin: 0.9998,
-            fmax: 1.0002
+            // Settings for map1
+            vmin1: 0.8,
+            vmax1: 1.2,
+            amin1: -1.0,
+            amax1: 1.0,
+            fmin1: 0.9998,
+            fmax1: 1.0002,
+
+            // Settings for map2
+            vmin2: 0.8,
+            vmax2: 1.2,
+            amin2: -1.0,
+            amax2: 1.0,
+            fmin2: 0.9998,
+            fmax2: 1.0002
         };
 
         if (document.cookie !== "") {
@@ -248,10 +257,19 @@
         const dimec2 = new DimeClient(window.location.hostname, +window.location.port + 8, 'geovis2');
 
         // Do NOT change these from strings to div elements!
-        const [map1, layers1] = CreateWindow(1, options, dimec1, pbar);
-        const [map2, layers2] = CreateWindow(2, options, dimec2, pbar);
+        const [map1, layers1] = CreateWindow(1, options, dimec1);
+        const [map2, layers2] = CreateWindow(2, options, dimec2);
 
-        // Toggle config panel button
+        function toggleSecondMap() {
+            x2.style.display = (x2.style.display === "block" ? "none" : "block");
+
+            map1.invalidateSize();
+            map2.invalidateSize();
+        }
+
+        L.easyButton('2<span>nd</span>', toggleSecondMap).addTo(map1);
+
+        /*// Toggle config panel button
         const panel = document.getElementById("configpanel");
 
         L.easyButton('<span>\u2699</span>', function(btn, map1) {
@@ -485,11 +503,10 @@
         document.getElementById("opt_resettime").onclick = function() {
             map1.resetTime();
             map2.resetTime();
-        }
+        } */
 
         // set the number of map views
         if (options.nview > 1) {
-            opt_togglemap2.checked = true;
-            ToggleSecond();
+            toggleSecondMap();
         }
     </script>
