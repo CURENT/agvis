@@ -239,22 +239,24 @@ function CreateWindow(num, options, dimec, pbar) {
 
     /// Bar of icons for voltage, theta and frequency
     const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map){
-        const amin = (options.amin === undefined) ? -1.0 : options.amin;
-        const amax = (options.amax === undefined) ?  1.0 : options.amax;
+        const amin = (options["amin" + num] === undefined) ? -1.0 : options["amin" + num];
+        const amax = (options["amax" + num] === undefined) ?  1.0 : options["amax" + num];
 
         contourLayer.showVariable("theta");
         contourLayer.updateRange(amin, amax);
     });
+
     const voltageButton = L.easyButton('<span>V</span>', function(btn, map){
-        const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
-        const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
+        const vmin = (options["vmin" + num] === undefined) ? 0.8 : options["vmin" + num];
+        const vmax = (options["vmax" + num] === undefined) ? 1.2 : options["vmax" + num];
 
         contourLayer.showVariable("V");
         contourLayer.updateRange(vmin, vmax);
     });
+
     const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map){
-        const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
-        const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
+        const fmin = (options["fmin" + num] === undefined) ? 0.9998 : options["fmin" + num];
+        const fmax = (options["fmax" + num] === undefined) ? 1.0002 : options["fmax" + num];
 
         contourLayer.showVariable("freq");
         contourLayer.updateRange(fmin, fmax);
@@ -265,6 +267,7 @@ function CreateWindow(num, options, dimec, pbar) {
         contourLayer.toggleRender();
         topologyLayer.toggleRender();
     });
+
     const rendCommunicationButton = L.easyButton('<i class="fa fa-wifi"></i>', function(btn, map){
         communicationLayer.toggleRender();
     });
@@ -342,8 +345,8 @@ function CreateWindow(num, options, dimec, pbar) {
             contourLayer.storeRelativeIndices(variableRelIndices);
             contourLayer.showVariable("freq");
 
-            const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
-            const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;
+            const fmin = (options["fmin" + num] === undefined) ? 0.9998 : options["fmin" + num];
+            const fmax = (options["fmax" + num] === undefined) ? 1.0002 : options["fmax" + num];
 
             contourLayer.updateRange(fmin, fmax);
 
