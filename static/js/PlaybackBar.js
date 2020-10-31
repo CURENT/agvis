@@ -3,11 +3,14 @@ let PlaybackBar = L.Control.extend({
         position: "bottomleft"
     },
 
-    initialize: function(options) {
-        L.Util.setOptions(this, options);
+    initialize: function(name, options) {
+        this.name = name;
+        if (options) L.Util.setOptions(this, options);
     },
 
     onAdd: function(options) {
+        const { name } = this;
+
         let div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
 
         div.style.backgroundColor = "white";
@@ -24,10 +27,14 @@ let PlaybackBar = L.Control.extend({
         pausebutton.type = "button";
         pausebutton.value = "Pause";
 
+        pausebutton.onclick = function() { console.log(name + ": Pause!"); }
+
         let stopbutton = L.DomUtil.create('input', '', div);
         //stopbutton.style.float = "left";
         stopbutton.type = "button";
         stopbutton.value = "Stop";
+
+        stopbutton.onclick = function() { console.log(name + ": Stop!"); }
 
         let playbackspeedrange = L.DomUtil.create('input', '', div);
         playbackspeedrange.type = "range";
