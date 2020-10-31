@@ -126,6 +126,7 @@
 <script src="/static/js/SidebarConfig.js"></script>
 <script src="/static/js/Window.js"></script>
 <script src="/static/js/TimeBox.js"></script>
+<script src="/static/js/PlaybackBar.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-dialog@1.0.5/Leaflet.Dialog.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/leaflet-sidebar-v2@3.2.1/js/leaflet-sidebar.js"></script>
@@ -506,4 +507,6 @@
         if (options.nview > 1) {
             toggleSecondMap();
         }
+
+        new PlaybackBar().addTo(map1);
     </script>
