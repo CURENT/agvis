@@ -188,10 +188,10 @@ function CreateWindow(num, options, dimec, pbar) {
             if (!ready) return;
 
             //zoneLayer.update(workspace);
+            //communicationLayer.update(workspace);
 
             topologyLayer.update(workspace);
             contourLayer.update(workspace);
-            //communicationLayer.update(workspace);
 
             if (workspace.Varvgs) {
                 simTimeBox.update(workspace.Varvgs.t.toFixed(2));
@@ -377,29 +377,7 @@ function CreateWindow(num, options, dimec, pbar) {
 
             map.end_time = Number(workspace.Varvgs.t.toFixed(2));
 
-            if (pbar) {
-                pbar.min = 0;
-                pbar.max = map.end_time;
-                pbar.value = map.end_time;
-                pbar.keep_ticking = true;
-
-                pbar.addEventListener("input", function() {
-                    console.log("oninput!");
-                    workspace.currentTimeInSeconds = Number(pbar.value);
-                });
-
-                pbar.addEventListener("mousedown", function() {
-                    console.log("onmousedown!");
-                    pbar.keep_ticking = false;
-                });
-
-                pbar.addEventListener("mouseup", function() {
-                    console.log("onmouseup!");
-                    pbar.keep_ticking = true;
-                });
-
-                pbar.disabled = false;
-            }
+            new PlaybackBar(map, workspace).addTo(map);
         }
 
     }
