@@ -1,4 +1,4 @@
-function CreateWindow(num, options, dimec, pbar) {
+function CreateWindow(num, options, dimec) {
     /*const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
     const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
 
@@ -39,6 +39,8 @@ function CreateWindow(num, options, dimec, pbar) {
 
     const workspace = {};
     const history = {};
+
+    let pbar = new PlaybackBar(map, workspace);
 
     const tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(map);
 
@@ -177,10 +179,7 @@ function CreateWindow(num, options, dimec, pbar) {
                 workspace.currentTimeInSeconds = map.end_time;
             }
 
-            if (pbar && !pbar.disabled && pbar.keep_ticking) {
-                pbar.value = workspace.currentTimeInSeconds;
-            }
-
+            pbar.updatePlaybackBar(workspace.currentTimeInSeconds);
             firstTime = currentTime;
 
             // get data from history, update contour, simulation time, and plots
@@ -377,7 +376,7 @@ function CreateWindow(num, options, dimec, pbar) {
 
             map.end_time = Number(workspace.Varvgs.t.toFixed(2));
 
-            new PlaybackBar(map, workspace).addTo(map);
+            pbar.addTo(map);
         }
 
     }
