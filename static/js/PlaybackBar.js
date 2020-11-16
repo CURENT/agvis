@@ -19,6 +19,8 @@ let PlaybackBar = L.Control.extend({
         div.style.boxSizing = "border-box";
         div.style.padding = "4px";
 
+        L.DomEvent.disableClickPropagation(div);
+
         let playbackbar = L.DomUtil.create('input', '', div);
         this.playbackbar = playbackbar;
         playbackbar.style.width = "100%";
