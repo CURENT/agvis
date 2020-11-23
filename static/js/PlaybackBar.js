@@ -13,6 +13,8 @@ let PlaybackBar = L.Control.extend({
 
     onAdd: function(options) {
         const { map, workspace } = this;
+        let paused = false;
+        let playbackspeed = 1.0;
 
         let div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
         div.style.backgroundColor = "white";
@@ -41,7 +43,17 @@ let PlaybackBar = L.Control.extend({
         pausebutton.type = "button";
         pausebutton.value = "Pause";
 
-        pausebutton.onclick = function() { console.log(name + ": Pause!"); }
+        pausebutton.onclick = function() {
+            paused = !paused;
+
+            if (paused) {
+                pausebutton.value = "Pause";
+                map.timescale = playbackspeed;
+            } else {
+                pausebutton.value = "Play";
+                map.timescale = 0;
+            }
+        }
 
         let stopbutton = L.DomUtil.create('input', '', ldiv);
         stopbutton.type = "button";
@@ -78,8 +90,11 @@ let PlaybackBar = L.Control.extend({
 
                 const val = Number(playbackspeedtext.value);
 
-                if (val >= 0) {
-                    map.timescale = val;
+                if (val > 0) {
+                    playbackspeed = val;
+                    if (!paused) {
+                        map.timescale = playbackspeed;
+                    }
                 }
             } else {
                 playbackspeedtext.disabled = true;
@@ -96,7 +111,11 @@ let PlaybackBar = L.Control.extend({
 
                 const val = vals[Number(playbackspeedrange.value)];
 
-                map.timescale = val;
+                playbackspeed = val;
+                if (!paused) {
+                    map.timescale = playbackspeed;
+                }
+
                 playbackspeedspan.innerHTML = " " + val + "x ";
             }
         }
@@ -105,7 +124,10 @@ let PlaybackBar = L.Control.extend({
             const val = Number(playbackspeedtext.value);
 
             if (val > 0) {
-                map.timescale = val;
+                playbackspeed = val;
+                if (!paused) {
+                    map.timescale = playbackspeed;
+                }
             }
         }
 
