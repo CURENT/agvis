@@ -47,11 +47,11 @@ let PlaybackBar = L.Control.extend({
             paused = !paused;
 
             if (paused) {
-                pausebutton.value = "Pause";
-                map.timescale = playbackspeed;
-            } else {
-                pausebutton.value = "Play";
                 map.timescale = 0;
+                pausebutton.value = "Play";
+            } else {
+                map.timescale = playbackspeed;
+                pausebutton.value = "Pause";
             }
         }
 
