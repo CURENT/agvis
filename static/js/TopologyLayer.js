@@ -212,8 +212,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
         ctx.beginPath();
 
         for (let i=0; i < Line.idx.length; ++i){
-            const voltageRating = Line.Vn1.get(0, i);
-            if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
+            //const voltageRating = Line.Vn1.get(0, i);
+            //if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
 
             const fromNumber = Line.bus1[i];
             const fromIndex = busToIndexLookup.get(fromNumber);
@@ -225,8 +225,12 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
             const toX = busPixelCoords.get(toIndex, 0);
             const toY = busPixelCoords.get(toIndex, 1);
 
-            ctx.moveTo(fromX, fromY);
-            ctx.lineTo(toX, toY);
+            const dist = Math.hypot(toX - fromX, toY - fromY);
+
+            if (dist > 12) {
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(toX, toY);
+            }
         }
 
         ctx.closePath();
