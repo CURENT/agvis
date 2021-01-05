@@ -189,6 +189,19 @@ class NDArray {
 	}
 }
 
+function jsonloads(obj) {
+    return JSON.parse(msg.data, function(key, value) {
+        //console.log(JSON.parse(JSON.stringify({ this: this, key, value })));
+        if (value !== null && value.ndarray) {
+            const buffer = base64arraybuffer.decode(value.data);
+            const f64array = new Float64Array(buffer);
+            const f32array = Float32Array.from(f64array);
+            return new NDArray('F', value.shape, f32array);
+        }
+        return value;
+    });
+}
+
 // Boolean sentinels
 const TYPE_NULL  = 0x00;
 const TYPE_TRUE  = 0x01;
@@ -645,9 +658,12 @@ class DimeClient {
 
         this.ws = null;
         this.workspace = {};
-        this.serialization = "dimeb";
+        this.serialization = "json";
         this.recvbuffer = new ArrayBuffer(0);
         this.recvcallback = null;
+
+        this.loads = function() {};
+        this.dumps = function() {};
 
         this.connected = new Promise(function(resolve, reject) {
             self.ws = new WebSocket("ws://" + hostname + ":" + port);
@@ -682,8 +698,16 @@ class DimeClient {
                         reject(jsondata.error);
                     }
 
+                    self.serialization = jsondata.serialization;
+
                     // No serialization methods other than dimeb are supported (for now)
-                    if (jsondata.serialization !== "dimeb") {
+                    if (jsondata.serialization === "dimeb") {
+                        self.loads = dimebloads;
+                        self.dumps = dimebdumps;
+                    } else if (jsondata.serialization === "json") {
+                        self.loads = jsonloads;
+                        self.dumps = JSON.stringify;
+                    } else {
                         reject("Cannot use the selected serialization");
                     }
 
@@ -759,7 +783,7 @@ class DimeClient {
                 serialization: this.serialization
             };
 
-            let bindata = dimebdumps(value);
+            let bindata = this.dumps(value);
 
             this.__send(jsondata, bindata);
             [jsondata, bindata] = await this.__recv();
@@ -793,7 +817,7 @@ class DimeClient {
                 serialization: this.serialization
             };
 
-            let bindata = dimebdumps(value);
+            let bindata = this.dumps(value);
 
             this.__send(jsondata, bindata);
             [jsondata, bindata] = await this.__recv();
@@ -835,6 +859,8 @@ class DimeClient {
 
             if (jsondata.serialization === "dimeb") {
                 ret[jsondata.varname] = dimebloads(bindata);
+            } else if (jsondata.serialization === "json") {
+                ret[jsondata.varname] = jsonloads(bindata);
             } else {
                 m--;
             }
