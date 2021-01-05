@@ -203,7 +203,17 @@ function jsonloads(obj) {
 }
 
 function jsondumps(obj) {
-    return new TextEncoder().encode(JSON.stringify(obj)).buffer;
+    return new TextEncoder().encode(JSON.stringify(obj, function(key, value) {
+        if (value instanceof NDArray) {
+            return {
+                ndarray: true,
+                shape: value.shape,
+                data: base64arraybuffer.encode(value.array.buffer)
+            }
+        }
+
+        return value;
+    })).buffer;
 }
 
 // Boolean sentinels

@@ -30,7 +30,7 @@ RUN chown -R cui:cui /home/cui/.andes
 COPY andes.rc /home/cui/.andes
 
 WORKDIR /tmp
-RUN git clone https://github.com/TheHashTableSlasher/dime2
+COPY dime2 /tmp/dime2
 WORKDIR /tmp/dime2/server
 RUN make clean
 RUN make
