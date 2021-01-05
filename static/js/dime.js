@@ -190,7 +190,7 @@ class NDArray {
 }
 
 function jsonloads(obj) {
-    return JSON.parse(msg.data, function(key, value) {
+    return JSON.parse(new TextDecoder().decode(new Uint8Array(obj)), function(key, value) {
         //console.log(JSON.parse(JSON.stringify({ this: this, key, value })));
         if (value !== null && value.ndarray) {
             const buffer = base64arraybuffer.decode(value.data);
@@ -200,6 +200,10 @@ function jsonloads(obj) {
         }
         return value;
     });
+}
+
+function jsondumps(obj) {
+    return new TextEncoder().encode(JSON.stringify(obj)).buffer;
 }
 
 // Boolean sentinels
@@ -706,7 +710,7 @@ class DimeClient {
                         self.dumps = dimebdumps;
                     } else if (jsondata.serialization === "json") {
                         self.loads = jsonloads;
-                        self.dumps = JSON.stringify;
+                        self.dumps = jsondumps;
                     } else {
                         reject("Cannot use the selected serialization");
                     }
