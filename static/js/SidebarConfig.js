@@ -195,7 +195,7 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
                 let fr = new FileReader();
 
                 fr.onload = function(file) {
-                    let newconfig = JSON.parse(file.target.result);
+                    let newoptions = JSON.parse(file.target.result);
                     Object.assign(options, newoptions);
                 }
 

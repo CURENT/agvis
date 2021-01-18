@@ -131,8 +131,8 @@ dev() {
 	tmux split-window -v
 	tmux select-layout tiled
 	tmux send-keys -t0 "./go.sh run_8810 python3 server.py --port $((port+0)) --bind 0.0.0.0" Enter
-	tmux send-keys -t1 "docker run -t -v /tmp:/tmp -p 8818:8818 $tag dime -vv -l unix:/tmp/dime2 -l ws:$((port+8))" Enter
-	tmux send-keys -t2 "docker run -t -v /tmp:/tmp $tag andes -v 10 run /home/cui/wecc_vis.xlsx -r tds"
+	tmux send-keys -t1 "docker run --rm -t -v /tmp:/tmp -p 8818:8818 $tag dime -vv -l unix:/tmp/dime2 -l ws:$((port+8))" Enter
+	tmux send-keys -t2 "docker run --rm -t -v /tmp:/tmp $tag andes -v 10 run /home/cui/wecc_vis.xlsx -r tds"
 }
 
 "$@"
