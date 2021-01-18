@@ -25,10 +25,13 @@ const table_html = `
         <td><input type="checkbox" name="opt_togglebuslabels"></td>
     </tr>
 </table>
+<div>
+    <input type="button" value="Load config" name="opt_loadconfig">
+    <input type="button" value="Save config" name="opt_saveconfig">
+</div>
 `
 
 function addSidebarConfig(num, options, map, layers, sidebar) {
-    // Generate a UUID for the config panel's ID
     const table_id = "configpanel" + num;
 
     sidebar.addPanel({
@@ -79,7 +82,7 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
                 layers.contourLayer.updateRange(options["amax" + num], options["amax" + num]);
             }
         }
-    }
+    };
 
     const opt_vmin = document.querySelector(`#${table_id} input[name='opt_vmin']`);
 
@@ -100,7 +103,7 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
                 layers.contourLayer.updateRange(options["vmin" + num], options["vmax" + num]);
             }
         }
-    }
+    };
 
     const opt_vmax = document.querySelector(`#${table_id} input[name='opt_vmax']`);
 
@@ -142,7 +145,7 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
                 layers.contourLayer.updateRange(options["fmin" + num], options["fmax" + num]);
             }
         }
-    }
+    };
 
     const opt_fmax = document.querySelector(`#${table_id} input[name='opt_fmax']`);
 
@@ -163,19 +166,59 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
                 layers.contourLayer.updateRange(options["fmin" + num], options["fmax" + num]);
             }
         }
-    }
+    };
 
     const opt_togglezones = document.querySelector(`#${table_id} input[name='opt_togglezones']`);
 
     opt_togglezones.onclick = function() {
         layers.zoneLayer.toggleRender();
         opt_togglezones.checked = layers1.zoneLayer._render;
-    }
+    };
 
     const opt_togglebuslabels = document.querySelector(`#${table_id} input[name='opt_togglebuslabels']`);
 
     opt_togglebuslabels.onclick = function() {
         layers.topologyLayer._render_bus_ids = opt_togglebuslabels.checked;
         layers.topologyLayer.redraw();
+    };
+
+    const opt_loadconfig = document.querySelector(`#${table_id} input[name='opt_loadconfig']`);
+    const opt_loadconfig_input = document.createElement("input");
+
+    opt_loadconfig_input.style.display = "none";
+    opt_loadconfig_input.type = "file";
+    document.body.appendChild(opt_loadconfig_input);
+
+    opt_loadconfig.onclick = function() {
+        opt_loadconfig_input.onchange = function() {
+            if (opt_loadconfig_input.files.length > 0) {
+                let fr = new FileReader();
+
+                fr.onload = function(file) {
+                    let newconfig = JSON.parse(file.target.result);
+                    Object.assign(options, newoptions);
+                }
+
+                fr.readAsText(opt_loadconfig_input.files[0]);
+            }
+        };
+
+        opt_loadconfig_input.click();
+    }
+
+    const opt_saveconfig = document.querySelector(`#${table_id} input[name='opt_saveconfig']`);
+    const opt_saveconfig_a = document.createElement("a");
+
+    opt_saveconfig_a.style.display = "none";
+    document.body.appendChild(opt_saveconfig_a);
+
+    opt_saveconfig.onclick = function() {
+        let json = JSON.stringify(options);
+        let blob = new Blob([json], {type: "application/json"});
+
+        opt_saveconfig_a.href = window.URL.createObjectURL(blob);
+        opt_saveconfig_a.download = "ltbvis.json";
+
+        opt_saveconfig_a.click();
     }
 }
