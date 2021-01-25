@@ -85,7 +85,7 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
             opt_fmax.value = options["fmax" + num];
         }
 
-        if ("togglezones" + num in options) {
+        if ("togglezones" + num in options) { // TODO
             opt_togglezones.checked = options["togglezones" + num];
         }
 
