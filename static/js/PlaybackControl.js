@@ -1,18 +1,18 @@
-let PlaybackBar = L.Control.extend({
+let PlaybackControl = L.Control.extend({
     options: {
         position: "bottomleft"
     },
 
-    initialize: function(map, workspace, options) {
+    initialize: function(map, historykeeper, options) {
         this.map = map;
-        this.workspace = workspace;
+        this.historykeeper = historykeeper;
         this.playbackbar = null;
 
         if (options) L.Util.setOptions(this, options);
     },
 
     onAdd: function(options) {
-        const { map, workspace } = this;
+        const { map, historykeeper } = this;
         let paused = false;
         let playbackspeed = 1.0;
 
@@ -33,7 +33,7 @@ let PlaybackBar = L.Control.extend({
         playbackbar.value = map.end_time;
 
         playbackbar.oninput = function() {
-            workspace.currentTimeInSeconds = Number(playbackbar.value);
+            historykeeper.currentTimeInSeconds = Number(playbackbar.value);
         }
 
         let ldiv = L.DomUtil.create('div', '', div);

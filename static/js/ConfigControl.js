@@ -30,14 +30,14 @@ const table_html = `
     <input type="button" value="Save config" name="opt_saveconfig">
 </div>
 <div>
-    <input type="button" value="Load history" name="opt_loadhistory">
-    <input type="button" value="Save history" name="opt_savehistory">
+    <input type="button" value="Load simulation" name="opt_loadsimulation">
+    <input type="button" value="Save simulation" name="opt_savesimulation">
 </div>
 `
 
 const SIDEBAR_CALLBACKS = [];
 
-function addSidebarConfig(num, options, map, layers, sidebar, workspace, history) {
+function addSidebarConfig(num, options, map, layers, sidebar, historykeeper) {
     const table_id = "configpanel" + num;
 
     sidebar.addPanel({
@@ -59,8 +59,8 @@ function addSidebarConfig(num, options, map, layers, sidebar, workspace, history
 
     const opt_loadconfig = document.querySelector(`#${table_id} input[name='opt_loadconfig']`);
     const opt_saveconfig = document.querySelector(`#${table_id} input[name='opt_saveconfig']`);
-    const opt_loadhistory = document.querySelector(`#${table_id} input[name='opt_loadhistory']`);
-    const opt_savehistory = document.querySelector(`#${table_id} input[name='opt_savehistory']`);
+    const opt_loadsimulation = document.querySelector(`#${table_id} input[name='opt_loadsimulation']`);
+    const opt_savesimulation = document.querySelector(`#${table_id} input[name='opt_savesimulation']`);
 
     const opt_alabel = document.querySelector(`#${table_id} span[name='opt_alabel']`);
     const opt_vlabel = document.querySelector(`#${table_id} span[name='opt_vlabel']`);
@@ -291,47 +291,40 @@ function addSidebarConfig(num, options, map, layers, sidebar, workspace, history
         opt_saveconfig_a.click();
     }
 
-    const opt_loadhistory_input = document.createElement("input");
+    const opt_loadsimulation_input = document.createElement("input");
 
-    opt_loadhistory_input.style.display = "none";
-    opt_loadhistory_input.type = "file";
-    document.body.appendChild(opt_loadhistory_input);
+    opt_loadsimulation_input.style.display = "none";
+    opt_loadsimulation_input.type = "file";
+    document.body.appendChild(opt_loadsimulation_input);
 
-    opt_loadhistory_input.onchange = function() {
-        if (opt_loadhistory_input.files.length > 0) {
+    opt_loadsimulation_input.onchange = function() {
+        if (opt_loadsimulation_input.files.length > 0) {
             let fr = new FileReader();
 
             fr.onload = function(file) {
-                let data = dime.dimebloads(file.target.result);
-
-                for (let k in workspace) delete workspace[k];
-                Object.assign(workspace, data.workspace);
-
-                for (let k in history) delete history[k];
-                Object.assign(history, data.history);
+                historykeeper.load(file.target.result);
             }
 
-            fr.readAsArrayBuffer(opt_loadhistory_input.files[0]);
+            fr.readAsArrayBuffer(opt_loadsimulation_input.files[0]);
         }
     };
 
-    opt_loadhistory.onclick = function() {
-        opt_loadhistory_input.click();
+    opt_loadsimulation.onclick = function() {
+        opt_loadsimulation_input.click();
     };
 
-    const opt_savehistory_a = document.createElement("a");
+    const opt_savesimulation_a = document.createElement("a");
 
-    opt_savehistory_a.style.display = "none";
-    document.body.appendChild(opt_savehistory_a);
+    opt_savesimulation_a.style.display = "none";
+    document.body.appendChild(opt_savesimulation_a);
 
-    opt_savehistory.onclick = function() {
-        let json = dime.dimebdumps({history, workspace});
-        let blob = new Blob([json]);
+    opt_savesimulation.onclick = function() {
+        let blob = new Blob([historykeeper.save()]);
 
-        opt_savehistory_a.href = window.URL.createObjectURL(blob);
-        opt_savehistory_a.download = "ltbvis_history.dimeb";
+        opt_savesimulation_a.href = window.URL.createObjectURL(blob);
+        opt_savesimulation_a.download = "ltbvis_history.dimeb";
 
-        opt_savehistory_a.click();
+        opt_savesimulation_a.click();
     }
 
     updateInputs();

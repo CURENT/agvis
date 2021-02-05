@@ -1,13 +1,4 @@
 function CreateWindow(num, options, dimec) {
-    /*const vmin = (options.vmin === undefined) ? 0.8 : options.vmin;
-    const vmax = (options.vmax === undefined) ? 1.2 : options.vmax;
-
-    const amin = (options.amin === undefined) ? -1.0 : options.amin;
-    const amax = (options.amax === undefined) ?  1.0 : options.amax;
-
-    const fmin = (options.fmin === undefined) ? 0.9998 : options.fmin;
-    const fmax = (options.fmax === undefined) ? 1.0002 : options.fmax;*/
-
     const p1 = options.p1;
     const p2 = options.p2;
     const p3 = options.p3;
@@ -37,10 +28,9 @@ function CreateWindow(num, options, dimec) {
     map.end_time = null;
     map.handshake = true;
 
-    const workspace = {};
-    const history = {};
+    const historykeeper = new HistoryKeeper();
 
-    let pbar = new PlaybackBar(map, workspace);
+    let pbar = new PlaybackControl(map, historykeeper);
 
     const tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(map);
 
@@ -103,7 +93,7 @@ function CreateWindow(num, options, dimec) {
     }
 
 
-    addSidebarConfig(num, options, map, layers, sidebar, workspace, history);
+    addSidebarConfig(num, options, map, layers, sidebar, historykeeper);
 
     var plotPanel = {
         id: 'plotPanel',                     // UID, used to access the panel
@@ -123,24 +113,8 @@ function CreateWindow(num, options, dimec) {
         position: 'top'
     });
 
-    function historyKeeper(workspace, history, currentTimeInSeconds, varname) {
-        const varHistory = history[varname];
-        let value;
+    async function updateThread() {
 
-        if (varHistory == null){
-            return false;
-        }
-        for (let i=0; i<varHistory.length; ++i) {
-            value = varHistory[i];
-            const t = value.t;
-            if (t >= currentTimeInSeconds) break;
-        }
-        workspace[varname] = value;
-        return true;
-
-    }
-
-    async function updateThread(workspace) {
         if (p1 !== undefined) {
             const { view } = await vegaEmbed('#' + map_name + 'Vis' + p1, lineSpec, {defaultStyle: true});
             workspace.p1 = view;
@@ -159,6 +133,8 @@ function CreateWindow(num, options, dimec) {
         let firstTime = null;
 
         function step(currentTime) {
+            let {workspace, history} = historykeeper;
+
             requestAnimationFrame(step);
 
             if (firstTime === null) {
@@ -183,7 +159,7 @@ function CreateWindow(num, options, dimec) {
             firstTime = currentTime;
 
             // get data from history, update contour, simulation time, and plots
-            ready = historyKeeper(workspace, history, workspace.currentTimeInSeconds, 'Varvgs');
+            ready = historykeeper.lookup('Varvgs', workspace.currentTimeInSeconds);
             if (!ready) return;
 
             //zoneLayer.update(workspace);
@@ -219,11 +195,11 @@ function CreateWindow(num, options, dimec) {
         function reset() {
             firstTime = null;
             if (p1 !== undefined)
-                workspace.p1.remove('table', function(d) { return true; }).run();
+                historykeeper.workspace.p1.remove('table', function(d) { return true; }).run();
             if (p2 !== undefined)
-                workspace.p2.remove('table', function(d) { return true; }).run();
+                historykeeper.workspace.p2.remove('table', function(d) { return true; }).run();
             if (p3 !== undefined)
-                workspace.p3.remove('table', function(d) { return true; }).run();
+                historykeeper.workspace.p3.remove('table', function(d) { return true; }).run();
         }
 
         requestAnimationFrame(step);
@@ -234,8 +210,8 @@ function CreateWindow(num, options, dimec) {
 
     (async function() {
 
-    const resetTime = await updateThread(workspace);
-    workspace.resetTime = resetTime;
+    const resetTime = await updateThread(historykeeper);
+    historykeeper.workspace.resetTime = resetTime;
     map.resetTime = resetTime;
 
     /// Bar of icons for voltage, theta and frequency
@@ -298,21 +274,21 @@ function CreateWindow(num, options, dimec) {
             continue;
         }
 
-        workspace[name] = value;
+        historykeeper.workspace[name] = value;
 
-        if (!history[name]) history[name] = [];
-        history[name].push(value);
+        if (!historykeeper.history[name]) historykeeper.history[name] = [];
+        historykeeper.history[name].push(value);
 
         // Update this here so that it's not in the animation loop
-        searchLayer.update(workspace);
+        searchLayer.update(historykeeper.workspace);
 
         //if (name !== 'Varvgs' && name !== 'pmudata' && name !== 'LTBNET_vars')
             //console.log({ name, value });
 
         if (!sentHeader && name === 'Idxvgs') {
-            const busVoltageIndices = workspace.Idxvgs.Bus.V.array;
-            const busThetaIndices = workspace.Idxvgs.Bus.theta.array;
-            const busfreqIndices= workspace.Idxvgs.Bus.w_Busfreq.array;
+            const busVoltageIndices = historykeeper.workspace.Idxvgs.Bus.V.array;
+            const busThetaIndices = historykeeper.workspace.Idxvgs.Bus.theta.array;
+            const busfreqIndices= historykeeper.workspace.Idxvgs.Bus.w_Busfreq.array;
 
             const nBus = busVoltageIndices.length;
 
@@ -374,7 +350,7 @@ function CreateWindow(num, options, dimec) {
         } else if (name === 'DONE') {
             console.timeEnd(map_name);
 
-            map.end_time = Number(workspace.Varvgs.t.toFixed(2));
+            map.end_time = Number(historykeeper.workspace.Varvgs.t.toFixed(2));
 
             pbar.addTo(map);
         }
