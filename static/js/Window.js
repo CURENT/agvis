@@ -103,7 +103,7 @@ function CreateWindow(num, options, dimec) {
     }
 
 
-    addSidebarConfig(num, options, map, layers, sidebar);
+    addSidebarConfig(num, options, map, layers, sidebar, workspace, history);
 
     var plotPanel = {
         id: 'plotPanel',                     // UID, used to access the panel

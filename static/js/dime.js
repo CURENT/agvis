@@ -213,7 +213,7 @@ function jsondumps(obj) {
         }
 
         return value;
-    })).buffer;
+    }));
 }
 
 // Boolean sentinels
@@ -982,6 +982,8 @@ class DimeClient {
 return {
     dimebloads,
     dimebdumps,
+    jsonloads,
+    jsondumps,
     Complex,
     NDArray,
     DimeClient

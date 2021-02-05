@@ -29,11 +29,15 @@ const table_html = `
     <input type="button" value="Load config" name="opt_loadconfig">
     <input type="button" value="Save config" name="opt_saveconfig">
 </div>
+<div>
+    <input type="button" value="Load history" name="opt_loadhistory">
+    <input type="button" value="Save history" name="opt_savehistory">
+</div>
 `
 
 const SIDEBAR_CALLBACKS = [];
 
-function addSidebarConfig(num, options, map, layers, sidebar) {
+function addSidebarConfig(num, options, map, layers, sidebar, workspace, history) {
     const table_id = "configpanel" + num;
 
     sidebar.addPanel({
@@ -55,6 +59,8 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
 
     const opt_loadconfig = document.querySelector(`#${table_id} input[name='opt_loadconfig']`);
     const opt_saveconfig = document.querySelector(`#${table_id} input[name='opt_saveconfig']`);
+    const opt_loadhistory = document.querySelector(`#${table_id} input[name='opt_loadhistory']`);
+    const opt_savehistory = document.querySelector(`#${table_id} input[name='opt_savehistory']`);
 
     const opt_alabel = document.querySelector(`#${table_id} span[name='opt_alabel']`);
     const opt_vlabel = document.querySelector(`#${table_id} span[name='opt_vlabel']`);
@@ -280,11 +286,56 @@ function addSidebarConfig(num, options, map, layers, sidebar) {
         let blob = new Blob([json], {type: "application/json"});
 
         opt_saveconfig_a.href = window.URL.createObjectURL(blob);
-        opt_saveconfig_a.download = "ltbvis.json";
+        opt_saveconfig_a.download = "ltbvis_config.json";
 
         opt_saveconfig_a.click();
     }
 
+    const opt_loadhistory_input = document.createElement("input");
+
+    opt_loadhistory_input.style.display = "none";
+    opt_loadhistory_input.type = "file";
+    document.body.appendChild(opt_loadhistory_input);
+
+    opt_loadhistory_input.onchange = function() {
+        if (opt_loadhistory_input.files.length > 0) {
+            let fr = new FileReader();
+
+            fr.onload = function(file) {
+                let data = dime.dimebloads(file.target.result);
+
+                for (let k in workspace) delete workspace[k];
+                Object.assign(workspace, data.workspace);
+
+                for (let k in history) delete history[k];
+                Object.assign(history, data.history);
+            }
+
+            fr.readAsArrayBuffer(opt_loadhistory_input.files[0]);
+        }
+    };
+
+    opt_loadhistory.onclick = function() {
+        opt_loadhistory_input.click();
+    };
+
+    const opt_savehistory_a = document.createElement("a");
+
+    opt_savehistory_a.style.display = "none";
+    document.body.appendChild(opt_savehistory_a);
+
+    opt_savehistory.onclick = function() {
+        let json = dime.dimebdumps({history, workspace});
+        let blob = new Blob([json]);
+
+        opt_savehistory_a.href = window.URL.createObjectURL(blob);
+        opt_savehistory_a.download = "ltbvis_history.dimeb";
+
+        opt_savehistory_a.click();
+    }
+
     updateInputs();
     SIDEBAR_CALLBACKS.push(updateInputs);
+
+    return table_id;
 }
