@@ -192,24 +192,82 @@ class NDArray {
 function jsonloads(obj) {
     return JSON.parse(new TextDecoder().decode(new Uint8Array(obj)), function(key, value) {
         //console.log(JSON.parse(JSON.stringify({ this: this, key, value })));
-        if (value !== null && value.ndarray) {
-            const buffer = base64arraybuffer.decode(value.data);
-            const f64array = new Float64Array(buffer);
-            const f32array = Float32Array.from(f64array);
-            return new NDArray('F', value.shape, f32array);
+
+        if (value.__dime_type !== undefined) {
+            if (value.__dime_type === "complex") {
+                return new Complex(value.real, value.imag);
+            }
+
+            if (value.__dime_type === "matrix") {
+                const dtype_tab = {
+                    int8: Int8Array,
+                    int16: Int16Array,
+                    int32: Int32Array,
+                    int64: Int64Array,
+                    uint8: Uint8Array,
+                    uint16: Uint16Array,
+                    uint32: Uint32Array,
+                    uint64: Uint64Array,
+                    float32: Float32Array,
+                    float64: Float64Array,
+                    complex64: Float32Array,
+                    complex128: Float64Array
+                }
+
+                let data = new dtype_tab[value.dtype](base64arraybuffer.decode(value.data));
+
+                return new NDArray('F', value.shape, data, value.dtype.startsWith("complex"));
+            }
         }
+
         return value;
     });
 }
 
 function jsondumps(obj) {
     return new TextEncoder().encode(JSON.stringify(obj, function(key, value) {
-        if (value instanceof NDArray) {
+        if (value instanceof Complex) {
             return {
-                ndarray: true,
-                shape: value.shape,
-                data: base64arraybuffer.encode(value.array.buffer)
+                __dime_type: "complex",
+                real: obj.real,
+                imag: obj.imag
+            };
+        }
+
+        if (value instanceof NDArray) {
+            const dtype_tab = {
+                Int8Array: "int8",
+                Int16Array: "int16",
+                Int32Array: "int32",
+                Int64Array: "int64",
+                Uint8Array: "uint8",
+                Uint16Array: "uint16",
+                Uint32Array: "uint32",
+                Uint64Array: "uint64",
+                Float32Array: "float32",
+                Float64Array: "float64"
+            };
+
+            let dtype = dtype_tab[value.array.name];
+            let data = base64arraybuffer.encode(value.array.buffer);
+
+            if (value.array.complex) {
+                if (dtype === "float32") {
+                    dtype = "complex64";
+                } else if (dtype === "float64") {
+                    dtype = "complex128";
+                } else {
+                    data = base64arraybuffer.encode(Float64Array.from(value.array).buffer);
+                    dtype = "complex128";
+                }
             }
+
+            return {
+                __dime_type: "matrix",
+                dtype: dtype,
+                shape: value.shape,
+                data: data
+            };
         }
 
         return value;
