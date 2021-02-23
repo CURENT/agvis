@@ -108,7 +108,7 @@ function CreateWindow(num, options, dimec) {
     sidebar.addPanel({
         id: 'architecture',
         tab: '<i class="fa fa-info"></i>',
-        pane: '<img src="static/img/ltb-architecture.gif" width="400", height="600">',
+        pane: '<img src="/img/ltb-architecture.gif" width="400", height="600">',
         title: 'LTB System Architecture',
         position: 'top'
     });
