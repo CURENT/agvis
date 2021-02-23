@@ -144,11 +144,11 @@ dev-cygwin() {
 }
 
 dime-cygwin() {
-    docker run --rm -t -p 5000:5000 -p 8818:8818 $tag dime -vv -l tcp:5000 -l ws:$((port+8))
+    docker run --rm -it -p 5000:5000 -p 8818:8818 $tag dime -vv -l tcp:5000 -l ws:$((port+8))
 }
 
 http-cygwin() {
-    docker run --rm -t -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))
+    docker run --rm -it -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))
 }
 
 "$@"
