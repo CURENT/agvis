@@ -42,7 +42,7 @@ WORKDIR /tmp
 RUN rm -rf /tmp/dime2
 
 USER cui
-WORKDIR /srv
+WORKDIR /home/cui
 
 ENTRYPOINT []
 CMD []

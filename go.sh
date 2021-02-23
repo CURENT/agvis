@@ -131,17 +131,17 @@ dev() {
     tmux split-window -v
     tmux select-layout tiled
     #tmux send-keys -t0 "./go.sh run_8810 python3 server.py --port $((port+0)) --bind 0.0.0.0" Enter
-    tmux send-keys -t0 "docker run --rm -t -v `pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server $((port+0))" Enter
+    tmux send-keys -t0 "docker run --rm -t -v `pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))" Enter
     tmux send-keys -t1 "docker run --rm -t -v /tmp:/tmp -p 8818:8818 $tag dime -vv -l unix:/tmp/dime2 -l ws:$((port+8))" Enter
-    tmux send-keys -t2 "docker run --rm -t -v /tmp:/tmp $tag andes -v 10 run /app/wecc_vis.xlsx -r tds"
+    tmux send-keys -t2 "docker run --rm -t -v /tmp:/tmp $tag andes -v 10 run /home/cui/wecc_vis.xlsx -r tds"
 }
 
 dev-cygwin() {
     google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &!
 
-    mintty --exec "docker run --rm -t -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server $((port+0))" &!
+    mintty --exec "docker run --rm -t -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))" &!
     mintty --exec "docker run --rm -t -p 5000:5000 -p 8818:8818 $tag dime -vv -l tcp:5000 -l ws:$((port+8))" &!
-    mintty --exec "docker run --rm -t $tag andes -v 10 --dime-protocol tcp --dime-address 127.0.0.1:5000 run /home/cui/wecc_vis.xlsx -r tds" &!
+    mintty --exec "docker run --rm -t $tag andes -v 10 run /home/cui/wecc_vis.xlsx --dime-protocol tcp --dime-address 127.0.0.1:5000 -r tds" &!
 }
 
 "$@"
