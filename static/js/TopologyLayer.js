@@ -271,14 +271,14 @@ L.TopologyLayer = L.CanvasLayer.extend({
 
 		const images = {};
 		for (let { name, src } of [
-			{ name: 'bus', src: '/static/img/bus.svg' },
-			{ name: 'syn', src: '/static/img/syn.svg' },
-			{ name: 'dfig', src: '/static/img/dfig.svg' },
-			{ name: 'synT', src: '/static/img/synT.svg' },
-			{ name: 'synTE', src: '/static/img/synTE.svg' },
-			{ name: 'synTEP', src: '/static/img/synTEP.svg' },
-			{ name: 'synEP', src: '/static/img/synEP.svg' },
-			{ name: 'synE', src: '/static/img/synE.svg' },
+			{ name: 'bus', src: '/img/bus.svg' },
+			{ name: 'syn', src: '/img/syn.svg' },
+			{ name: 'dfig', src: '/img/dfig.svg' },
+			{ name: 'synT', src: '/img/synT.svg' },
+			{ name: 'synTE', src: '/img/synTE.svg' },
+			{ name: 'synTEP', src: '/img/synTEP.svg' },
+			{ name: 'synEP', src: '/img/synEP.svg' },
+			{ name: 'synE', src: '/img/synE.svg' },
 		]) {
 			const image = new Image();
 			image.src = src;

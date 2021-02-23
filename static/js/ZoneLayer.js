@@ -20,7 +20,7 @@ L.ZoneLayer = L.GeoJSON.extend({
         this._geojson = null;
 
         (async function(zonelayer) {
-            let geojson = await fetch("/static/js/nerc_regions.geojson");
+            let geojson = await fetch("/js/nerc_regions.geojson");
             geojson = await geojson.json();
 
             zonelayer._geojson = geojson;

@@ -133,7 +133,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	let { uColormapSampler } = glCache;
 	if (!uColormapSampler) {
 		uColormapSampler = glCache.uColormapSampler = twgl.createTexture(gl, {
-			src: '/static/img/map256.png',
+			src: '/img/map256.png',
 			wrapS: gl.CLAMP_TO_EDGE,
 			wrapT: gl.CLAMP_TO_EDGE,
 			min: gl.LINEAR_MIPMAP_LINEAR,
