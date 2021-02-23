@@ -286,6 +286,7 @@ function CreateWindow(num, options, dimec) {
             //console.log({ name, value });
 
         if (!sentHeader && name === 'Idxvgs') {
+            /* Need to move this code somewhere else */
             const busVoltageIndices = historykeeper.workspace.Idxvgs.Bus.V.array;
             const busThetaIndices = historykeeper.workspace.Idxvgs.Bus.theta.array;
             const busfreqIndices= historykeeper.workspace.Idxvgs.Bus.w_Busfreq.array;

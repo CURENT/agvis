@@ -319,10 +319,10 @@ function addSidebarConfig(num, options, map, layers, sidebar, historykeeper) {
     document.body.appendChild(opt_savesimulation_a);
 
     opt_savesimulation.onclick = function() {
-        let blob = new Blob([historykeeper.save()]);
+        let blob = new Blob([historykeeper.save()], {type: "application/json"});
 
         opt_savesimulation_a.href = window.URL.createObjectURL(blob);
-        opt_savesimulation_a.download = "ltbvis_history.dimeb";
+        opt_savesimulation_a.download = "ltbvis_history.json";
 
         opt_savesimulation_a.click();
     }

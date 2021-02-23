@@ -41,11 +41,8 @@ RUN python3 -m pip install .
 WORKDIR /tmp
 RUN rm -rf /tmp/dime2
 
-WORKDIR /app
-COPY server.py /app
-
 USER cui
-WORKDIR /home/cui
+WORKDIR /srv
 
 ENTRYPOINT []
 CMD []

@@ -110,6 +110,10 @@ class NDArray {
             throw "Complex matrices are currently unsuppoerted";
         }
 
+        if (this.shape.length === 1) {
+            return this.array;
+        }
+
 		if (this.order !== 'F') {
 			throw 'bad order, expected "' + this.order + '"';
 		}
@@ -123,6 +127,10 @@ class NDArray {
 	row(n) {
         if (this.complex) {
             throw "Complex matrices are currently unsuppoerted";
+        }
+
+        if (this.shape.length === 1) {
+            return this.array;
         }
 
 		if (this.order !== 'C') {
@@ -191,9 +199,7 @@ class NDArray {
 
 function jsonloads(obj) {
     return JSON.parse(new TextDecoder().decode(new Uint8Array(obj)), function(key, value) {
-        //console.log(JSON.parse(JSON.stringify({ this: this, key, value })));
-
-        if (value.__dime_type !== undefined) {
+        if (value && value.__dime_type !== undefined) {
             if (value.__dime_type === "complex") {
                 return new Complex(value.real, value.imag);
             }
@@ -203,11 +209,11 @@ function jsonloads(obj) {
                     int8: Int8Array,
                     int16: Int16Array,
                     int32: Int32Array,
-                    int64: Int64Array,
+                    int64: BigInt64Array,
                     uint8: Uint8Array,
                     uint16: Uint16Array,
                     uint32: Uint32Array,
-                    uint64: Uint64Array,
+                    uint64: BigUint64Array,
                     float32: Float32Array,
                     float64: Float64Array,
                     complex64: Float32Array,
@@ -215,6 +221,10 @@ function jsonloads(obj) {
                 }
 
                 let data = new dtype_tab[value.dtype](base64arraybuffer.decode(value.data));
+
+                if ((value.dtype === "int64" || value.dtype === "uint64") && data.every((i) => BigInt(-Number.MAX_SAFE_INTEGER) <= i && i <= BigInt(Number.MAX_SAFE_INTEGER))) {
+                    data = new Float64Array(Array.from(data).map(Number));
+                }
 
                 return new NDArray('F', value.shape, data, value.dtype.startsWith("complex"));
             }
@@ -239,16 +249,16 @@ function jsondumps(obj) {
                 Int8Array: "int8",
                 Int16Array: "int16",
                 Int32Array: "int32",
-                Int64Array: "int64",
+                BigInt64Array: "int64",
                 Uint8Array: "uint8",
                 Uint16Array: "uint16",
                 Uint32Array: "uint32",
-                Uint64Array: "uint64",
+                BigUint64Array: "uint64",
                 Float32Array: "float32",
                 Float64Array: "float64"
             };
 
-            let dtype = dtype_tab[value.array.name];
+            let dtype = dtype_tab[value.array.constructor.name];
             let data = base64arraybuffer.encode(value.array.buffer);
 
             if (value.array.complex) {
