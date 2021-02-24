@@ -3,16 +3,15 @@ let PlaybackControl = L.Control.extend({
         position: "bottomleft"
     },
 
-    initialize: function(map, historykeeper, options) {
-        this.map = map;
-        this.historykeeper = historykeeper;
+    initialize: function(window, options) {
+        this.window = window;
         this.playbackbar = null;
 
         if (options) L.Util.setOptions(this, options);
     },
 
     onAdd: function(options) {
-        const { map, historykeeper } = this;
+        const { window } = this;
         let paused = false;
         let playbackspeed = 1.0;
 
@@ -28,12 +27,13 @@ let PlaybackControl = L.Control.extend({
         playbackbar.style.width = "100%";
         playbackbar.type = "range";
         playbackbar.min = 0;
-        playbackbar.max = map.end_time;
+        playbackbar.max = window.end_time;
         playbackbar.step = 0.01;
-        playbackbar.value = map.end_time;
+        playbackbar.value = window.end_time;
 
         playbackbar.oninput = function() {
-            historykeeper.currentTimeInSeconds = Number(playbackbar.value);
+            console.log(playbackbar.value);
+            window.time = Number(playbackbar.value);
         }
 
         let ldiv = L.DomUtil.create('div', '', div);
@@ -47,10 +47,10 @@ let PlaybackControl = L.Control.extend({
             paused = !paused;
 
             if (paused) {
-                map.timescale = 0;
+                window.timescale = 0;
                 pausebutton.value = "Play";
             } else {
-                map.timescale = playbackspeed;
+                window.timescale = playbackspeed;
                 pausebutton.value = "Pause";
             }
         }
@@ -60,7 +60,7 @@ let PlaybackControl = L.Control.extend({
         stopbutton.value = "Stop";
 
         stopbutton.onclick = function() {
-            map.resetTime();
+            window.resetTime();
         }
 
         let rdiv = L.DomUtil.create('div', '', div);
@@ -93,7 +93,7 @@ let PlaybackControl = L.Control.extend({
                 if (val > 0) {
                     playbackspeed = val;
                     if (!paused) {
-                        map.timescale = playbackspeed;
+                        window.timescale = playbackspeed;
                     }
                 }
             } else {
@@ -113,7 +113,7 @@ let PlaybackControl = L.Control.extend({
 
                 playbackspeed = val;
                 if (!paused) {
-                    map.timescale = playbackspeed;
+                    window.timescale = playbackspeed;
                 }
 
                 playbackspeedspan.innerHTML = " " + val + "x ";
@@ -126,7 +126,7 @@ let PlaybackControl = L.Control.extend({
             if (val > 0) {
                 playbackspeed = val;
                 if (!paused) {
-                    map.timescale = playbackspeed;
+                    window.timescale = playbackspeed;
                 }
             }
         }

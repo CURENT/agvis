@@ -9,6 +9,9 @@ class Window {
 
         this.map_name = "map" + num;
         this.dimec_name = "geovis" + num;
+        this.time = 0.0;
+        this.end_time = null;
+        this.timescale = 1.0;
 
         this.p1 = options.p1;
         this.p2 = options.p2;
@@ -32,11 +35,11 @@ class Window {
             zoom: 5,
         });
 
-        this.map.timescale = 1.0;
-        this.map.end_time = null;
+        //this.map.timescale = 1.0;
+        //this.map.end_time = null;
         this.map.handshake = true;
 
-        this.pbar = new PlaybackControl(this.map, this);
+        this.pbar = new PlaybackControl(this, options);
 
         this.tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(this.map);
 
@@ -207,24 +210,22 @@ class Window {
             requestAnimationFrame(step);
 
             if (firstTime === null) {
-                self.workspace.currentTimeInSeconds = 0.0;
+                self.time = 0.0;
                 firstTime = currentTime;
                 return;
             }
 
             let dt = (currentTime - firstTime) / 1000.0;
 
-            if (self.map.end_time !== null) {
-                dt *= self.map.timescale;
+            if (self.end_time !== null) {
+                dt *= self.timescale;
             }
 
-            self.workspace.currentTimeInSeconds += dt;
+            self.time += dt;
 
-            if (self.map.end_time !== null && self.workspace.currentTimeInSeconds > self.map.end_time) {
-                self.workspace.currentTimeInSeconds = self.map.end_time;
-            }
+            self.pbar.updatePlaybackBar(self.time);
 
-            self.pbar.updatePlaybackBar(self.workspace.currentTimeInSeconds);
+            self.workspace.currentTimeInSeconds = self.time;
             firstTime = currentTime;
 
             // get data from history, update contour, simulation time, and plots
@@ -280,6 +281,7 @@ class Window {
         const resetTime = await this.drawThread();
         this.workspace.resetTime = resetTime;
         this.map.resetTime = resetTime;
+        this.resetTime = resetTime;
 
         /// Bar of icons for voltage, theta and frequency
         const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map) {
@@ -367,7 +369,8 @@ class Window {
             } else if (name === 'DONE') {
                 console.timeEnd(this.map_name);
 
-                this.map.end_time = Number(this.workspace.Varvgs.t.toFixed(2));
+                this.end_time = Number(this.workspace.Varvgs.t.toFixed(2));
+                console.log(this.end_time);
 
                 this.pbar.addTo(this.map);
             }
