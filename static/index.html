@@ -185,18 +185,20 @@
         const dimec1 = new dime.DimeClient(window.location.hostname, +window.location.port + 8);
         const dimec2 = new dime.DimeClient(window.location.hostname, +window.location.port + 8);
 
-        // Do NOT change these from strings to div elements!
-        const [map1, layers1] = CreateWindow(1, options, dimec1);
-        const [map2, layers2] = CreateWindow(2, options, dimec2);
+        const window1 = new Window(1, options, dimec1);
+        const window2 = new Window(2, options, dimec2);
+
+        window1.mainThread();
+        window2.mainThread();
 
         function toggleSecondMap() {
             x2.style.display = (x2.style.display === "block" ? "none" : "block");
 
-            map1.invalidateSize();
-            map2.invalidateSize();
+            window1.map.invalidateSize();
+            window2.map.invalidateSize();
         }
 
-        L.easyButton('<span>2nd</span>', toggleSecondMap).addTo(map1);
+        L.easyButton('<span>2nd</span>', toggleSecondMap).addTo(window1.map);
 
         // set the number of map views
         if (options.nview > 1) {
