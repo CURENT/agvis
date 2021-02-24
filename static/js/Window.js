@@ -94,7 +94,7 @@ class Window {
             visPane = visPane + '<div id="' + visPlotName + p3 + '"></div>'
         }
 
-        addSidebarConfig(num, options, this.map, this, sidebar, this);
+        addSidebarConfig(this, options, sidebar);
 
         sidebar.addPanel({
             id: 'plotPanel',                     // UID, used to access the panel
@@ -131,7 +131,7 @@ class Window {
         return true;
     }
 
-    updateHeader() {
+    startSimulation() {
                 const busVoltageIndices = this.workspace.Idxvgs.Bus.V.array;
                 const busThetaIndices = this.workspace.Idxvgs.Bus.theta.array;
                 const busfreqIndices= this.workspace.Idxvgs.Bus.w_Busfreq.array;
@@ -184,6 +184,11 @@ class Window {
 
                 // Update this here so that it's not in the animation loop
                 this.searchLayer.update(this.workspace);
+    }
+
+    endSimulation() {
+        this.time = this.end_time = Number(this.workspace.Varvgs.t.toFixed(2));
+        this.pbar.addTo(this.map);
     }
 
     async drawThread() {
@@ -352,7 +357,7 @@ class Window {
                 //console.log({ name, value });
 
             if (!sentHeader && name === 'Idxvgs') {
-                this.updateHeader();
+                this.startSimulation();
 
                 kvpair = {};
 
@@ -368,11 +373,7 @@ class Window {
                 sentHeader = true;
             } else if (name === 'DONE') {
                 console.timeEnd(this.map_name);
-
-                this.end_time = Number(this.workspace.Varvgs.t.toFixed(2));
-                console.log(this.end_time);
-
-                this.pbar.addTo(this.map);
+                this.endSimulation();
             }
 
         }

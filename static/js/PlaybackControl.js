@@ -3,15 +3,15 @@ let PlaybackControl = L.Control.extend({
         position: "bottomleft"
     },
 
-    initialize: function(window, options) {
-        this.window = window;
+    initialize: function(win, options) {
+        this.win = win;
         this.playbackbar = null;
 
         if (options) L.Util.setOptions(this, options);
     },
 
     onAdd: function(options) {
-        const { window } = this;
+        const { win } = this;
         let paused = false;
         let playbackspeed = 1.0;
 
@@ -27,13 +27,12 @@ let PlaybackControl = L.Control.extend({
         playbackbar.style.width = "100%";
         playbackbar.type = "range";
         playbackbar.min = 0;
-        playbackbar.max = window.end_time;
+        playbackbar.max = win.end_time;
         playbackbar.step = 0.01;
-        playbackbar.value = window.end_time;
+        playbackbar.value = win.end_time;
 
         playbackbar.oninput = function() {
-            console.log(playbackbar.value);
-            window.time = Number(playbackbar.value);
+            win.time = Number(playbackbar.value);
         }
 
         let ldiv = L.DomUtil.create('div', '', div);
@@ -47,10 +46,10 @@ let PlaybackControl = L.Control.extend({
             paused = !paused;
 
             if (paused) {
-                window.timescale = 0;
+                win.timescale = 0;
                 pausebutton.value = "Play";
             } else {
-                window.timescale = playbackspeed;
+                win.timescale = playbackspeed;
                 pausebutton.value = "Pause";
             }
         }
@@ -60,7 +59,7 @@ let PlaybackControl = L.Control.extend({
         stopbutton.value = "Stop";
 
         stopbutton.onclick = function() {
-            window.resetTime();
+            win.resetTime();
         }
 
         let rdiv = L.DomUtil.create('div', '', div);
@@ -93,7 +92,7 @@ let PlaybackControl = L.Control.extend({
                 if (val > 0) {
                     playbackspeed = val;
                     if (!paused) {
-                        window.timescale = playbackspeed;
+                        win.timescale = playbackspeed;
                     }
                 }
             } else {
@@ -113,7 +112,7 @@ let PlaybackControl = L.Control.extend({
 
                 playbackspeed = val;
                 if (!paused) {
-                    window.timescale = playbackspeed;
+                    win.timescale = playbackspeed;
                 }
 
                 playbackspeedspan.innerHTML = " " + val + "x ";
@@ -126,7 +125,7 @@ let PlaybackControl = L.Control.extend({
             if (val > 0) {
                 playbackspeed = val;
                 if (!paused) {
-                    window.timescale = playbackspeed;
+                    win.timescale = playbackspeed;
                 }
             }
         }
