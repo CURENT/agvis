@@ -321,10 +321,10 @@ function addSidebarConfig(win, options, sidebar) {
     document.body.appendChild(opt_savesimulation_a);
 
     opt_savesimulation.onclick = function() {
-        let blob = new Blob([win.save()], {type: "application/json"});
+        let blob = new Blob([win.save()]);
 
         opt_savesimulation_a.href = window.URL.createObjectURL(blob);
-        opt_savesimulation_a.download = "ltbvis_history.json";
+        opt_savesimulation_a.download = "ltbvis_history.dimeb";
 
         opt_savesimulation_a.click();
     }

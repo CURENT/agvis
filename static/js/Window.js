@@ -380,13 +380,13 @@ class Window {
     }
 
     load(buf) {
-        let {workspace, history} = dime.jsonloads(buf);
+        let {workspace, history} = dime.dimebloads(buf);
 
         this.workspace = workspace;
         this.history = history;
     }
 
     save() {
-        return dime.jsondumps({history: this.history, workspace: this.workspace});
+        return dime.dimebdumps({history: this.history, workspace: this.workspace});
     }
 }
