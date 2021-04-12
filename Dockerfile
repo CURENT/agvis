@@ -1,55 +1,48 @@
-FROM ubuntu:bionic AS base
+FROM python:3.8-buster AS base
 
-RUN apt-get update && \
-    apt-get install -y \
-        python2.7 \
-	python-pip \
-        python3.7 \
-	python3-pip \
-	libblas-dev \
-	liblapack-dev \
-	libsuitesparse-dev \
-	unzip \
-    && \
-    rm -rf /var/lib/apt/lists/*
+USER root
+WORKDIR /root
 
-ARG PIP_INDEX_URL
-ARG PIP_TRUSTED_HOST
+RUN apt update
+RUN apt install -y --no-install-recommends \
+    git \
+    build-essential \
+    libsuitesparse-dev \
+    libopenblas-dev \
+    libjansson-dev \
+    libssl-dev \
+    zlib1g-dev
 
-ARG andes_version=master
-WORKDIR /opt
-COPY andes /opt/andes
-RUN python3.7 -m pip install \
-        /opt/andes
+RUN rm -rf /var/lib/apt/lists/*
 
-ARG andes_addon_version=89e6f3f11f63
-WORKDIR /opt
-COPY andes_addon /opt/andes_addon
-RUN python3.7 -m pip install \
-        /opt/andes_addon
+RUN python3 -m pip install cvxoptklu --no-cache-dir
+RUN python3 -m pip install https://github.com/cuihantao/andes/zipball/develop --no-cache-dir
+RUN python3 -m pip install https://github.com/curent/cvxopt/zipball/master --no-cache-dir
 
-ARG dime_version=b43d58ba70df
-WORKDIR /opt
-COPY dime /opt/dime
-RUN python3.7 -m pip install \
-        /opt/dime
+RUN useradd -ms /bin/bash cui
 
-RUN python3.7 -m pip install \
-        websockets
+RUN python3 -m andes selftest
+RUN mv /root/.andes /home/cui
+COPY wecc_vis.xlsx /home/cui
+COPY ieee39.xlsx /home/cui
+COPY ACTIVSg2000.xlsx /home/cui
+RUN chown -R cui:cui /home/cui/.andes
+COPY andes.rc /home/cui/.andes
 
-RUN sed -ie 's/# Fault/Fault/g' /opt/andes/cases/curent/WECC_WIND0.dm
-RUN python3.7 -m pip install \
-        netaddr \
-        pandas
+WORKDIR /tmp
+COPY dime2 /tmp/dime2
+WORKDIR /tmp/dime2/server
+RUN make clean
+RUN make
+RUN make install
+WORKDIR /tmp/dime2/client/python
+RUN python3 -m pip install .
+
+WORKDIR /tmp
+RUN rm -rf /tmp/dime2
+
+USER cui
+WORKDIR /home/cui
 
 ENTRYPOINT []
-CMD []
-
-
-FROM base AS dist
-
-WORKDIR /app
-COPY server.py /app/
-
-ENTRYPOINT ["python3.7", "-u", "server.py"]
 CMD []

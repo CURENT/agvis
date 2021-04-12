@@ -110,7 +110,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
 
     let { transferPixelCoords } = varCache;
     if (!transferPixelCoords || needsProjectionUpdate) {
-        console.log("Updating tansfer pixels")
+        //console.log("Updating tansfer pixels");
         transferPixelCoords = varCache.transferPixelCoords = new NDArray('C', [Transfer.shape[0], 4]);
         for(let i=0; i<Transfer.shape[0]; ++i) {
             const options = [Switch, Pmu, Pdc, Hwintf, Tchwintf];
@@ -167,7 +167,7 @@ function renderCommunication(canvas, { size, bounds, project, needsProjectionUpd
             varCache.totalTransfer = totalTransfer;
             varCache.totalReceive = totalReceive;
         }
-        console.log('end');
+        //console.log('end');
     }
 
     const lineBgColor = "rgba(243, 176, 90, 1)";
@@ -317,6 +317,11 @@ L.CommunicationLayer = L.CanvasLayer.extend({
     update(context) {
         this._context = context;
         this.redraw();
+    },
+
+    onAdd(map) {
+        L.CanvasLayer.prototype.onAdd.call(this, map);
+        this.getPane().classList.add("communication-pane");
     },
 
     toggleRender() {

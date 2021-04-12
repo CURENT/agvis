@@ -13,6 +13,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	const Exc = SysParam.Exc;
 	const Pss = SysParam.Pss;
 
+    const GENROU = SysParam.GENROU;
+
 	let paramCache = this._cache.get(SysParam);
 	if (!paramCache) {
 		paramCache = {};
@@ -69,14 +71,16 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 		}
 	}
 
+    const nelems = Bus.idx.length;
+
 	let { busLatLngCoords } = paramCache;
 	if (!busLatLngCoords) {
 		busLatLngCoords = paramCache.busLatLngCoords =
-			new NDArray('C', [Bus.shape[0], 2]);
+			new NDArray('C', [nelems, 2]);
 
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const lat = Bus.get(i, 6);
-			const lng = Bus.get(i, 7);
+		for (let i=0; i < nelems; ++i) {
+			const lat = Bus.ycoord[i];
+			const lng = Bus.xcoord[i];
 			busLatLngCoords.set(lat, i, 0);
 			busLatLngCoords.set(lng, i, 1);
 		}
@@ -84,8 +88,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 
 	let { busPixelCoords } = paramCache;
 	if (!busPixelCoords || needsProjectionUpdate) {
-		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [Bus.shape[0], 2]);
-		for (let i=0; i<Bus.shape[0]; ++i) {
+		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [nelems, 2]);
+		for (let i=0; i < nelems; ++i) {
 			const lat = busLatLngCoords.get(i, 0);
 			const lng = busLatLngCoords.get(i, 1);
 			const point = project(L.latLng(lat, lng));
@@ -98,8 +102,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!busToIndexLookup) {
 		busToIndexLookup = paramCache.busToIndexLookup =
 			new Map();
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const busNumber = Bus.get(i, 0);
+		for (let i=0; i < nelems; ++i) {
+			const busNumber = Bus.idx[i];
 			busToIndexLookup.set(busNumber, i);
 		}
 	}
@@ -108,8 +112,8 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!busToImageLookup) {
 		busToImageLookup = paramCache.busToImageLookup = new Map();
 
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const busNumber = Bus.get(i, 0);
+		/*for (let i=0; i < nelems; ++i) {
+			const busNumber = Bus.idx[i];
 			const syn = busToSynLookup.get(busNumber);
 			const exc = synToExcLookup.get(syn);
 			const tg = synToTgLookup.get(syn);
@@ -126,19 +130,31 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 				images.bus;
 
 			busToImageLookup.set(busNumber, image);
-		}
+		}*/
+
+        for (let i = 0; i < nelems; i++) {
+			const busNumber = Bus.idx[i];
+			busToImageLookup.set(busNumber, images.bus);
+        }
+
+        if (GENROU) {
+            for (let i = 0; i < GENROU.bus.length; i++) {
+                const busNumber = GENROU.bus[i];
+                busToImageLookup.set(busNumber, images.syn);
+            }
+        }
 	}
 
 	let { lineVoltageRating } = paramCache;
 	if (!lineVoltageRating) {
-		lineVoltageRating = paramCache.lineVoltageRating = Line.column(3);
+		lineVoltageRating = paramCache.lineVoltageRating = Line.Vn1.column(0);
 	}
 
 	let { lineVoltageRatingExtents } = paramCache;
 	if (!lineVoltageRatingExtents) {
 		const min = Math.min(...lineVoltageRating);
 		const max = Math.max(...lineVoltageRating);
-		console.log({ min, max });
+		//console.log({ min, max });
 		lineVoltageRatingExtents = paramCache.lineVoltageRatingExtents = { min, max };
 	}
 
@@ -156,48 +172,90 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
 			zoomToLineVoltageRatingMinLookup.set(i, voltageRatingMin);
 			voltageRatingMin -= voltageRatingStep;
 		}
-		console.log(zoomToLineVoltageRatingMinLookup);
+		//console.log(zoomToLineVoltageRatingMinLookup);
 	}
 
 	const zoomLevel = this._map.getZoom();
 
 	const ctx = canvas.getContext('2d');
+
 	ctx.clearRect(0, 0, size.x, size.y);
 
     if(this._render) {
-	ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
-	ctx.lineWidth = 2;
-	ctx.beginPath();
-	for (let i=0; i<Line.shape[0]; ++i){
-		const voltageRating = Line.get(i, 3);
-		if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
+        /*
+        if (this._states) {
+            for (let zone of this._states) {
+                ctx.fillStyle = zone.color;
 
-		const fromNumber = Line.get(i, 0);
-		const fromIndex = busToIndexLookup.get(fromNumber);
-		const fromX = busPixelCoords.get(fromIndex, 0);
-		const fromY = busPixelCoords.get(fromIndex, 1);
+                for (let i = 0; i < zone.coords.shape[0]; i++) {
+                    const lat = zone.coords.get(i, 0);
+                    const lon = zone.coords.get(i, 1);
 
-		const toNumber = Line.get(i, 1);
-		const toIndex = busToIndexLookup.get(toNumber);
-		const toX = busPixelCoords.get(toIndex, 0);
-		const toY = busPixelCoords.get(toIndex, 1);
+                    const {x, y} = project(L.latLng(lat, lon));
 
-		ctx.moveTo(fromX, fromY);
-		ctx.lineTo(toX, toY);
-	}
-	ctx.closePath();
-	ctx.stroke();
+                    if (i === 0) {
+                        ctx.beginPath();
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
 
-	for (let i=0; i<Bus.shape[0]; ++i) {
-		const x = busPixelCoords.get(i, 0);
-		const y = busPixelCoords.get(i, 1);
-		const busNumber = Bus.get(i, 0);
-		const image = busToImageLookup.get(busNumber);
-		const size = 12;
-		ctx.drawImage(image, x - size/2, y - size/2, size, size);
-	}
+                ctx.closePath();
+                ctx.fill("evenodd");
+            }
+        }
+        */
 
-}
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        for (let i=0; i < Line.idx.length; ++i){
+            //const voltageRating = Line.Vn1.get(0, i);
+            //if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
+
+            const fromNumber = Line.bus1[i];
+            const fromIndex = busToIndexLookup.get(fromNumber);
+            const fromX = busPixelCoords.get(fromIndex, 0);
+            const fromY = busPixelCoords.get(fromIndex, 1);
+
+            const toNumber = Line.bus2[i];
+            const toIndex = busToIndexLookup.get(toNumber);
+            const toX = busPixelCoords.get(toIndex, 0);
+            const toY = busPixelCoords.get(toIndex, 1);
+
+            const dist = Math.hypot(toX - fromX, toY - fromY);
+
+            if (dist > 12) {
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(toX, toY);
+            }
+        }
+
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+
+        // Draws the buses (vertices)
+        for (let i=0; i < nelems; ++i) {
+            const x = busPixelCoords.get(i, 0);
+            const y = busPixelCoords.get(i, 1);
+            const busNumber = Bus.idx[i];
+            const image = busToImageLookup.get(busNumber);
+            const size = 12;
+            ctx.drawImage(image, x - size/2, y - size/2, size, size);
+
+            //const voltageRating = Bus.get(i, 1); Mic
+
+            if (this._render_bus_ids) {
+                ctx.fillText(busNumber.toString(), x, y + size/2);
+            }
+        }
+        // TODO: Render zones
+    }
 }
 
 L.TopologyLayer = L.CanvasLayer.extend({
@@ -209,17 +267,18 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._context = null;
 		this._cache = new WeakMap();
         this._render = true;
+        this._render_bus_ids = false;
 
 		const images = {};
 		for (let { name, src } of [
-			{ name: 'bus', src: '/static/img/bus.svg' },
-			{ name: 'syn', src: '/static/img/syn.svg' },
-			{ name: 'dfig', src: '/static/img/dfig.svg' },
-			{ name: 'synT', src: '/static/img/synT.svg' },
-			{ name: 'synTE', src: '/static/img/synTE.svg' },
-			{ name: 'synTEP', src: '/static/img/synTEP.svg' },
-			{ name: 'synEP', src: '/static/img/synEP.svg' },
-			{ name: 'synE', src: '/static/img/synE.svg' },
+			{ name: 'bus', src: '/img/bus.svg' },
+			{ name: 'syn', src: '/img/syn.svg' },
+			{ name: 'dfig', src: '/img/dfig.svg' },
+			{ name: 'synT', src: '/img/synT.svg' },
+			{ name: 'synTE', src: '/img/synTE.svg' },
+			{ name: 'synTEP', src: '/img/synTEP.svg' },
+			{ name: 'synEP', src: '/img/synEP.svg' },
+			{ name: 'synE', src: '/img/synE.svg' },
 		]) {
 			const image = new Image();
 			image.src = src;
@@ -240,7 +299,6 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		});
 		this._images = images;
 
-
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
 
@@ -248,9 +306,15 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._context = context;
 		this.redraw();
 	},
+
+    onAdd(map) {
+        L.CanvasLayer.prototype.onAdd.call(this, map);
+        this.getPane().classList.add("topology-pane");
+    },
+
     toggleRender() {
         this._render = !this._render;
-        console.log("Topology rendering: ", this._render);
+        //console.log("Topology rendering: ", this._render);
     }
 });
 

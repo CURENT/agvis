@@ -34,7 +34,6 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!Idxvgs) return;
 	const Varvgs = context.Varvgs;
 	if (!Varvgs) return;
-	const vars = Varvgs.vars;
 
 	let paramCache = this._cache.get(SysParam);
 	if (!paramCache) {
@@ -42,14 +41,16 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		this._cache.set(SysParam, paramCache);
 	}
 
+    const nelems = Bus.idx.length;
+
 	let { busLatLngCoords } = paramCache;
 	if (!busLatLngCoords) {
 		busLatLngCoords = paramCache.busLatLngCoords =
-			new NDArray('C', [Bus.shape[0], 2]);
+			new NDArray('C', [nelems, 2]);
 
-		for (let i=0; i<Bus.shape[0]; ++i) {
-			const lat = Bus.get(i, 6);
-			const lng = Bus.get(i, 7);
+		for (let i=0; i < nelems; ++i) {
+			const lat = Bus.ycoord[i];
+			const lng = Bus.xcoord[i];
 			busLatLngCoords.set(lat, i, 0);
 			busLatLngCoords.set(lng, i, 1);
 		}
@@ -57,8 +58,8 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 
 	let { busPixelCoords } = paramCache;
 	if (!busPixelCoords || needsProjectionUpdate) {
-		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [Bus.shape[0], 2]);
-		for (let i=0; i<Bus.shape[0]; ++i) {
+		busPixelCoords = paramCache.busPixelCoords = new NDArray('C', [nelems, 2]);
+		for (let i=0; i < nelems; ++i) {
 			const lat = busLatLngCoords.get(i, 0);
 			const lng = busLatLngCoords.get(i, 1);
 			const point = project(L.latLng(lat, lng));
@@ -69,7 +70,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 
 	let { busTriangles } = paramCache;
 	if (!busTriangles || needsProjectionUpdate) {
-		const delaunay = new d3.Delaunay(busLatLngCoords.typedArray);
+		const delaunay = new d3.Delaunay(busLatLngCoords.array);
 
 		busTriangles = paramCache.busTriangles =
 			new NDArray('C', [delaunay.triangles.length/3, 3], delaunay.triangles);
@@ -113,7 +114,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!aPositionBufferInfo || needsProjectionUpdate) {
 		aPositionBufferInfo = glCache.aPositionBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 			aPosition: {
-				data: busPixelCoords.typedArray,
+				data: busPixelCoords.array,
 				numComponents: 2,
 			},
 		});
@@ -123,7 +124,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	if (!aIndicesBufferInfo) {
 		aIndicesBufferInfo = glCache.aIndicesBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 			indices: {
-				data: busTriangles.typedArray,
+				data: busTriangles.array,
 				numComponents: 3,
 			},
 		});
@@ -132,7 +133,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	let { uColormapSampler } = glCache;
 	if (!uColormapSampler) {
 		uColormapSampler = glCache.uColormapSampler = twgl.createTexture(gl, {
-			src: '/static/img/map256.png',
+			src: '/img/map256.png',
 			wrapS: gl.CLAMP_TO_EDGE,
 			wrapT: gl.CLAMP_TO_EDGE,
 			min: gl.LINEAR_MIPMAP_LINEAR,
@@ -146,6 +147,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		-1, 1, 0, 1,
 	];
 
+	const vars = new dime.NDArray(Varvgs.vars.order, Varvgs.vars.shape, Float32Array.from(Varvgs.vars.array));
 	const variableValue = vars.subarray(this._variableRange);
 
 	let maxVoltageDifference = Math.abs(variableValue.get(0, 0) - 1.0);
@@ -159,7 +161,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 
 	const aValueBufferInfo = twgl.createBufferInfoFromArrays(gl, {
 		aValue: {
-			data: variableValue.typedArray,
+			data: variableValue.array,
 			numComponents: 1,
 		},
 	});
@@ -199,6 +201,8 @@ L.ContourLayer = L.CanvasLayer.extend({
 		this._uScaleMax = 1.2;
 		this._cache = new WeakMap();
         this._render = true;
+
+        this.variableName = null;
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
 
@@ -207,12 +211,19 @@ L.ContourLayer = L.CanvasLayer.extend({
             this.redraw();
     },
 
+    onAdd(map) {
+        L.CanvasLayer.prototype.onAdd.call(this, map);
+        this.getPane().classList.add("contour-pane");
+    },
+
 	storeRelativeIndices(idx) {
 		this._variableRelIndices = idx;
 	},
 
 	showVariable(name) {
 		// updates the name of variables for the contour map
+        this.variableName = name;
+
 		this._variableRange = this._variableRelIndices[name];
             this.redraw();
     },

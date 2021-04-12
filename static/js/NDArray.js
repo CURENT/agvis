@@ -9,7 +9,7 @@ class NDArray {
 			}
 			typedArray = new Float32Array(total);
 		}
-		this.typedArray = typedArray;
+		this.array = typedArray;
 	}
 
 	_makeIndex(index, strict) {
@@ -35,12 +35,12 @@ class NDArray {
 
 	get(...index) {
 		const realIndex = this._makeIndex(index, true);
-		return this.typedArray[realIndex];
+		return this.array[realIndex];
 	}
 
 	set(value, ...index) {
 		const realIndex = this._makeIndex(index, true);
-		this.typedArray[realIndex] = value;
+		this.array[realIndex] = value;
 	}
 
 	column(n) {
@@ -49,8 +49,8 @@ class NDArray {
 		}
 		const start = this._makeIndex([0, n], false);
 		const end = this._makeIndex([0, n+1], false);
-		console.log({ start, end });
-		return this.typedArray.slice(start, end);
+		//console.log({ start, end });
+		return this.array.slice(start, end);
 	}
 
 	row(n) {
@@ -59,15 +59,16 @@ class NDArray {
 		}
 		const start = this._makeIndex([n, 0], false);
 		const end = this._makeIndex([n+1, 0], false);
-		console.log({ start, end });
-		return this.typedArray.slice(start, end);
+		//console.log({ start, end });
+		return this.array.slice(start, end);
 	}
 
 	extents() {
+
 		if (this.shape[0] !== 1) {
 			throw 'extents: expected column vector';
 		}
-		const typedArray = this.typedArray;
+		const typedArray = this.array;
 		let prev = typedArray[0];
 		for (let i=1; i<typedArray.length; ++i) {
 			const cur = typedArray[i];
@@ -80,7 +81,7 @@ class NDArray {
 	}
 
 	subarray({ begin, end }) {
-		return new NDArray(this.order, [1, end - begin - 1], this.typedArray.subarray(begin, end));
+		return new NDArray(this.order, [1, end - begin - 1], this.array.subarray(begin, end));
 	}
 
 	subindex(idx){
@@ -93,9 +94,9 @@ class NDArray {
 		}
 
 		const out_values = new Float64Array(idx.shape[1]);
-		
-		for (let i=0; i<idx.typedArray.length; i++){
-			const pos = idx.typedArray[i];
+
+		for (let i=0; i<idx.array.length; i++){
+			const pos = idx.array[i];
 			out_values[i] = this.get(0, pos);
 		}
 
