@@ -26,7 +26,6 @@ RUN python3 -m andes selftest && \
     mv /root/.andes /home/cui && \
     chown -R cui:cui /home/cui/.andes
 
-
 # build DiME 2
 WORKDIR /tmp
 COPY dime2 /tmp/dime2
