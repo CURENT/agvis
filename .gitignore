@@ -2,4 +2,4 @@
 /dime2/
 env.sh
 *.zip
-*_out*.*
+/work/*_out*.*
