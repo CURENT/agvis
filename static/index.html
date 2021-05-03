@@ -143,6 +143,12 @@
 </div>
     <script>
         let options = {
+            // Settings for DiME clients
+            dimehost1: window.location.hostname,
+            dimeport1: +window.location.port + 8,
+            dimehost2: window.location.hostname,
+            dimeport2: +window.location.port + 8,
+
             // Settings for map1
             vmin1: 0.8,
             vmax1: 1.2,
@@ -181,8 +187,8 @@
         const x1 = document.getElementById("map1");
         const x2 = document.getElementById("map2");
 
-        const dimec1 = new dime.DimeClient(window.location.hostname, +window.location.port + 8);
-        const dimec2 = new dime.DimeClient(window.location.hostname, +window.location.port + 8);
+        const dimec1 = new dime.DimeClient(options.dimehost1, options.dimeport1);
+        const dimec2 = new dime.DimeClient(options.dimehost2, options.dimeport2);
 
         const window1 = new Window(1, options, dimec1);
         const window2 = new Window(2, options, dimec2);

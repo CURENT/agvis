@@ -132,7 +132,7 @@ dev() {
     tmux select-layout tiled
     tmux send-keys -t0 "docker run --rm -t -v `pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))" Enter
     tmux send-keys -t1 "docker run --rm -t -v /tmp:/tmp -p 8818:8818 $tag dime -vv -l unix:/tmp/dime2 -l ws:$((port+8))" Enter
-    tmux send-keys -t2 "docker run --rm -t -v /tmp:/tmp $tag andes -v 10 run /home/cui/wecc_vis.xlsx -r tds"
+    tmux send-keys -t2 "docker run --rm -t -v /tmp:/tmp -v `pwd`/cases:/home/cui/work $tag andes -v 10 run wecc_vis.xlsx -r tds"
 }
 
 dev-cygwin() {
@@ -140,7 +140,7 @@ dev-cygwin() {
 
     mintty --exec "docker run --rm -t -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))" &!
     mintty --exec "docker run --rm -t -p 5000:5000 -p 8818:8818 $tag dime -vv -l tcp:5000 -l ws:$((port+8))" &!
-    #mintty --exec "docker run --rm -t $tag andes -v 10 run /home/cui/wecc_vis.xlsx --dime-protocol tcp --dime-address 127.0.0.1:5000 -r tds" &!
+    #mintty --exec "docker run --rm -t $tag andes -v 10 run /home/cui/wecc_vis.xlsx --dime tcp://127.0.0.1:5000 -r tds" &!
 }
 
 dime-cygwin() {
