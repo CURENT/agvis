@@ -53,23 +53,6 @@ class Window {
 
         this.simTimeBox = L.simTimeBox({ position: 'topright' }).addTo(this.map);
 
-        const lineSpec = {
-            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
-            "width": 300,
-            "height": 180,
-            "description": "Plot",
-            "data": {"name": "table"},
-            "mark": "line",
-            "encoding": {
-                "x": {"field": "Time",  "type": "quantitative"},
-                "y": {"field": "Value", "type": "quantitative", "scale": {"domain": {"data": "table", "field": "Value"}}},
-            },
-            "autosize": {
-                resize: true
-            }
-            //"autosize": {"type": "fit", "contains": "padding"}
-        };
-
         // side bar
         const sidebar = L.control.sidebar({
             autopan: true,       // whether to maintain the centered map point when opening the sidebar
@@ -83,15 +66,15 @@ class Window {
         let visPane = '';
 
         if (this.p1 !== undefined) {
-            visPane = visPane + '<div id="' + visPlotName + p1 + '"></div>'
+            visPane = visPane + '<div id="' + visPlotName + this.p1 + '"></div>'
         }
 
         if (this.p2 !== undefined) {
-            visPane = visPane + '<div id="' + visPlotName + p2 + '"></div>'
+            visPane = visPane + '<div id="' + visPlotName + this.p2 + '"></div>'
         }
 
         if (this.p3 !== undefined) {
-            visPane = visPane + '<div id="' + visPlotName + p3 + '"></div>'
+            visPane = visPane + '<div id="' + visPlotName + this.p3 + '"></div>'
         }
 
         addSidebarConfig(this, options, sidebar);
@@ -192,21 +175,38 @@ class Window {
     }
 
     async drawThread() {
+        const lineSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+            "width": 300,
+            "height": 180,
+            "description": "Plot",
+            "data": {"name": "table"},
+            "mark": "line",
+            "encoding": {
+                "x": {"field": "Time",  "type": "quantitative"},
+                "y": {"field": "Value", "type": "quantitative", "scale": {"domain": {"data": "table", "field": "Value"}}},
+            },
+            "autosize": {
+                resize: true
+            }
+            //"autosize": {"type": "fit", "contains": "padding"}
+        };
+
         const self = this;
 
         if (this.p1 !== undefined) {
-            const { view } = await vegaEmbed('#' + this.map_name + 'Vis' + p1, lineSpec, {defaultStyle: true});
-            workspace.p1 = view;
+            const { view } = await vegaEmbed('#' + this.map_name + 'Vis' + this.p1, lineSpec, {defaultStyle: true});
+            this.workspace.p1 = view;
         }
 
         if (this.p2 !== undefined) {
-            const { view } = await vegaEmbed('#' + this.map_name + 'Vis' + p2, lineSpec, {defaultStyle: true});
-            workspace.p2 = view;
+            const { view } = await vegaEmbed('#' + this.map_name + 'Vis' + this.p2, lineSpec, {defaultStyle: true});
+            this.workspace.p2 = view;
         }
 
         if (this.p3 !== undefined) {
-            const { view } = await vegaEmbed('#' + this.map_name + 'Vis' + p3, lineSpec, {defaultStyle: true});
-            workspace.p3 = view;
+            const { view } = await vegaEmbed('#' + this.map_name + 'Vis' + this.p3, lineSpec, {defaultStyle: true});
+            this.workspace.p3 = view;
         }
 
         let firstTime = null;
