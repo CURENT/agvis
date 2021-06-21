@@ -23,7 +23,7 @@ Next, go into the directory for this repository and run `./go.sh build`:
 
 ```
 $ cd ltbvis
-$ ./go.sh dev
+$ ./go.sh build
 ```
 
 Note that no compilation of Andes or dime2, nor any extra dependencies, is required, as this is all done inside a Docker image.
