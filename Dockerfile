@@ -11,7 +11,8 @@ RUN apt install -y --no-install-recommends \
     libopenblas-dev \
     libjansson-dev \
     libssl-dev \
-    zlib1g-dev
+    zlib1g-dev \
+    libev-dev
 
 RUN rm -rf /var/lib/apt/lists/*
 
