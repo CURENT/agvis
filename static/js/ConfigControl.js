@@ -13,6 +13,10 @@ const table_html = `
         <td style="white-space: nowrap;"><input type="text" name="opt_fmin" pattern="[0-9]*(\.[0-9]*)?" size="7"> - <input type="text" name="opt_fmax" pattern="[0-9]*(\.[0-9]*)?" size="7"></td>
     </tr>
     <tr>
+        <td><span name="opt_flabel">Edge opacity</span></td>
+        <td style="white-space: nowrap;"><input type="text" name="opt_opacity" pattern="[01]*(\.[0-9]*)?" size="7"></td>
+    </tr>
+    <tr>
         <td><label for="opt_togglehandshake">Toggle Handshake</label></td>
         <td><input type="checkbox" name="opt_togglehandshake" checked></td>
     </tr>
@@ -54,6 +58,7 @@ function addSidebarConfig(win, options, sidebar) {
     const opt_vmax = document.querySelector(`#${table_id} input[name='opt_vmax']`);
     const opt_fmin = document.querySelector(`#${table_id} input[name='opt_fmin']`);
     const opt_fmax = document.querySelector(`#${table_id} input[name='opt_fmax']`);
+    const opt_opacity = document.querySelector(`#${table_id} input[name='opt_opacity']`);
     const opt_togglezones = document.querySelector(`#${table_id} input[name='opt_togglezones']`);
     const opt_togglebuslabels = document.querySelector(`#${table_id} input[name='opt_togglebuslabels']`);
 
@@ -89,6 +94,10 @@ function addSidebarConfig(win, options, sidebar) {
 
         if ("fmax" + win.num in options) {
             opt_fmax.value = options["fmax" + win.num];
+        }
+
+        if ("opacity" + win.num in options) {
+            opt_opacity.value = options["opacity" + win.num];
         }
 
         if ("togglezones" + win.num in options) { // TODO
@@ -217,6 +226,19 @@ function addSidebarConfig(win, options, sidebar) {
             if (win.contourLayer.variableName === "freq") {
                 win.contourLayer.updateRange(options["fmin" + win.num], options["fmax" + win.num]);
             }
+        }
+    };
+
+    opt_opacity.oninput = function() {
+        const val = Number(opt_fmax.value);
+
+        if (val === val) {
+            options["opacity" + win.num] = val;
+
+            win.topologyLayer._opacity = val;
+            win.topologyLayer.redraw();
+
+            document.cookie = `opacity${num}=${val};expires=${dt};path=/`;
         }
     };
 

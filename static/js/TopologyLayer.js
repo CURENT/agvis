@@ -207,7 +207,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
         }
         */
 
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.strokeStyle = 'rgba(0, 0, 0, ' + this._opacity + ')';
         ctx.lineWidth = 2;
         ctx.beginPath();
 
@@ -268,6 +268,7 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		this._cache = new WeakMap();
         this._render = true;
         this._render_bus_ids = false;
+        this._opacity = 0.25;
 
 		const images = {};
 		for (let { name, src } of [
