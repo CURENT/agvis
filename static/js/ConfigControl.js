@@ -131,7 +131,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `amin${num}=${val};expires=${dt};path=/`;
+            document.cookie = `amin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "theta") {
                 win.contourLayer.updateRange(options["amin" + win.num], options["amax" + win.num]);
@@ -149,7 +149,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `amax${num}=${val};expires=${dt};path=/`;
+            document.cookie = `amax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "theta") {
                 win.contourLayer.updateRange(options["amax" + win.num], options["amax" + win.num]);
@@ -167,7 +167,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `vmin${num}=${val};expires=${dt};path=/`;
+            document.cookie = `vmin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "V") {
                 win.contourLayer.updateRange(options["vmin" + win.num], options["vmax" + win.num]);
@@ -185,7 +185,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `vmax${num}=${val};expires=${dt};path=/`;
+            document.cookie = `vmax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "V") {
                 win.contourLayer.updateRange(options["vmin" + win.num], options["vmax" + win.num]);
@@ -203,7 +203,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `fmin${num}=${val};expires=${dt};path=/`;
+            document.cookie = `fmin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "freq") {
                 win.contourLayer.updateRange(options["fmin" + win.num], options["fmax" + win.num]);
@@ -221,7 +221,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `fmax${num}=${val};expires=${dt};path=/`;
+            document.cookie = `fmax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "freq") {
                 win.contourLayer.updateRange(options["fmin" + win.num], options["fmax" + win.num]);
@@ -230,7 +230,7 @@ function addSidebarConfig(win, options, sidebar) {
     };
 
     opt_opacity.oninput = function() {
-        const val = Number(opt_fmax.value);
+        const val = Number(opt_opacity.value);
 
         if (val === val) {
             options["opacity" + win.num] = val;
@@ -238,7 +238,11 @@ function addSidebarConfig(win, options, sidebar) {
             win.topologyLayer._opacity = val;
             win.topologyLayer.redraw();
 
-            document.cookie = `opacity${num}=${val};expires=${dt};path=/`;
+            let dt = new Date();
+            dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+            dt = dt.toUTCString();
+
+            document.cookie = `opacity${win.num}=${val};expires=${dt};path=/`;
         }
     };
 
@@ -254,7 +258,7 @@ function addSidebarConfig(win, options, sidebar) {
         dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
         dt = dt.toUTCString();
 
-        document.cookie = `togglezones${num}=${val};expires=${dt};path=/`;
+        document.cookie = `togglezones${win.num}=${val};expires=${dt};path=/`;
     };
 
     opt_togglebuslabels.onclick = function() {
@@ -268,7 +272,7 @@ function addSidebarConfig(win, options, sidebar) {
         dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
         dt = dt.toUTCString();
 
-        document.cookie = `togglebuslabels${num}=${val};expires=${dt};path=/`;
+        document.cookie = `togglebuslabels${win.num}=${val};expires=${dt};path=/`;
     };
 
     const opt_loadconfig_input = document.createElement("input");

@@ -207,7 +207,7 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
         }
         */
 
-        ctx.strokeStyle = 'rgba(0, 0, 0, ' + this._opacity + ')';
+        ctx.strokeStyle = `rgba(0, 0, 0, ${this._opacity})`;
         ctx.lineWidth = 2;
         ctx.beginPath();
 
