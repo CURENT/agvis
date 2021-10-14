@@ -316,11 +316,11 @@ class Window {
         /// Added toggle buttons for different layer views
         const rendContourButton = L.easyButton('<i class="fa fa-bolt"></i>', function(btn, map) {
             self.contourLayer.toggleRender();
-            self.topologyLayer.toggleRender();
         });
 
         const rendCommunicationButton = L.easyButton('<i class="fa fa-wifi"></i>', function(btn, map) {
-            self.communicationLayer.toggleRender();
+            self.topologyLayer.toggleRender(); // Since communicationlayer is unused, just do this for now
+            //self.communicationLayer.toggleRender();
         });
 
         const avfButtons = [thetaButton, voltageButton, freqButton];
