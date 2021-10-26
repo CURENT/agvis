@@ -13,6 +13,10 @@ const table_html = `
         <td style="white-space: nowrap;"><input type="text" name="opt_fmin" pattern="[0-9]*(\.[0-9]*)?" size="7"> - <input type="text" name="opt_fmax" pattern="[0-9]*(\.[0-9]*)?" size="7"></td>
     </tr>
     <tr>
+        <td><span name="opt_flabel">Edge opacity</span></td>
+        <td style="white-space: nowrap;"><input type="text" name="opt_opacity" pattern="[01]*(\.[0-9]*)?" size="7"></td>
+    </tr>
+    <tr>
         <td><label for="opt_togglehandshake">Toggle Handshake</label></td>
         <td><input type="checkbox" name="opt_togglehandshake" checked></td>
     </tr>
@@ -54,6 +58,7 @@ function addSidebarConfig(win, options, sidebar) {
     const opt_vmax = document.querySelector(`#${table_id} input[name='opt_vmax']`);
     const opt_fmin = document.querySelector(`#${table_id} input[name='opt_fmin']`);
     const opt_fmax = document.querySelector(`#${table_id} input[name='opt_fmax']`);
+    const opt_opacity = document.querySelector(`#${table_id} input[name='opt_opacity']`);
     const opt_togglezones = document.querySelector(`#${table_id} input[name='opt_togglezones']`);
     const opt_togglebuslabels = document.querySelector(`#${table_id} input[name='opt_togglebuslabels']`);
 
@@ -91,6 +96,10 @@ function addSidebarConfig(win, options, sidebar) {
             opt_fmax.value = options["fmax" + win.num];
         }
 
+        if ("opacity" + win.num in options) {
+            opt_opacity.value = options["opacity" + win.num];
+        }
+
         if ("togglezones" + win.num in options) { // TODO
             opt_togglezones.checked = options["togglezones" + win.num];
         }
@@ -122,7 +131,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `amin${num}=${val};expires=${dt};path=/`;
+            document.cookie = `amin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "theta") {
                 win.contourLayer.updateRange(options["amin" + win.num], options["amax" + win.num]);
@@ -140,7 +149,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `amax${num}=${val};expires=${dt};path=/`;
+            document.cookie = `amax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "theta") {
                 win.contourLayer.updateRange(options["amax" + win.num], options["amax" + win.num]);
@@ -158,7 +167,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `vmin${num}=${val};expires=${dt};path=/`;
+            document.cookie = `vmin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "V") {
                 win.contourLayer.updateRange(options["vmin" + win.num], options["vmax" + win.num]);
@@ -176,7 +185,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `vmax${num}=${val};expires=${dt};path=/`;
+            document.cookie = `vmax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "V") {
                 win.contourLayer.updateRange(options["vmin" + win.num], options["vmax" + win.num]);
@@ -194,7 +203,7 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `fmin${num}=${val};expires=${dt};path=/`;
+            document.cookie = `fmin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "freq") {
                 win.contourLayer.updateRange(options["fmin" + win.num], options["fmax" + win.num]);
@@ -212,11 +221,28 @@ function addSidebarConfig(win, options, sidebar) {
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
             dt = dt.toUTCString();
 
-            document.cookie = `fmax${num}=${val};expires=${dt};path=/`;
+            document.cookie = `fmax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "freq") {
                 win.contourLayer.updateRange(options["fmin" + win.num], options["fmax" + win.num]);
             }
+        }
+    };
+
+    opt_opacity.oninput = function() {
+        const val = Number(opt_opacity.value);
+
+        if (val === val) {
+            options["opacity" + win.num] = val;
+
+            win.topologyLayer._opacity = val;
+            win.topologyLayer.redraw();
+
+            let dt = new Date();
+            dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+            dt = dt.toUTCString();
+
+            document.cookie = `opacity${win.num}=${val};expires=${dt};path=/`;
         }
     };
 
@@ -232,7 +258,7 @@ function addSidebarConfig(win, options, sidebar) {
         dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
         dt = dt.toUTCString();
 
-        document.cookie = `togglezones${num}=${val};expires=${dt};path=/`;
+        document.cookie = `togglezones${win.num}=${val};expires=${dt};path=/`;
     };
 
     opt_togglebuslabels.onclick = function() {
@@ -246,7 +272,7 @@ function addSidebarConfig(win, options, sidebar) {
         dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
         dt = dt.toUTCString();
 
-        document.cookie = `togglebuslabels${num}=${val};expires=${dt};path=/`;
+        document.cookie = `togglebuslabels${win.num}=${val};expires=${dt};path=/`;
     };
 
     const opt_loadconfig_input = document.createElement("input");
