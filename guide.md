@@ -27,7 +27,7 @@ Now we assume that you have access to the SSH.
 6. You can check out the files:
 ![image](https://user-images.githubusercontent.com/79226045/133362514-3c154699-7edf-4f41-b4f6-58724b49fbc4.png)
 
-## Using LTBVIS
+## Use LTBVIS
 
 Before using LTBVIS, please install docker in the VS Code estension market.
 
@@ -88,7 +88,7 @@ More details:
 
 https://github.com/CURENT/ltbvis
 
-## Additional
+## Additional notes
 Play with Jupyter Notebook:
 
 * Open in VS Code:
