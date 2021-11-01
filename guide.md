@@ -1,4 +1,4 @@
-# Using LTB on Server
+# Remote access to LTB
 
 ## Install VS Code and configure SSH
 
