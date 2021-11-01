@@ -50,7 +50,7 @@ tmux
 
 4. Now you are in the tmux, run the LTBVIS:
 ```
-.go.sh dev2
+./go.sh dev2
 ```
 
 5. Now the communication is ready, in your browser open the web 'localhost:8810' and you should be able to see the visualization window. If the address is not correct, check the forwarded port number.
