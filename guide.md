@@ -4,6 +4,8 @@
 
 ### Install VS Code and configure SSH
 
+If you do not have VS Code on your machine, you can install it first, and then configure the remote access.
+
 1. Install [VS Code](https://code.visualstudio.com/![image](https://user-images.githubusercontent.com/79226045/133316409-186154e3-46ea-4ac9-b75d-d6a8d666899a.png)
 )
 ![image](https://user-images.githubusercontent.com/79226045/133316365-9c1e8fad-14f0-43d8-8956-fa1dd1a3e8b5.png)
