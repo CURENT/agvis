@@ -86,6 +86,12 @@ andes run weec_vis_out.xlsx --from-csv weec_vis_out.csv
 
 More details:
 
+ANDES Documentation:
+
+https://docs.andes.app/en/stable/
+
+LTBVIS:
+
 https://github.com/CURENT/ltbvis
 
 ## Additional notes
