@@ -31,9 +31,9 @@ Now we assume that you have access to the SSH.
 
 Before using LTBVIS, please install docker in the VS Code estension market.
 
-The LTBVis is already installed in the server in '/home/curentltb/ltb/ltbvis'.
+The LTBVis is already installed in the server for the common account '/home/curentltb/ltb/ltbvis'.
 
-1. Change path to the location:
+1. Hit ``Ctrl + ~`` to open the terminal window. Change path to the LTBVIS location:
 ```
 cd /home/curentltb/ltb/ltbvis
 ```
@@ -48,32 +48,29 @@ cd /home/curentltb/ltb/ltbvis
 tmux
 ```
 
-4. Now you are in the tmux, run the LTBVIS:
+4. Now you are in the tmux, run the LTBVIS by below command.
 ```
 ./go.sh dev2
 ```
+Then there are three panes, which are http, dime2, and control respectively.
 
-5. Now the communication is ready, in your browser open the web 'localhost:8810' and you should be able to see the visualization window. If the address is not correct, check the forwarded port number.
+5. In the port panel, port 8810 should be forwarded automatically, and you need to forward the port 8818. Now the communication is ready, then open the web 'localhost:8810' in your browser (Chrome is recommended) and visualization window should be there.
 
-6. In the tmux window, the command is already input here, just hit 'enter' and you should be able to run the example case.
+6. In the tmux command window, the command is already input there, just hit 'enter' and you should be able to run the example case.
 
-After using, please close your process.
-Quit the tmux:
-```
-tmux detach
-``` 
-Then shut down the process
-```
-./go.sh clean
-```
+7. After using, please close the program propoerly, or it will cause trouble in the next time use.
+(1) In tmux, you can hit ``Ctrl + B``, and then hit arrow keys to swithch between panes.
+(2) Switch to dime2 window, hit ``Ctrl + C`` to close dime2.
+(3) Switch to http window, hit ``Ctrl + C`` to close http.
+(4) Then in the control pane, exit the tmux by ``tmux detach``. Finally clean the docker images and tmux sessions by ``./go.sh clean``.
 
 Trouble shooting:
 
-1. If no visualization appears in the browser, you may refresh the web and then run the ``docker run ...`` again.
+1. If no visualization appears in the browser, check if the port is forwarded correctly.
 
-2. If in the tmux second window, it said: "Address already in use", you may need to delete the '/tmp/dime2' and then run the LTBVIS again.
+2. If in the dime pane, it said: "Address already in use", you may need to delete the '/tmp/dime2' and then run the LTBVIS again.
 
-3. If the port is already in use, you may remove those ports in the port panel.
+3. If the port is already in use, you may remove those ports in the port panel and then run again.
 
 4. If ANDES said the file does not exist, check the mounting path. The default path is '`pwd`/cases' ('/home/curentltb/ltball/ltbvis/cases'), if you need to change the path, please change the path before ':/home/cui/work' in the ``docker run ...``. It should be noted that the blank space in the path may cause error, if so please include your path in the double quote.
 
