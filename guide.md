@@ -71,7 +71,7 @@ Trouble shooting:
 
 1. If no visualization appears in the browser, you may refresh the web and then run the ``docker run ...`` again.
 
-2. If in the tmux second window, it said the address is already in use, you may need to delete the '/tmp/dime2' and then run the LTBVIS again.
+2. If in the tmux second window, it said: "Address already in use", you may need to delete the '/tmp/dime2' and then run the LTBVIS again.
 
 3. If the port is already in use, you may remove those ports in the port panel.
 
