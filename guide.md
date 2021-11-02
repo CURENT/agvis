@@ -35,7 +35,7 @@ The LTBVis is already installed in the server for the common account '/home/cure
 
 1. Hit ``Ctrl + ~`` to open the terminal window. Change path to the LTBVIS location:
 ```
-cd /home/curentltb/ltb/ltbvis
+cd /home/curentltb/ltball/ltbvis
 ```
 
 2. Build the LTBVIS:
