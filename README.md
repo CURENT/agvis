@@ -11,7 +11,7 @@ Note that [Docker](https://www.docker.com/products/docker-desktop) and [tmux](ht
 First, clone this repository, as well as the [dime2](https://github.com/TheHashTableSlasher/dime2) and [Andes](https://github.com/cuihantao/andes) repositories, in the same directory.
 
 ```
-$ git clone https://github.com/TheHashTableSlasher/ltbvis
+$ git clone https://github.com/CURENT/ltbvis
 # ...
 $ git clone https://github.com/TheHashTableSlasher/dime2
 # ...
