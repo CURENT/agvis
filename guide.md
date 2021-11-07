@@ -54,7 +54,7 @@ tmux
 ```
 Then there are three panes, which are http, dime2, and control respectively.
 
-5. In the port panel, port 8810 should be forwarded automatically, and you need to forward the port 8818. Now the communication is ready, then open the web 'localhost:8810' in your browser (Chrome is recommended) and visualization window should be there.
+5. In the port panel, port 8810 should be forwarded automatically, and you need to *manually forward the port 8818*. Now the communication is ready, then open the web 'localhost:8810' in your browser (Chrome is recommended) and the visualization window should be there.
 
 6. In the tmux command window, the command is already input there, just hit 'enter' and you should be able to run the example case.
 
@@ -62,7 +62,8 @@ Then there are three panes, which are http, dime2, and control respectively.
 (1) In tmux, you can hit ``Ctrl + B``, and then hit arrow keys to swithch between panes.
 (2) Switch to dime2 window, hit ``Ctrl + C`` to close dime2.
 (3) Switch to http window, hit ``Ctrl + C`` to close http.
-(4) Then in the control pane, exit the tmux by ``tmux detach``. Finally clean the docker images and tmux sessions by ``./go.sh clean``.
+(4) Then exit the tmux by ``exit`` or ``tmux detach``. Finally clean the docker images and tmux sessions by ``./go.sh clean``.
+(5) Remove the ports (8810 and 8818) you just forwarded.
 
 Trouble shooting:
 
