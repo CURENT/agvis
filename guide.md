@@ -29,7 +29,7 @@ Now we assume that you have access to the SSH.
 
 ## Use LTBVIS
 
-Before using LTBVIS, please install docker in the VS Code estension market.
+Before using LTBVIS, please install the extension *docker* in the VS Code estension market.
 
 The LTBVis is already installed in the server for the common account '/home/curentltb/ltb/ltbvis'.
 
@@ -48,22 +48,24 @@ cd /home/curentltb/ltball/ltbvis
 tmux
 ```
 
-4. Now you are in the tmux, run the LTBVIS by below command.
+4. Now you are in the tmux, run the LTBVIS:
 ```
 ./go.sh dev2
 ```
-Then there are three panes, which are http, dime2, and control respectively.
+Then there are three panes, which are http, dime2, and control, respectively.
 
 5. In the port panel, port 8810 should be forwarded automatically, and you need to *manually forward the port 8818*. Now the communication is ready, then open the web 'localhost:8810' in your browser (Chrome is recommended) and the visualization window should be there.
 
 6. In the tmux command window, the command is already input there, just hit 'enter' and you should be able to run the example case.
 
-7. After using, please close the program propoerly, or it will cause trouble in the next time use.
+7. After running, please close the program propoerly, or it will cause trouble in the next time use.
 (1) In the control pane, hit ``Ctrl + C`` and then ``exit`` to safely close it.
 (2) Then it should be switched to dime2 pane, hit ``Ctrl + C`` and then ``exit`` to safely close it.
 (3) Then it should be switched to http pane, hit ``Ctrl + C`` and then ``exit`` to safely close it.
 (4) Finally clean the docker images and tmux sessions by ``./go.sh clean``.
 (5) Remove the ports (8810 and 8818) you just forwarded.
+
+After successfully running the visualization, you can replay the video in your browser. Before you visualize another one, remember to refresh the visualize webpage.
 
 Trouble shooting:
 
