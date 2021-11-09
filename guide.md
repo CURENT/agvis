@@ -38,7 +38,7 @@ The LTBVis is already installed in the server for the common account '/home/cure
 cd /home/curentltb/ltball/ltbvis
 ```
 
-2. Build the LTBVIS:
+2. Build the LTBVIS (the environment is already there, only do this when needed):
 ```
 ./go.sh build
 ```
@@ -59,10 +59,10 @@ Then there are three panes, which are http, dime2, and control respectively.
 6. In the tmux command window, the command is already input there, just hit 'enter' and you should be able to run the example case.
 
 7. After using, please close the program propoerly, or it will cause trouble in the next time use.
-(1) In tmux, you can hit ``Ctrl + B``, and then hit arrow keys to swithch between panes.
-(2) Switch to dime2 window, hit ``Ctrl + C`` to close dime2.
-(3) Switch to http window, hit ``Ctrl + C`` to close http.
-(4) Then exit the tmux by ``exit`` or ``tmux detach``. Finally clean the docker images and tmux sessions by ``./go.sh clean``.
+(1) In the control pane, hit ``Ctrl + C`` and then ``exit`` to safely close it.
+(2) Then it should be switched to dime2 pane, hit ``Ctrl + C`` and then ``exit`` to safely close it.
+(3) Then it should be switched to http pane, hit ``Ctrl + C`` and then ``exit`` to safely close it.
+(4) Finally clean the docker images and tmux sessions by ``./go.sh clean``.
 (5) Remove the ports (8810 and 8818) you just forwarded.
 
 Trouble shooting:
@@ -77,14 +77,14 @@ Trouble shooting:
 
 Other ANDES command:
 
-If you need any other ADNES command, just modify the andes part in the docker command (`... andes run wecc_vis.xlsx -r tds ...`).
+If you need any other ADNES command, just modify the andes part in the docker command (``... andes run wecc_vis.xlsx -r tds ...``).
 
-Generate the output csv file:
+Convert the andes output npz file into csv file:
 ```
 andes plot weec_vis_out.npz --to-csv
 ```
 
-Use the existing output:
+Visualize the existing output csv file:
 ```
 andes run weec_vis_out.xlsx --from-csv weec_vis_out.csv
 ```
