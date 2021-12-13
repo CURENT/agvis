@@ -5,7 +5,7 @@ class Window {
 
         this.num = num;
         this.options = options;
-        this.dimec = dimec;
+        this.dimec = new dime.DimeClient(options.dimehost, options.dimeport);
 
         this.map_name = "map" + num;
         this.dimec_name = "geovis" + num;
@@ -115,58 +115,58 @@ class Window {
     }
 
     startSimulation() {
-                const busVoltageIndices = this.workspace.Idxvgs.Bus.V.array;
-                const busThetaIndices = this.workspace.Idxvgs.Bus.theta.array;
-                const busfreqIndices= this.workspace.Idxvgs.Bus.w_Busfreq.array;
+        const busVoltageIndices = this.workspace.Idxvgs.Bus.V.array;
+        const busThetaIndices = this.workspace.Idxvgs.Bus.theta.array;
+        const busfreqIndices= this.workspace.Idxvgs.Bus.w_Busfreq.array;
 
-                const nBus = busVoltageIndices.length;
+        const nBus = busVoltageIndices.length;
 
-                // Build the idx list for simulator
-                let nPlotVariable = 1;
+        // Build the idx list for simulator
+        let nPlotVariable = 1;
 
-                if (this.p2 !== undefined) {
-                    nPlotVariable += 1;
-                }
+        if (this.p2 !== undefined) {
+            nPlotVariable += 1;
+        }
 
-                if (this.p3 !== undefined) {
-                    nPlotVariable += 1;
-                }
+        if (this.p3 !== undefined) {
+            nPlotVariable += 1;
+        }
 
-                this.variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
-                this.variableRelIndices = {};
+        this.variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
+        this.variableRelIndices = {};
 
-                for (let i=0; i < busVoltageIndices.length; ++i) {
-                    this.variableAbsIndices[i] = Number(busVoltageIndices[i]);
-                }
-                for (let i=0; i < busThetaIndices.length; ++i) {
-                    this.variableAbsIndices[nBus + i] = Number(busThetaIndices[i]);
-                }
-                for (let i=0; i < busfreqIndices.length; ++i) {
-                    this.variableAbsIndices[2*nBus + i] = Number(busfreqIndices[i]);
-                }
-                if (this.p1 !== undefined)
-                    this.variableAbsIndices[3*nBus] = parseInt(this.p1);
-                if (this.p2 !== undefined)
-                    this.variableAbsIndices[3*nBus + 1] = parseInt(this.p2);
-                if (this.p3 !== undefined)
-                    this.variableAbsIndices[3*nBus + 2] = parseInt(this.p3);
+        for (let i=0; i < busVoltageIndices.length; ++i) {
+            this.variableAbsIndices[i] = Number(busVoltageIndices[i]);
+        }
+        for (let i=0; i < busThetaIndices.length; ++i) {
+            this.variableAbsIndices[nBus + i] = Number(busThetaIndices[i]);
+        }
+        for (let i=0; i < busfreqIndices.length; ++i) {
+            this.variableAbsIndices[2*nBus + i] = Number(busfreqIndices[i]);
+        }
+        if (this.p1 !== undefined)
+            this.variableAbsIndices[3*nBus] = parseInt(this.p1);
+        if (this.p2 !== undefined)
+            this.variableAbsIndices[3*nBus + 1] = parseInt(this.p2);
+        if (this.p3 !== undefined)
+            this.variableAbsIndices[3*nBus + 2] = parseInt(this.p3);
 
-                // Build internal idx list
-                this.variableRelIndices["V"] = {"begin": 0, "end": nBus};
-                this.variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
-                this.variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
+        // Build internal idx list
+        this.variableRelIndices["V"] = {"begin": 0, "end": nBus};
+        this.variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
+        this.variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
 
-                // Update variable Range
-                this.contourLayer.storeRelativeIndices(this.variableRelIndices);
-                this.contourLayer.showVariable("freq");
+        // Update variable Range
+        this.contourLayer.storeRelativeIndices(this.variableRelIndices);
+        this.contourLayer.showVariable("freq");
 
-                const fmin = (this.options["fmin" + this.num] === undefined) ? 0.9998 : this.options["fmin" + this.num];
-                const fmax = (this.options["fmax" + this.num] === undefined) ? 1.0002 : this.options["fmax" + this.num];
+        const fmin = (this.options.fmin === undefined) ? 0.9998 : this.options.fmin;
+        const fmax = (this.options.fmax === undefined) ? 1.0002 : this.options.fmax;
 
-                this.contourLayer.updateRange(fmin, fmax);
+        this.contourLayer.updateRange(fmin, fmax);
 
-                // Update this here so that it's not in the animation loop
-                this.searchLayer.update(this.workspace);
+        // Update this here so that it's not in the animation loop
+        this.searchLayer.update(this.workspace);
     }
 
     endSimulation() {
@@ -290,24 +290,24 @@ class Window {
 
         /// Bar of icons for voltage, theta and frequency
         const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map) {
-            const amin = (self.options["amin" + self.num] === undefined) ? -1.0 : self.options["amin" + self.num];
-            const amax = (self.options["amax" + self.num] === undefined) ?  1.0 : self.options["amax" + self.num];
+            const amin = (self.options.amin === undefined) ? -1.0 : self.options.amin;
+            const amax = (self.options.amax === undefined) ?  1.0 : self.options.amax;
 
             self.contourLayer.showVariable("theta");
             self.contourLayer.updateRange(amin, amax);
         });
 
         const voltageButton = L.easyButton('<span>V</span>', function(btn, map) {
-            const vmin = (self.options["vmin" + self.num] === undefined) ? 0.8 : self.options["vmin" + self.num];
-            const vmax = (self.options["vmax" + self.num] === undefined) ? 1.2 : self.options["vmax" + self.num];
+            const vmin = (self.options.vmin === undefined) ? 0.8 : self.options.vmin;
+            const vmax = (self.options.vmax === undefined) ? 1.2 : self.options.vmax;
 
             self.contourLayer.showVariable("V");
             self.contourLayer.updateRange(vmin, vmax);
         });
 
         const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map) {
-            const fmin = (self.options["fmin" + self.num] === undefined) ? 0.9998 : self.options["fmin" + self.num];
-            const fmax = (self.options["fmax" + self.num] === undefined) ? 1.0002 : self.options["fmax" + self.num];
+            const fmin = (self.options.fmin === undefined) ? 0.9998 : self.options.fmin;
+            const fmax = (self.options.fmax === undefined) ? 1.0002 : self.options.fmax;
 
             self.contourLayer.showVariable("freq");
             self.contourLayer.updateRange(fmin, fmax);
