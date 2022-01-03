@@ -1,6 +1,10 @@
 const table_html = `
 <table style="width: 100%;">
     <tr>
+        <td>DiME hostname/port</td>
+        <td style="white-space: nowrap;"><input type="text" name="opt_dimehost" size="9"> : <input type="text" name="opt_dimeport" pattern="[0-9]*(\.[0-9]*)?" size="5"></td>
+    </tr>
+    <tr>
         <td><span name="opt_alabel">V Angle (rad) min/max</span></td>
         <td style="white-space: nowrap;"><input type="text" name="opt_amin" pattern="[0-9]*(\.[0-9]*)?" size="7"> - <input type="text" name="opt_amax" pattern="[0-9]*(\.[0-9]*)?" size="7"></td>
     </tr>
@@ -41,6 +45,15 @@ const table_html = `
 
 const SIDEBAR_CALLBACKS = [];
 
+class DimeInfo {
+    constructor(host, port) {
+        this.host = host;
+        this.port = port;
+
+        Object.freeze(this);
+    }
+}
+
 function addSidebarConfig(win, options, sidebar) {
     const table_id = "configpanel" + win.num;
 
@@ -52,6 +65,8 @@ function addSidebarConfig(win, options, sidebar) {
 
     });
 
+    const opt_dimehost = document.querySelector(`#${table_id} input[name='opt_dimehost']`);
+    const opt_dimeport = document.querySelector(`#${table_id} input[name='opt_dimeport']`);
     const opt_amin = document.querySelector(`#${table_id} input[name='opt_amin']`);
     const opt_amax = document.querySelector(`#${table_id} input[name='opt_amax']`);
     const opt_vmin = document.querySelector(`#${table_id} input[name='opt_vmin']`);
@@ -72,6 +87,14 @@ function addSidebarConfig(win, options, sidebar) {
     const opt_flabel = document.querySelector(`#${table_id} span[name='opt_flabel']`);
 
     function updateInputs() {
+        if ("dimehost" in options) {
+            opt_dimehost.value = options.dimehost;
+        }
+
+        if ("dimeport" in options) {
+            opt_dimeport.value = options.dimeport;
+        }
+
         if ("amin" in options) {
             opt_amin.value = options.amin;
         }
@@ -119,6 +142,32 @@ function addSidebarConfig(win, options, sidebar) {
         if ("flabel" in options) {
             opt_flabel.innerHTML = options.flabel + " min/max";
         }
+    };
+
+    win.dime_updated = function() {
+        return new Promise(function(resolve, reject) {
+            let callback = function() {
+                const host = opt_dimehost.value;
+                const port = Number(opt_dimeport.value);
+
+                if (port === port) {
+                    options.dimehost = host;
+                    options.dimeport = port;
+
+                    let dt = new Date();
+                    dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+                    dt = dt.toUTCString();
+
+                    document.cookie = `dimehost${win.num}=${host};expires=${dt};path=/`;
+                    document.cookie = `dimeport${win.num}=${port};expires=${dt};path=/`;
+
+                    resolve(new DimeInfo(host, port));
+                }
+            };
+
+            opt_dimehost.oninput = callback;
+            opt_dimeport.oninput = callback;
+        });
     };
 
     opt_amin.oninput = function() {

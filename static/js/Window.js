@@ -5,7 +5,6 @@ class Window {
 
         this.num = num;
         this.options = options;
-        this.dimec = new dime.DimeClient(options.dimehost, options.dimeport);
 
         this.map_name = "map" + num;
         this.dimec_name = "geovis" + num;
@@ -329,53 +328,62 @@ class Window {
         const toggleLayerButtons = [rendContourButton, rendCommunicationButton];
         const toggleLayerBar = L.easyBar(toggleLayerButtons).addTo(this.map);
 
-        await this.dimec.join(this.dimec_name);
-        console.time(this.map_name);
+        newdimeserver: for (;;) {
+            this.dimec = new dime.DimeClient(this.options.dimehost, this.options.dimeport);
+            let dime_updated = this.dime_updated();
 
-        let sentHeader = false;
-
-        for (;;) {
-            let kvpair = {};
-
-            while (Object.keys(kvpair).length === 0) {
-                await this.dimec.wait();
-                kvpair = await this.dimec.sync_r(1);
+            //await this.dimec.join(this.dimec_name);
+            if (await Promise.any([this.dimec.join(this.dimec_name), dime_updated]) instanceof DimeInfo) {
+                continue newdimeserver;
             }
 
-            const [[name, value]] = Object.entries(kvpair);
+            console.time(this.map_name);
 
-            if (!this.map.handshake) {
-                continue;
+            let sentHeader = false;
+
+            for (;;) {
+                let kvpair = {};
+
+                while (Object.keys(kvpair).length === 0) {
+                    //await this.dimec.wait();
+                    if (await Promise.any([this.dimec.wait(), dime_updated]) instanceof DimeInfo) {
+                        continue newdimeserver;
+                    }
+
+                    kvpair = await this.dimec.sync_r(1);
+                }
+
+                const [[name, value]] = Object.entries(kvpair);
+
+                if (!this.map.handshake) {
+                    continue;
+                }
+
+                this.workspace[name] = value;
+
+                if (!this.history[name]) this.history[name] = [];
+                this.history[name].push(value);
+
+                //if (name !== 'Varvgs' && name !== 'pmudata' && name !== 'LTBNET_vars')
+                    //console.log({ name, value });
+
+                if (!sentHeader && name === 'Idxvgs') {
+                    this.startSimulation();
+
+                    kvpair = {};
+                    kvpair[this.dimec_name] = { vgsvaridx: new dime.NDArray('F', [1, this.variableAbsIndices.length],this.variableAbsIndices) };
+
+                    //await this.dimec.send_r('andes', kvpair);
+                    if (await Promise.any([this.dimec.send_r('andes', kvpair), dime_updated]) instanceof DimeInfo) {
+                        continue newdimeserver;
+                    }
+
+                    sentHeader = true;
+                } else if (name === 'DONE') {
+                    console.timeEnd(this.map_name);
+                    this.endSimulation();
+                }
             }
-
-            this.workspace[name] = value;
-
-            if (!this.history[name]) this.history[name] = [];
-            this.history[name].push(value);
-
-            //if (name !== 'Varvgs' && name !== 'pmudata' && name !== 'LTBNET_vars')
-                //console.log({ name, value });
-
-            if (!sentHeader && name === 'Idxvgs') {
-                this.startSimulation();
-
-                kvpair = {};
-
-                kvpair[this.dimec_name] = {
-                    vgsvaridx: new dime.NDArray('F', [1, this.variableAbsIndices.length],this.variableAbsIndices) /*{
-                        ndarray: true,
-                        shape: [1, variableAbsIndices.length],
-                        data: base64arraybuffer.encode(variableAbsIndices.buffer),
-                    },*/
-                };
-
-                await this.dimec.send_r('andes', kvpair);
-                sentHeader = true;
-            } else if (name === 'DONE') {
-                console.timeEnd(this.map_name);
-                this.endSimulation();
-            }
-
         }
     }
 
