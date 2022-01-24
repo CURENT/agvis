@@ -237,7 +237,7 @@ class Window {
             if (!ready) return;
 
             //zoneLayer.update(workspace);
-            //communicationLayer.update(workspace);
+            self.communicationLayer.update(workspace);
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
 
@@ -318,8 +318,8 @@ class Window {
         });
 
         const rendCommunicationButton = L.easyButton('<i class="fa fa-wifi"></i>', function(btn, map) {
-            self.topologyLayer.toggleRender(); // Since communicationlayer is unused, just do this for now
-            //self.communicationLayer.toggleRender();
+            //self.topologyLayer.toggleRender(); // Since communicationlayer is unused, just do this for now
+            self.communicationLayer.toggleRender();
         });
 
         const avfButtons = [thetaButton, voltageButton, freqButton];
