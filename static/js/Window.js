@@ -163,9 +163,6 @@ class Window {
         const fmax = (this.options.fmax === undefined) ? 1.0002 : this.options.fmax;
 
         this.contourLayer.updateRange(fmin, fmax);
-
-        // Update this here so that it's not in the animation loop
-        this.searchLayer.update(this.workspace);
     }
 
     endSimulation() {
@@ -237,9 +234,10 @@ class Window {
             if (!ready) return;
 
             //zoneLayer.update(workspace);
-            self.communicationLayer.update(workspace);
+            self.communicationLayer.update(self.workspace);
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
+            self.searchLayer.update(self.workspace);
 
             if (self.workspace.Varvgs) {
                 self.simTimeBox.update(self.workspace.Varvgs.t.toFixed(2));
