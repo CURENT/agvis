@@ -5,7 +5,6 @@ class Window {
 
         this.num = num;
         this.options = options;
-        this.dimec = dimec;
 
         this.map_name = "map" + num;
         this.dimec_name = "geovis" + num;
@@ -115,58 +114,55 @@ class Window {
     }
 
     startSimulation() {
-                const busVoltageIndices = this.workspace.Idxvgs.Bus.V.array;
-                const busThetaIndices = this.workspace.Idxvgs.Bus.theta.array;
-                const busfreqIndices= this.workspace.Idxvgs.Bus.w_Busfreq.array;
+        const busVoltageIndices = this.workspace.Idxvgs.Bus.V.array;
+        const busThetaIndices = this.workspace.Idxvgs.Bus.theta.array;
+        const busfreqIndices= this.workspace.Idxvgs.Bus.w_Busfreq.array;
 
-                const nBus = busVoltageIndices.length;
+        const nBus = busVoltageIndices.length;
 
-                // Build the idx list for simulator
-                let nPlotVariable = 1;
+        // Build the idx list for simulator
+        let nPlotVariable = 1;
 
-                if (this.p2 !== undefined) {
-                    nPlotVariable += 1;
-                }
+        if (this.p2 !== undefined) {
+            nPlotVariable += 1;
+        }
 
-                if (this.p3 !== undefined) {
-                    nPlotVariable += 1;
-                }
+        if (this.p3 !== undefined) {
+            nPlotVariable += 1;
+        }
 
-                this.variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
-                this.variableRelIndices = {};
+        this.variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
+        this.variableRelIndices = {};
 
-                for (let i=0; i < busVoltageIndices.length; ++i) {
-                    this.variableAbsIndices[i] = Number(busVoltageIndices[i]);
-                }
-                for (let i=0; i < busThetaIndices.length; ++i) {
-                    this.variableAbsIndices[nBus + i] = Number(busThetaIndices[i]);
-                }
-                for (let i=0; i < busfreqIndices.length; ++i) {
-                    this.variableAbsIndices[2*nBus + i] = Number(busfreqIndices[i]);
-                }
-                if (this.p1 !== undefined)
-                    this.variableAbsIndices[3*nBus] = parseInt(this.p1);
-                if (this.p2 !== undefined)
-                    this.variableAbsIndices[3*nBus + 1] = parseInt(this.p2);
-                if (this.p3 !== undefined)
-                    this.variableAbsIndices[3*nBus + 2] = parseInt(this.p3);
+        for (let i=0; i < busVoltageIndices.length; ++i) {
+            this.variableAbsIndices[i] = Number(busVoltageIndices[i]);
+        }
+        for (let i=0; i < busThetaIndices.length; ++i) {
+            this.variableAbsIndices[nBus + i] = Number(busThetaIndices[i]);
+        }
+        for (let i=0; i < busfreqIndices.length; ++i) {
+            this.variableAbsIndices[2*nBus + i] = Number(busfreqIndices[i]);
+        }
+        if (this.p1 !== undefined)
+            this.variableAbsIndices[3*nBus] = parseInt(this.p1);
+        if (this.p2 !== undefined)
+            this.variableAbsIndices[3*nBus + 1] = parseInt(this.p2);
+        if (this.p3 !== undefined)
+            this.variableAbsIndices[3*nBus + 2] = parseInt(this.p3);
 
-                // Build internal idx list
-                this.variableRelIndices["V"] = {"begin": 0, "end": nBus};
-                this.variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
-                this.variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
+        // Build internal idx list
+        this.variableRelIndices["V"] = {"begin": 0, "end": nBus};
+        this.variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
+        this.variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
 
-                // Update variable Range
-                this.contourLayer.storeRelativeIndices(this.variableRelIndices);
-                this.contourLayer.showVariable("freq");
+        // Update variable Range
+        this.contourLayer.storeRelativeIndices(this.variableRelIndices);
+        this.contourLayer.showVariable("freq");
 
-                const fmin = (this.options["fmin" + this.num] === undefined) ? 0.9998 : this.options["fmin" + this.num];
-                const fmax = (this.options["fmax" + this.num] === undefined) ? 1.0002 : this.options["fmax" + this.num];
+        const fmin = (this.options.fmin === undefined) ? 0.9998 : this.options.fmin;
+        const fmax = (this.options.fmax === undefined) ? 1.0002 : this.options.fmax;
 
-                this.contourLayer.updateRange(fmin, fmax);
-
-                // Update this here so that it's not in the animation loop
-                this.searchLayer.update(this.workspace);
+        this.contourLayer.updateRange(fmin, fmax);
     }
 
     endSimulation() {
@@ -238,9 +234,10 @@ class Window {
             if (!ready) return;
 
             //zoneLayer.update(workspace);
-            //communicationLayer.update(workspace);
+            self.communicationLayer.update(self.workspace);
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
+            self.searchLayer.update(self.workspace);
 
             if (self.workspace.Varvgs) {
                 self.simTimeBox.update(self.workspace.Varvgs.t.toFixed(2));
@@ -290,24 +287,24 @@ class Window {
 
         /// Bar of icons for voltage, theta and frequency
         const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map) {
-            const amin = (self.options["amin" + self.num] === undefined) ? -1.0 : self.options["amin" + self.num];
-            const amax = (self.options["amax" + self.num] === undefined) ?  1.0 : self.options["amax" + self.num];
+            const amin = (self.options.amin === undefined) ? -1.0 : self.options.amin;
+            const amax = (self.options.amax === undefined) ?  1.0 : self.options.amax;
 
             self.contourLayer.showVariable("theta");
             self.contourLayer.updateRange(amin, amax);
         });
 
         const voltageButton = L.easyButton('<span>V</span>', function(btn, map) {
-            const vmin = (self.options["vmin" + self.num] === undefined) ? 0.8 : self.options["vmin" + self.num];
-            const vmax = (self.options["vmax" + self.num] === undefined) ? 1.2 : self.options["vmax" + self.num];
+            const vmin = (self.options.vmin === undefined) ? 0.8 : self.options.vmin;
+            const vmax = (self.options.vmax === undefined) ? 1.2 : self.options.vmax;
 
             self.contourLayer.showVariable("V");
             self.contourLayer.updateRange(vmin, vmax);
         });
 
         const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map) {
-            const fmin = (self.options["fmin" + self.num] === undefined) ? 0.9998 : self.options["fmin" + self.num];
-            const fmax = (self.options["fmax" + self.num] === undefined) ? 1.0002 : self.options["fmax" + self.num];
+            const fmin = (self.options.fmin === undefined) ? 0.9998 : self.options.fmin;
+            const fmax = (self.options.fmax === undefined) ? 1.0002 : self.options.fmax;
 
             self.contourLayer.showVariable("freq");
             self.contourLayer.updateRange(fmin, fmax);
@@ -319,8 +316,8 @@ class Window {
         });
 
         const rendCommunicationButton = L.easyButton('<i class="fa fa-wifi"></i>', function(btn, map) {
-            self.topologyLayer.toggleRender(); // Since communicationlayer is unused, just do this for now
-            //self.communicationLayer.toggleRender();
+            //self.topologyLayer.toggleRender(); // Since communicationlayer is unused, just do this for now
+            self.communicationLayer.toggleRender();
         });
 
         const avfButtons = [thetaButton, voltageButton, freqButton];
@@ -329,53 +326,62 @@ class Window {
         const toggleLayerButtons = [rendContourButton, rendCommunicationButton];
         const toggleLayerBar = L.easyBar(toggleLayerButtons).addTo(this.map);
 
-        await this.dimec.join(this.dimec_name);
-        console.time(this.map_name);
+        newdimeserver: for (;;) {
+            this.dimec = new dime.DimeClient(this.options.dimehost, this.options.dimeport);
+            let dime_updated = this.dime_updated();
 
-        let sentHeader = false;
-
-        for (;;) {
-            let kvpair = {};
-
-            while (Object.keys(kvpair).length === 0) {
-                await this.dimec.wait();
-                kvpair = await this.dimec.sync_r(1);
+            //await this.dimec.join(this.dimec_name);
+            if (await Promise.any([this.dimec.join(this.dimec_name), dime_updated]) instanceof DimeInfo) {
+                continue newdimeserver;
             }
 
-            const [[name, value]] = Object.entries(kvpair);
+            console.time(this.map_name);
 
-            if (!this.map.handshake) {
-                continue;
+            let sentHeader = false;
+
+            for (;;) {
+                let kvpair = {};
+
+                while (Object.keys(kvpair).length === 0) {
+                    //await this.dimec.wait();
+                    if (await Promise.any([this.dimec.wait(), dime_updated]) instanceof DimeInfo) {
+                        continue newdimeserver;
+                    }
+
+                    kvpair = await this.dimec.sync_r(1);
+                }
+
+                const [[name, value]] = Object.entries(kvpair);
+
+                if (!this.map.handshake) {
+                    continue;
+                }
+
+                this.workspace[name] = value;
+
+                if (!this.history[name]) this.history[name] = [];
+                this.history[name].push(value);
+
+                //if (name !== 'Varvgs' && name !== 'pmudata' && name !== 'LTBNET_vars')
+                    //console.log({ name, value });
+
+                if (!sentHeader && name === 'Idxvgs') {
+                    this.startSimulation();
+
+                    kvpair = {};
+                    kvpair[this.dimec_name] = { vgsvaridx: new dime.NDArray('F', [1, this.variableAbsIndices.length],this.variableAbsIndices) };
+
+                    //await this.dimec.send_r('andes', kvpair);
+                    if (await Promise.any([this.dimec.send_r('andes', kvpair), dime_updated]) instanceof DimeInfo) {
+                        continue newdimeserver;
+                    }
+
+                    sentHeader = true;
+                } else if (name === 'DONE') {
+                    console.timeEnd(this.map_name);
+                    this.endSimulation();
+                }
             }
-
-            this.workspace[name] = value;
-
-            if (!this.history[name]) this.history[name] = [];
-            this.history[name].push(value);
-
-            //if (name !== 'Varvgs' && name !== 'pmudata' && name !== 'LTBNET_vars')
-                //console.log({ name, value });
-
-            if (!sentHeader && name === 'Idxvgs') {
-                this.startSimulation();
-
-                kvpair = {};
-
-                kvpair[this.dimec_name] = {
-                    vgsvaridx: new dime.NDArray('F', [1, this.variableAbsIndices.length],this.variableAbsIndices) /*{
-                        ndarray: true,
-                        shape: [1, variableAbsIndices.length],
-                        data: base64arraybuffer.encode(variableAbsIndices.buffer),
-                    },*/
-                };
-
-                await this.dimec.send_r('andes', kvpair);
-                sentHeader = true;
-            } else if (name === 'DONE') {
-                console.timeEnd(this.map_name);
-                this.endSimulation();
-            }
-
         }
     }
 

@@ -1,6 +1,10 @@
 const table_html = `
 <table style="width: 100%;">
     <tr>
+        <td>DiME hostname/port</td>
+        <td style="white-space: nowrap;"><input type="text" name="opt_dimehost" size="9"> : <input type="text" name="opt_dimeport" pattern="[0-9]*(\.[0-9]*)?" size="5"></td>
+    </tr>
+    <tr>
         <td><span name="opt_alabel">V Angle (rad) min/max</span></td>
         <td style="white-space: nowrap;"><input type="text" name="opt_amin" pattern="[0-9]*(\.[0-9]*)?" size="7"> - <input type="text" name="opt_amax" pattern="[0-9]*(\.[0-9]*)?" size="7"></td>
     </tr>
@@ -41,6 +45,15 @@ const table_html = `
 
 const SIDEBAR_CALLBACKS = [];
 
+class DimeInfo {
+    constructor(host, port) {
+        this.host = host;
+        this.port = port;
+
+        Object.freeze(this);
+    }
+}
+
 function addSidebarConfig(win, options, sidebar) {
     const table_id = "configpanel" + win.num;
 
@@ -52,6 +65,8 @@ function addSidebarConfig(win, options, sidebar) {
 
     });
 
+    const opt_dimehost = document.querySelector(`#${table_id} input[name='opt_dimehost']`);
+    const opt_dimeport = document.querySelector(`#${table_id} input[name='opt_dimeport']`);
     const opt_amin = document.querySelector(`#${table_id} input[name='opt_amin']`);
     const opt_amax = document.querySelector(`#${table_id} input[name='opt_amax']`);
     const opt_vmin = document.querySelector(`#${table_id} input[name='opt_vmin']`);
@@ -72,60 +87,94 @@ function addSidebarConfig(win, options, sidebar) {
     const opt_flabel = document.querySelector(`#${table_id} span[name='opt_flabel']`);
 
     function updateInputs() {
-        if ("amin" + win.num in options) {
-            opt_amin.value = options["amin" + win.num];
+        if ("dimehost" in options) {
+            opt_dimehost.value = options.dimehost;
         }
 
-        if ("amax" + win.num in options) {
-            opt_amax.value = options["amax" + win.num];
+        if ("dimeport" in options) {
+            opt_dimeport.value = options.dimeport;
         }
 
-        if ("vmin" + win.num in options) {
-            opt_vmin.value = options["vmin" + win.num];
+        if ("amin" in options) {
+            opt_amin.value = options.amin;
         }
 
-        if ("vmax" + win.num in options) {
-            opt_vmax.value = options["vmax" + win.num];
+        if ("amax" in options) {
+            opt_amax.value = options.amax;
         }
 
-        if ("fmin" + win.num in options) {
-            opt_fmin.value = options["fmin" + win.num];
+        if ("vmin" in options) {
+            opt_vmin.value = options.vmin;
         }
 
-        if ("fmax" + win.num in options) {
-            opt_fmax.value = options["fmax" + win.num];
+        if ("vmax" in options) {
+            opt_vmax.value = options.vmax;
         }
 
-        if ("opacity" + win.num in options) {
-            opt_opacity.value = options["opacity" + win.num];
+        if ("fmin" in options) {
+            opt_fmin.value = options.fmin;
         }
 
-        if ("togglezones" + win.num in options) { // TODO
-            opt_togglezones.checked = options["togglezones" + win.num];
+        if ("fmax" in options) {
+            opt_fmax.value = options.fmax;
         }
 
-        if ("togglebuslabels" + win.num in options) {
-            opt_togglebuslabels.checked = options["togglebuslabels" + win.num];
+        if ("opacity" in options) {
+            opt_opacity.value = options.opacity;
         }
 
-        if ("alabel" + win.num in options) {
-            opt_alabel.innerHTML = options["alabel" + win.num] + " min/max";
+        if ("togglezones" in options) { // TODO
+            opt_togglezones.checked = options.togglezones;
         }
 
-        if ("vlabel" + win.num in options) {
-            opt_vlabel.innerHTML = options["vlabel" + win.num] + " min/max";
+        if ("togglebuslabels" in options) {
+            opt_togglebuslabels.checked = options.togglebuslabels;
         }
 
-        if ("flabel" + win.num in options) {
-            opt_flabel.innerHTML = options["flabel" + win.num] + " min/max";
+        if ("alabel" in options) {
+            opt_alabel.innerHTML = options.alabel + " min/max";
         }
+
+        if ("vlabel" in options) {
+            opt_vlabel.innerHTML = options.vlabel + " min/max";
+        }
+
+        if ("flabel" in options) {
+            opt_flabel.innerHTML = options.flabel + " min/max";
+        }
+    };
+
+    win.dime_updated = function() {
+        return new Promise(function(resolve, reject) {
+            let callback = function() {
+                const host = opt_dimehost.value;
+                const port = Number(opt_dimeport.value);
+
+                if (port === port) {
+                    options.dimehost = host;
+                    options.dimeport = port;
+
+                    let dt = new Date();
+                    dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
+                    dt = dt.toUTCString();
+
+                    document.cookie = `dimehost${win.num}=${host};expires=${dt};path=/`;
+                    document.cookie = `dimeport${win.num}=${port};expires=${dt};path=/`;
+
+                    resolve(new DimeInfo(host, port));
+                }
+            };
+
+            opt_dimehost.oninput = callback;
+            opt_dimeport.oninput = callback;
+        });
     };
 
     opt_amin.oninput = function() {
         const val = Number(opt_amin.value);
 
         if (val === val) {
-            options["amin" + win.num] = val;
+            options.amin = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -134,7 +183,7 @@ function addSidebarConfig(win, options, sidebar) {
             document.cookie = `amin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "theta") {
-                win.contourLayer.updateRange(options["amin" + win.num], options["amax" + win.num]);
+                win.contourLayer.updateRange(options.amin, options.amax);
             }
         }
     }
@@ -143,7 +192,7 @@ function addSidebarConfig(win, options, sidebar) {
         const val = Number(opt_amax.value);
 
         if (val === val) {
-            options["amax" + win.num] = val;
+            options.amax = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -152,7 +201,7 @@ function addSidebarConfig(win, options, sidebar) {
             document.cookie = `amax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "theta") {
-                win.contourLayer.updateRange(options["amax" + win.num], options["amax" + win.num]);
+                win.contourLayer.updateRange(options.amax, options.amax);
             }
         }
     };
@@ -161,7 +210,7 @@ function addSidebarConfig(win, options, sidebar) {
         const val = Number(opt_vmin.value);
 
         if (val === val) {
-            options["vmin" + win.num] = val;
+            options.vmin = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -170,7 +219,7 @@ function addSidebarConfig(win, options, sidebar) {
             document.cookie = `vmin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "V") {
-                win.contourLayer.updateRange(options["vmin" + win.num], options["vmax" + win.num]);
+                win.contourLayer.updateRange(options.vmin, options.vmax);
             }
         }
     };
@@ -179,7 +228,7 @@ function addSidebarConfig(win, options, sidebar) {
         const val = Number(opt_vmax.value);
 
         if (val === val) {
-            options["vmax" + win.num] = val;
+            options.vmax = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -188,7 +237,7 @@ function addSidebarConfig(win, options, sidebar) {
             document.cookie = `vmax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "V") {
-                win.contourLayer.updateRange(options["vmin" + win.num], options["vmax" + win.num]);
+                win.contourLayer.updateRange(options.vmin, options.vmax);
             }
         }
     }
@@ -197,7 +246,7 @@ function addSidebarConfig(win, options, sidebar) {
         const val = Number(opt_fmin.value);
 
         if (val === val) {
-            options["fmin" + win.num] = val;
+            options.fmin = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -206,7 +255,7 @@ function addSidebarConfig(win, options, sidebar) {
             document.cookie = `fmin${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "freq") {
-                win.contourLayer.updateRange(options["fmin" + win.num], options["fmax" + win.num]);
+                win.contourLayer.updateRange(options.fmin, options.fmax);
             }
         }
     };
@@ -215,7 +264,7 @@ function addSidebarConfig(win, options, sidebar) {
         const val = Number(opt_fmax.value);
 
         if (val === val) {
-            options["fmax" + win.num] = val;
+            options.fmax = val;
 
             let dt = new Date();
             dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -224,7 +273,7 @@ function addSidebarConfig(win, options, sidebar) {
             document.cookie = `fmax${win.num}=${val};expires=${dt};path=/`;
 
             if (win.contourLayer.variableName === "freq") {
-                win.contourLayer.updateRange(options["fmin" + win.num], options["fmax" + win.num]);
+                win.contourLayer.updateRange(options.fmin, options.fmax);
             }
         }
     };
@@ -233,7 +282,7 @@ function addSidebarConfig(win, options, sidebar) {
         const val = Number(opt_opacity.value);
 
         if (val === val) {
-            options["opacity" + win.num] = val;
+            options.opacity = val;
 
             win.topologyLayer._opacity = val;
             win.topologyLayer.redraw();
@@ -252,7 +301,7 @@ function addSidebarConfig(win, options, sidebar) {
         const val = win.zoneLayer._render;
 
         opt_togglezones.checked = val;
-        options["togglezones" + win.num] = val;
+        options.togglezones = val;
 
         let dt = new Date();
         dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
@@ -266,7 +315,7 @@ function addSidebarConfig(win, options, sidebar) {
 
         win.topologyLayer._render_bus_ids = val;
         win.topologyLayer.redraw();
-        options["togglebuslabels" + win.num] = val;
+        options.togglebuslabels = val;
 
         let dt = new Date();
         dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));

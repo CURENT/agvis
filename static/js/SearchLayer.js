@@ -2,6 +2,7 @@ L.SearchLayer = L.LayerGroup.extend({
 	initialize(options) {
 		this._context = null;
 		this._cache = new WeakMap();
+        this._needs_update = true;
 
 		L.LayerGroup.prototype.initialize.call(this, options);
 
@@ -14,9 +15,14 @@ L.SearchLayer = L.LayerGroup.extend({
 	},
 
 	update(context) {
+        if (!this._needs_update) {
+            return;
+        }
+
         if (!context) {
             return;
         }
+
 		this._context = context;
 
         const SysParam = context.SysParam;
@@ -47,6 +53,8 @@ L.SearchLayer = L.LayerGroup.extend({
 
             this.addLayer(marker);
         }
+
+        this._needs_update = (Bus.idx.length > 0);
 	}
 });
 

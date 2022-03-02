@@ -142,7 +142,7 @@
     </div> -->
 </div>
     <script>
-        let options = {
+        /*let options = {
             // Settings for DiME clients
             dimehost1: window.location.hostname,
             dimeport1: +window.location.port + 8,
@@ -166,14 +166,46 @@
             fmin2: 0.9998,
             fmax2: 1.0002,
             opacity2: 0.25
-        };
+        };*/
+
+        let options = [
+            // Settings for map1
+            {
+                dimehost: window.location.hostname,
+                dimeport: +window.location.port + 8,
+                vmin: 0.8,
+                vmax: 1.2,
+                amin: -1.0,
+                amax: 1.0,
+                fmin: 0.9998,
+                fmax: 1.0002,
+                opacity: 0.25
+            },
+
+            // Settings for map2
+            {
+                dimehost: window.location.hostname,
+                dimeport: +window.location.port + 8,
+                vmin: 0.8,
+                vmax: 1.2,
+                amin: -1.0,
+                amax: 1.0,
+                fmin: 0.9998,
+                fmax: 1.0002,
+                opacity: 0.25
+            }
+        ];
 
         if (document.cookie !== "") {
-            document.cookie.split(';').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k.trim()] = v.trim(); return acc; }, options);
+            for (let option of options) { // TODO: fix this
+                document.cookie.split(';').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k.trim()] = v.trim(); return acc; }, option);
+            }
         }
 
         if (window.location.hash !== "") {
-            window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = decodeURI(v); return acc; }, options);
+            for (let option of options) {
+                window.location.hash.substring(1).split(',').map((d) => d.split('=')).reduce((acc, [k, v]) => { acc[k] = decodeURI(v); return acc; }, option);
+            }
         }
 
         /*window.onbeforeunload = function() {
@@ -189,11 +221,8 @@
         const x1 = document.getElementById("map1");
         const x2 = document.getElementById("map2");
 
-        const dimec1 = new dime.DimeClient(options.dimehost1, options.dimeport1);
-        const dimec2 = new dime.DimeClient(options.dimehost2, options.dimeport2);
-
-        const window1 = new Window(1, options, dimec1);
-        const window2 = new Window(2, options, dimec2);
+        const window1 = new Window(1, options[0]);
+        const window2 = new Window(2, options[1]);
 
         window1.mainThread();
         window2.mainThread();
