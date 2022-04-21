@@ -49,11 +49,11 @@ tmux detach
 to shut down the process.
 
 ### Further Information
-[LTBVIS] (https://github.com/CURENT/ltbvis)
+[LTBVIS](https://github.com/CURENT/ltbvis)
 
-[ANDES] (https://github.com/cuihantao/andes)
+[ANDES](https://github.com/cuihantao/andes)
 
-[ANDES Documentation] (https://docs.andes.app/en/stable/)
+[ANDES Documentation](https://docs.andes.app/en/stable/)
 
 
 ## Additional Setup for Windows
