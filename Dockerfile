@@ -1,4 +1,4 @@
-FROM python:3.8-buster AS base
+FROM python:3.10-buster AS base
 
 USER root
 WORKDIR /root
@@ -34,7 +34,7 @@ WORKDIR /tmp/dime/server
 RUN make clean && \
     make && \
     make install
-WORKDIR /tmp/dime2/client/python
+WORKDIR /tmp/dime/client/python
 RUN python3 -m pip install .
 
 WORKDIR /tmp
