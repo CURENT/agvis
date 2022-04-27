@@ -21,7 +21,7 @@ piptrustedhost=
 
 build() {
     cp -af ../andes .
-    cp -af ../dime2 .
+    cp -af ../dime .
     docker build \
         ${target:+--target $target} \
         ${pipindex:+--build-arg PIP_INDEX_URL=$pipindex} \
