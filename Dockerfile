@@ -1,4 +1,4 @@
-FROM python:3.8-buster AS base
+FROM python:3.10-buster AS base
 
 USER root
 WORKDIR /root
@@ -17,7 +17,7 @@ RUN apt install -y --no-install-recommends \
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install kvxopt \
-    git+git://github.com/cuihantao/andes@develop \
+    git+https://github.com/cuihantao/andes@develop \
     --no-cache-dir
 
 RUN useradd -ms /bin/bash cui && \
@@ -29,16 +29,16 @@ RUN python3 -m andes selftest && \
 
 # build DiME 2
 WORKDIR /tmp
-COPY dime2 /tmp/dime2
-WORKDIR /tmp/dime2/server
+COPY dime /tmp/dime
+WORKDIR /tmp/dime/server
 RUN make clean && \
     make && \
     make install
-WORKDIR /tmp/dime2/client/python
+WORKDIR /tmp/dime/client/python
 RUN python3 -m pip install .
 
 WORKDIR /tmp
-RUN rm -rf /tmp/dime2
+RUN rm -rf /tmp/dime
 
 USER cui
 WORKDIR /home/cui/work
