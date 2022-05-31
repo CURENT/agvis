@@ -1,16 +1,16 @@
-# Using LTBVis Locally
+# Using AGVis Locally
 ## On Linux
 ### A Side Note
-As of writing this, tmux, a command used for running LTBVis is not available on Windows-based systems. This can be worked around by running LTBVis in the Windows Subsystem for Linux (WSL). The additional setup required for this is included at the bottom of the instructions.
+As of writing this, tmux, a command used for running AGVis is not available on Windows-based systems. This can be worked around by running AGVis in the Windows Subsystem for Linux (WSL). The additional setup required for this is included at the bottom of the instructions.
 
 ### Setup
-Docker Desktop is a required program for running LTBVis locally. The installer can be downloaded here: https://www.docker.com/products/docker-desktop/.
+Docker Desktop is a required program for running AGVis locally. The installer can be downloaded here: https://www.docker.com/products/docker-desktop/.
 
 Open your terminal and run these commands to download the necessary folders:
 ```
 git clone https://github.com/CURENT/ltbvis
-git clone https://github.com/TheHashTableSlasher/dime2
-git clone https://github.com/cuihantao/andes
+git clone https://github.com/CURENT/dime2
+git clone https://github.com/CURENT/andes
 ```
 
 Now, change to the "ltbvis" directory and run the build command for the Docker image using these commands:
@@ -29,8 +29,8 @@ as shown in the following image.
 <img width="601" alt="docker3" src="https://user-images.githubusercontent.com/59810286/162656954-7a289951-76ce-4c2e-9553-cbf801047739.PNG">
 
 
-### Running LTBVis
-With the setup done, running LTBVis is fairly trivial. Enter these two commands into your terminal:
+### Running AGVis
+With the setup done, running AGVis is fairly trivial. Enter these two commands into your terminal:
 ```
 tmux
 ./go.sh dev
@@ -95,5 +95,5 @@ Finally, open Windows Powershell again. Run
 ```
 ubuntu
 ```
-to run WSL in the Ubuntu distribution you installed earlier. You can now proceed with the Linux instructions to run LTBVis.
+to run WSL in the Ubuntu distribution you installed earlier. You can now proceed with the Linux instructions to run AGVis.
 
