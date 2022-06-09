@@ -18,7 +18,6 @@ L.SimTimeBox = L.Control.extend({
     update: function(t){
     
         this.simulation_time = t;
-        console.log("update time");
         let dval2 = document.getElementById("ts_date").value;
         let nval2 = Number(document.getElementById("ts_num").value);
         let yval2 = document.getElementById("ny").value;
@@ -65,7 +64,8 @@ L.SimTimeBox = L.Control.extend({
                     default:
                         msmult = 1;
                 }
-                
+        
+		    //Actual calculation of the new time.
                 fdate = fdate + (msmult * this.simulation_time * nval2);
                 
                 let dstring = new Date(fdate);

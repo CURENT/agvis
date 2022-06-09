@@ -181,22 +181,7 @@ function addSidebarConfig(win, options, sidebar) {
         }
 
     };
-    
-    opt_togglezones.onclick = function() {
-        win.zoneLayer.toggleRender();
-
-        const val = win.zoneLayer._render;
-
-        opt_togglezones.checked = val;
-        options.togglezones = val;
-
-        let dt = new Date();
-        dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
-        dt = dt.toUTCString();
-
-        document.cookie = `togglezones${win.num}=${val};expires=${dt};path=/`;
-    };
-    
+     
     function updateInputs() {
         if ("dimehost" in options) {
             opt_dimehost.value = options.dimehost;
