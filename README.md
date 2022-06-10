@@ -1,6 +1,6 @@
-# LTBVis
+# AGVis
 
-A visualization program for CURENT's Large-scale Test Bed, in the form of a web application. 
+Another Grid Visualizer, visualization program for CURENT's Large-scale Test Bed, in the form of a web application. 
 
 ## Setup
 
