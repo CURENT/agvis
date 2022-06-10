@@ -1,0 +1,7 @@
+site_name: AGVis
+site_url: https://agvis.readthedocs.io
+nav:
+  - Home: 'index.md'
+  - 'Quick Start': 'quick_start/quick_start.md'
+  - Examples: 'examples/examples.md'
+theme: readthedocs
