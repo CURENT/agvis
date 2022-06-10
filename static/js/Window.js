@@ -77,6 +77,7 @@ class Window {
         }
 
         addSidebarConfig(this, options, sidebar);
+        addSidebarLayers(this, options, sidebar);
 
         sidebar.addPanel({
             id: 'plotPanel',                     // UID, used to access the panel

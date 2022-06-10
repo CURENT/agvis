@@ -41,6 +41,49 @@ const table_html = `
     <input type="button" value="Load simulation" name="opt_loadsimulation">
     <input type="button" value="Save simulation" name="opt_savesimulation">
 </div>
+
+<hr>
+<h3>Timestamp Settings</h3>
+
+<div>
+    <label for="ny">Use Timestamp?</label>
+    <select name="ny" id="ny">
+        <option select="selected" value="No">No</option>
+        <option value="Yes">Yes</option>
+    </select>
+    
+</div>
+<div>
+    <label for="ts_date">Select a Date:</label>
+    <input type="date" id="ts_date" name="ts_date">
+</div>
+
+<div>
+    <label for="ts_time">Select a Time:</label>
+    <input type="time" id="ts_time" value="00:00:00" name="ts_time">
+</div>
+
+<div>
+    <label for="ts_inc">Select an Increment:</label>
+    <select name="ts_inc" id="ts_inc">
+        <option select="selected" value="ms">Milliseconds</option>
+        <option value="s">Seconds</option>
+        <option value="min">Minutes</option>
+        <option value="h">Hours</option>
+        <option value="day">Days</option>
+    </select>
+    <br>
+    
+    <label for="ts_num">Number of Increments per Frame?</label>
+    <input type="number" id="ts_num" name="ts_num" value="1" min="1" step="1">
+</div>
+
+<div>
+</div>
+<div>
+    <label for="ts_up">Update Settings?</label>
+    <input type="button" value="Update" id="ts_up" name="ts_up">
+</div>
 `
 
 const SIDEBAR_CALLBACKS = [];
@@ -86,6 +129,59 @@ function addSidebarConfig(win, options, sidebar) {
     const opt_vlabel = document.querySelector(`#${table_id} span[name='opt_vlabel']`);
     const opt_flabel = document.querySelector(`#${table_id} span[name='opt_flabel']`);
 
+    const ts_up = document.querySelector(`#${table_id} input[name='ts_up']`);
+    
+    //Updating function for Timestamp
+    ts_up.onclick = function() {
+    
+        let dval = document.getElementById("ts_date").value;
+        let nval = Number(document.getElementById("ts_num").value);
+        let yval = document.getElementById("ny").value;
+        let tval = document.getElementById("ts_time").value;
+        
+    
+        //If the Timestamp isn't being used, don't bother checking for good inputs
+        if (yval === "No") {
+            
+            
+            //The Timestamp is updated based on where in the simulation the timer is on.
+            if (win.workspace.Vargs) {
+            
+                win.simTimeBox.update(win.workspace.Varvgs.t.toFixed(2));
+            }
+        
+            //If there is no simulation, set it to 0.
+            else {
+            
+                win.simTimeBox.update(0.00);
+            }
+        }
+        
+        else {
+            
+            //Make sure all fully user provided inputs are proper. If not, throw an alert.
+            if ((dval == "") || (nval < 1) || (!(Number.isInteger(nval))) || (tval == "")) {
+                
+                alert("Please set all inputs properly before trying to update.");
+                return;
+            }
+
+            if (win.workspace.Vargs) {
+                
+                
+                win.simTimeBox.update(win.workspace.Varvgs.t.toFixed(2));
+            
+            }
+        
+            else {
+                
+                win.simTimeBox.update(0.00);
+            }
+        
+        }
+
+    };
+     
     function updateInputs() {
         if ("dimehost" in options) {
             opt_dimehost.value = options.dimehost;
