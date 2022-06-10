@@ -68,7 +68,8 @@ L.SimTimeBox = L.Control.extend({
 		    //Actual calculation of the new time.
                 fdate = fdate + (msmult * this.simulation_time * nval2);
                 
-                let dstring = new Date(fdate);
+                let ddate = new Date(fdate);
+		let dstring = new Date(Date.UTC(ddate.getFullYear(), ddate.getMonth(), ddate.getDate(), ddate.getHours(), ddate.getMinutes(), ddate.getSeconds(), ddate.getMilliseconds()));
                 let isostring = dstring.toISOString().split("T");
                 
                 this.text.innerHTML = "<p style=\"font-size:250%;\"><strong>Simulation time:</strong> " + isostring[0] + " " + isostring[1].slice(0, 12) + "</p>";
