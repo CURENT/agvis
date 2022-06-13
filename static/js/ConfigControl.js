@@ -74,8 +74,8 @@ const table_html = `
     </select>
     <br>
     
-    <label for="ts_num">Number of Increments per Frame?</label>
-    <input type="number" id="ts_num" name="ts_num" value="1" min="1" step="1">
+    <label for="ts_num">Number of Increments per Second:</label>
+    <input type="number" id="ts_num" name="ts_num" value="1" min="0" step="1">
 </div>
 
 <div>
@@ -160,7 +160,7 @@ function addSidebarConfig(win, options, sidebar) {
         else {
             
             //Make sure all fully user provided inputs are proper. If not, throw an alert.
-            if ((dval == "") || (nval < 1) || (!(Number.isInteger(nval))) || (tval == "")) {
+            if ((dval == "") || (nval < 0) || (!(Number.isFinite(nval))) || (tval == "")) {
                 
                 alert("Please set all inputs properly before trying to update.");
                 return;

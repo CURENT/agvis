@@ -30,7 +30,7 @@ L.SimTimeBox = L.Control.extend({
         
         else {
             
-            if ((dval2 == "") || (nval2 < 1) || (!(Number.isInteger(nval2))) || (tval2 == "")) {
+            if ((dval2 == "") || (nval2 < 0) || (!(Number.isFinite(nval2))) || (tval2 == "")) {
                 this.text.innerHTML = "<p style=\"font-size:250%;\"><strong>Simulation time:</strong> " + this.simulation_time + "</p>";
             }
             
