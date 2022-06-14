@@ -1,6 +1,6 @@
 # AGVis
 
-Another Grid Visualizer, visualization program for CURENT's Large-scale Test Bed, in the form of a web application. 
+Another Grid Visualizer, visualization program for CURENT's Large-scale Test Bed, in the form of a web application.
 
 ## Setup
 
@@ -11,22 +11,18 @@ Note that [Docker](https://www.docker.com/products/docker-desktop) and [tmux](ht
 First, clone this repository, as well as the [dime](https://github.com/TheHashTableSlasher/dime) and [Andes](https://github.com/cuihantao/andes) repositories, in the same directory.
 
 ```
-$ git clone https://github.com/CURENT/ltbvis
-# ...
-$ git clone https://github.com/TheHashTableSlasher/dime2
-# ...
-$ git clone https://github.com/cuihantao/andes
+$ git clone https://github.com/CURENT/ltb2
 # ...
 ```
 
 Next, go into the directory for this repository and run `./go.sh build`:
 
 ```
-$ cd ltbvis
+$ cd agvis
 $ ./go.sh build
 ```
 
-Note that no compilation of Andes or dime2, nor any extra dependencies, is required, as this is all done inside a Docker image.
+Note that no compilation of Andes or dime, nor any extra dependencies, is required, as this is all done inside a Docker image.
 
 ### Windows
 
@@ -54,13 +50,15 @@ The commands that tmux runs may also be run in any sort of shell session:
 
 ```
 $ docker run --rm -t -v `pwd`/static:/srv -p 8810:8810 ltbvis:$USER python3 -m http.server -d /srv 8810 &
-$ docker run --rm -t -v /tmp:/tmp -p 8818:8818 ltbvis:$USER dime -vv -l unix:/tmp/dime2 -l ws:8818 &
+$ docker run --rm -t -v /tmp:/tmp -p 8818:8818 agvis:$USER dime -vv -l unix:/tmp/dime2 -l ws:8818 &
 # When you want to start the simulation, type:
-$ docker run --rm -t -v /tmp:/tmp ltbvis:$USER andes -v 10 run /home/cui/wecc_vis.xlsx -r tds
+$ docker run --rm -t -v /tmp:/tmp agvis:$USER andes -v 10 run /home/cui/wecc_vis.xlsx -r tds
 ```
 
 A few notes:
+
 * The exact Docker image tag may change depending on how you built it with `./go.sh build`
+* Existing Docker images, containers, and tmux sessions can be cleaned by ``./go.sh clean``
 * The simulation may also be altered as desired. wecc_vis.xlsx, ieee39.xlsx, and ACTIVSg2000.xlsx all come with this repository, and are copied to the image upon building.
 * None of the above commands necessarily require Docker, and may be subsituted as desired:
   - The first line simply opens up an HTTP server, but any httpd (Apache, Nginx, Lighttpd, even something as basic as [mini_httpd](http://www.acme.com/software/mini_httpd/)) on port 8810 will suffice.
