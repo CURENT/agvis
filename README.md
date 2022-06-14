@@ -8,11 +8,10 @@ Note that [Docker](https://www.docker.com/products/docker-desktop) and [tmux](ht
 
 ### Linux
 
-First, clone this repository, as well as the [dime](https://github.com/TheHashTableSlasher/dime) and [Andes](https://github.com/cuihantao/andes) repositories, in the same directory.
+First, clone related repositories
 
 ```
-$ git clone https://github.com/CURENT/ltb2
-# ...
+$ git clone --recursive https://github.com/CURENT/ltb2
 ```
 
 Next, go into the directory for this repository and run `./go.sh build`:
@@ -21,8 +20,6 @@ Next, go into the directory for this repository and run `./go.sh build`:
 $ cd agvis
 $ ./go.sh build
 ```
-
-Note that no compilation of Andes or dime, nor any extra dependencies, is required, as this is all done inside a Docker image.
 
 ### Windows
 
