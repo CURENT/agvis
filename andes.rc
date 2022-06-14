@@ -1,14 +1,22 @@
 [System]
 freq = 60
 mva = 100
-store_z = 0
 ipadd = 1
+seed = None
 diag_eps = 1e-08
 warn_limits = 1
 warn_abnormal = 1
-dime_enabled = 1
+dime_enabled = 0
 dime_name = andes
-dime = ipc:///tmp/dime2
+dime_address = ipc:///tmp/dime2
+numba = 1
+numba_parallel = 0
+numba_nopython = 0
+yapf_pycode = 0
+np_divide = warn
+np_invalid = warn
+pickle_path = /home/jwang175/.andes/calls.pkl
+save_stats = 0
 
 [PFlow]
 sparselib = klu
@@ -16,6 +24,7 @@ linsolve = 0
 tol = 1e-06
 max_iter = 25
 method = NR
+check_conn = 1
 n_factorize = 4
 report = 1
 degree = 0
@@ -24,7 +33,8 @@ init_tds = 0
 [TDS]
 sparselib = klu
 linsolve = 0
-tol = 1e-06
+method = trapezoid
+tol = 0.0001
 t0 = 0.0
 tf = 20.0
 fixt = 1
@@ -33,23 +43,74 @@ honest = 0
 tstep = 0.03333333333333333
 max_iter = 15
 refresh_event = 0
+test_init = 1
+check_conn = 1
 g_scale = 1
-qrt = 1
-kqrt = 1
+reset_tiny = 1
+qrt = 0
+kqrt = 1.0
+store_z = 0
+store_f = 0.0
+store_h = 0.0
+store_i = 0.0
+no_tqdm = 0.0
+criteria = 0
+ddelta_limit = 180
+limit_store = 0
+max_store = 900
+save_every = 1
+save_mode = manual
 
 [EIG]
 sparselib = klu
 linsolve = 0
 plot = 0
+tol = 1e-06
+
+[Summary]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[Output]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[Toggler]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 
 [Fault]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 restore = 1
+mode = 1
 scale = 1.0
 
+[Alter]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[TimeSeries]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+silent = 1
+
 [Bus]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 flat_start = 0
 
 [PQ]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 pq2z = 1
 p2p = 0.0
 p2i = 0.0
@@ -59,47 +120,447 @@ q2i = 0.0
 q2z = 1.0
 
 [PV]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 pv2pq = 0
-npv2pq = 1
+npv2pq = 0
+min_iter = 2
+err_tol = 0.01
+abs_violation = 1
 
 [Slack]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 pv2pq = 0
-npv2pq = 1
+npv2pq = 0
+min_iter = 2
+err_tol = 0.01
+abs_violation = 1
 av2pv = 0
 
+[Shunt]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[ShuntTD]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[ShuntSw]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+min_iter = 2
+err_tol = 0.01
+
+[Line]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[Jumper]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[Area]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
 [ACE]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 freq_model = BusFreq
 interval = 4.0
 offset = 0.0
 
+[ACEc]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+freq_model = BusFreq
+
+[ZIP]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[FLoad]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
 [GENCLS]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 vf_lower = 1.0
 vf_upper = 5.0
 
 [GENROU]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 vf_lower = 1.0
 vf_upper = 5.0
 
+[PLBVFU1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
 [TG2]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 deadband = 0
 hardlimit = 1
 
+[TGOV1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[TGOV1DB]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[TGOV1N]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[TGOV1NDB]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[IEEEG1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[IEESGO]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[GAST]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[HYGOV]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[HYGOVDB]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[IEEEVC]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[EXDC2]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[IEEEX1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[ESDC2A]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[EXST1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[ESST3A]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[SEXS]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[IEEET1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[EXAC1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[EXAC4]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[ESST4B]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+ksr = 2
+ksm = 2
+
+[AC8B]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+ks = 2
+
+[IEEET3]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[ESAC1A]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[ESST1A]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
 [IEEEST]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 freq_model = BusFreq
 
 [ST2CUT]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 freq_model = BusFreq
 
+[Motor3]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[Motor5]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[BusFreq]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[BusROCOF]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[PMU]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[PLL1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
 [Node]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 flat_start = 0
 
+[Ground]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[R]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[L]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[C]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[RCp]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[RCs]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[RLs]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[RLCs]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[RLCp]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[VSCShunt]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[REGCA1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[REGCP1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
 [REECA1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+kqs = 2
+kvs = 2
+tpfilt = 0.02
+
+[REECA1E]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+kqs = 2
+kvs = 2
+tpfilt = 0.02
+
+[REECA1G]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 kqs = 2
 kvs = 2
 tpfilt = 0.02
 
 [REPCA1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 kqs = 2
 ksg = 2
 freeze = 1
+
+[WTDTA1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[WTDS]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[WTARA1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[WTPTA1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[WTTQA1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[WTARV1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[REGCV1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[REGCV2]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[PVD1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+plim = 0
+
+[ESD1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+plim = 0
+
+[EV1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+plim = 0
+
+[EV2]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+plim = 0
+
+[DGPRCT1]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[DGPRCTExt]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
+
+[COI]
+allow_adjust = 1
+adjust_lower = 0
+adjust_upper = 1
 

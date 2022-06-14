@@ -17,7 +17,7 @@ RUN apt install -y --no-install-recommends \
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install kvxopt \
-    git+https://github.com/cuihantao/andes@develop \
+    git+https://github.com/cuihantao/andes.git@develop \
     --no-cache-dir
 
 RUN useradd -ms /bin/bash cui && \
