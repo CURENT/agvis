@@ -8,14 +8,14 @@ Docker Desktop is a required program for running AGVis locally. The installer ca
 
 Open your terminal and run these commands to download the necessary folders:
 ```
-git clone https://github.com/CURENT/ltbvis
-git clone https://github.com/CURENT/dime2
+git clone https://github.com/CURENT/agvis
+git clone https://github.com/CURENT/dime
 git clone https://github.com/CURENT/andes
 ```
 
-Now, change to the "ltbvis" directory and run the build command for the Docker image using these commands:
+Now, change to the "agvis" directory and run the build command for the Docker image using these commands:
 ```
-cd ltbvis 
+cd agvis
 ./go.sh build
 ```
 
@@ -49,11 +49,15 @@ tmux detach
 to shut down the process.
 
 ### Further Information
-[LTBVIS] (https://github.com/CURENT/ltbvis)
+[AGVis Repository](https://github.com/CURENT/agvis)
 
-[ANDES] (https://github.com/cuihantao/andes)
+[DiME Repository](https://github.com/CURENT/dime)
 
-[ANDES Documentation] (https://docs.andes.app/en/stable/)
+[DiME Documentation](https://ltbdime.readthedocs.io/en/latest/)
+
+[ANDES Repository](https://github.com/CURENT/andes)
+
+[ANDES Documentation](https://docs.andes.app/en/stable/)
 
 
 ## Additional Setup for Windows
