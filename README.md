@@ -61,3 +61,6 @@ A few notes:
   - The first line simply opens up an HTTP server, but any httpd (Apache, Nginx, Lighttpd, even something as basic as [mini_httpd](http://www.acme.com/software/mini_httpd/)) on port 8810 will suffice.
   - dime2 can easily be compiled natively, see its README.md for instructions.
   - Andes is a bit trickier to set up without Docker, so its recommended to be used in the above configuration. However, it can be done with enough effort. Install the correct Python dependencies, and run the commands in the Dockerfile to set it up.
+  
+## Documentation
+[AGVis](https://agvis.readthedocs.io)
