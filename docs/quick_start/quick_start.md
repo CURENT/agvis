@@ -1,3 +1,43 @@
+# Using AGVis On Server through SSH
+
+## Run AGVis
+
+In the VSCode, log in the Linux server through SSH.
+
+1. Download the ltb2 repository:
+
+```
+git clone https://github.com/CURENT/ltb2 --revursive
+```
+
+2. Initially build the environment:
+
+```
+./go.sh build
+```
+
+3. Go to tmux:
+
+```
+tmux
+```
+
+4. Setup the environemnt:
+
+```
+./go.sh dev2
+```
+
+5. Manually forward the port 8810 and 8818 if not automatically forwarded
+6. In the browser, go to http://localhost:8810, AGVis should be there
+7. In the tmux, bottom window, run the command
+
+## Trouble shooting
+
+Port already in use, remove the existing tmp file.
+
+ANDES do not exist, rebuild the environment
+
 # Using AGVis Locally
 ## On Linux
 ### A Side Note
