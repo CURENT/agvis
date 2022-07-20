@@ -17,6 +17,14 @@ function transpose(a) {
 	});
 }
 
+function convertND(arr) {
+
+	const shape = [];
+	shape.push(arr.length);
+	nd = new NDArray("F", shape, arr);
+	return nd;
+}
+
 //Adds in the Layers Sidebar
 function addSidebarLayers(win, options, sidebar) {
 	const table_id = "layerpanel" + win.num;
@@ -74,10 +82,26 @@ function addSidebarLayers(win, options, sidebar) {
 
 					//Convert the data to csv and then that to an array
 					let wb = XLSX.read(dat.target.result, {type: "binary"});
-					let rows = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]);
+					
+					for (let k = 0; k < wb.SheetNames.length; k++) {
 
-					let csv = Papa.parse(rows);
+						newlayer[wb.SheetNames[k]] = {};
+						let rows = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[k]]);
+						let data = Papa.parse(rows);
 
+						let csv = transpose(data.data);
+
+						for (let m = 0; m < csv.length; m++) {
+
+							if (csv[m][0] == "") {
+
+								continue;
+							}
+
+							const temp = csv[m].slice(1, csv[m].length);
+							newlayer[wb.SheetNames[k]][csv[m][0]] = temp;
+						}
+					}
 					
 					newlayer.name = fname;
 
@@ -105,9 +129,8 @@ function addSidebarLayers(win, options, sidebar) {
 						}
 					}
 
-					newlayer.data = transpose(csv.data);
-					console.log(newlayer.data);
 					console.log(newlayer);
+					newlayer.topo = L.multitopLayer(newlayer).addTo(win.map);
 
 
 					//ids for the dynamically generated elements
@@ -146,10 +169,15 @@ function addSidebarLayers(win, options, sidebar) {
 
 						let cid = this.id.slice(6);
 						let cnum = Number(cid);
-						console.log("CNUM: " + cnum); 
+						//console.log("CNUM: " + cnum); 
 						let clayer = win.multilayer[cnum];
-						console.log("CBOX TEST:");
-						console.log(clayer);
+						//console.log(win.topologyLayer);
+						console.log(win.workspace.SysParam);
+						clayer.topo.toggleRender();
+						clayer.topo.update(win.workspace);
+						//console.log(clayer.topo);
+						//console.log("CBOX TEST:");
+						//console.log(clayer);
 						//Here is where we would toggle it
 					};
 
@@ -169,10 +197,11 @@ function addSidebarLayers(win, options, sidebar) {
 						//List some basic info on what's deleted
 						let bid = this.id.slice(6);
 						let bnum = Number(bid);
-						console.log("BNUM: " + bnum); 
+						//console.log("BNUM: " + bnum); 
 						let blayer = win.multilayer[bnum];
-						console.log("DELETE TEST:");
-						console.log(blayer);
+						blayer.topo.remove();
+						//console.log("DELETE TEST:");
+						//console.log(blayer);
 
 						//Set the nelayer to null in the array, increase the amount of free spaces, and set the current free layer to this newlayer's num
 						win.multilayer[bnum] = null;
