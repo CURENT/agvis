@@ -6,6 +6,15 @@ class Window {
         this.num = num;
         this.options = options;
 
+	this.multilayer = [];
+	this.multihistory = [];
+	this.mlayercur = 0;
+	this.mnumfree = 0;
+	
+
+	
+
+
         this.map_name = "map" + num;
         this.dimec_name = "geovis" + num;
         this.time = 0.0;
