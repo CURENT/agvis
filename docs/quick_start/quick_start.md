@@ -1,42 +1,32 @@
 # Using AGVis On Server through SSH
-
-## Run AGVis
-
-In the VSCode, log in the Linux server through SSH.
-
-1. Download the ltb2 repository:
-
+## Running AGVis
+Using a terminal (we would suggest [VSCode](https://code.visualstudio.com/)), log into the Linux server with SSH. Then use this command to download the LTB repository:
 ```
-git clone https://github.com/CURENT/ltb2 --revursive
+git clone https://github.com/CURENT/ltb2 --recursive
 ```
 
-2. Initially build the environment:
-
+After it's finished downloading, migrate to the AGVis folder and create the initial build:
 ```
+cd ltb2/agvis
 ./go.sh build
 ```
 
-3. Go to tmux:
-
+4. Setup the environemnt:
+Once the initial build is completed, setup the environment by running these commands in your terminal:
 ```
 tmux
-```
-
-4. Setup the environemnt:
-
-```
 ./go.sh dev2
 ```
 
-5. Manually forward the port 8810 and 8818 if not automatically forwarded
-6. In the browser, go to http://localhost:8810, AGVis should be there
-7. In the tmux, bottom window, run the command
+By running those two commands, your window should be populated with several tmux sessions. At this point you may need to forward ports 8810 and 8818 if they are not automatically forwarded. Once your ports are set up, you should be able to go to "localhost:8810" in your browser and see AGVis running. If you then run the command in the bottom tmux window, the simulation will start playing. 
 
-## Trouble shooting
-
+## Troubleshooting
+### Port Already in Use Error
+If you receive this error, then you may need to check the /tmp directory in your environment. If there is a folder called "dime" or "dime2", then remove it. That should fix the error.
 Port already in use, remove the existing tmp file.
 
-ANDES do not exist, rebuild the environment
+### ANDES Does Not Exist Error
+If ANDES doesn't exist, then your best bet is usually just rebuilding your environment. Running the second and third set of commands again should fix the issue.
 
 # Using AGVis Locally
 ## On Linux
