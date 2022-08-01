@@ -5,13 +5,12 @@ Using a terminal (we would suggest [VSCode](https://code.visualstudio.com/)), lo
 git clone https://github.com/CURENT/ltb2 --recursive
 ```
 
-After it's finished downloading, migrate to the AGVis folder and create the initial build:
+After it's finished downloading, move to the AGVis folder and create the initial build:
 ```
 cd ltb2/agvis
 ./go.sh build
 ```
 
-4. Setup the environemnt:
 Once the initial build is completed, setup the environment by running these commands in your terminal:
 ```
 tmux
@@ -22,11 +21,10 @@ By running those two commands, your window should be populated with several tmux
 
 ## Troubleshooting
 ### Port Already in Use Error
-If you receive this error, then you may need to check the /tmp directory in your environment. If there is a folder called "dime" or "dime2", then remove it. That should fix the error.
-Port already in use, remove the existing tmp file.
+If you receive this error, then you may need to check the /tmp directory in your environment. If there is a folder called "dime" or "dime2", remove it. That should fix the error.
 
 ### ANDES Does Not Exist Error
-If ANDES doesn't exist, then your best bet is usually just rebuilding your environment. Running the second and third set of commands again should fix the issue.
+If ANDES doesn't exist, then your best bet is usually just rebuilding your environment. Running ```./go.sh clean``` and then running the second and third set of commands again should fix the issue.
 
 # Using AGVis Locally
 ## On Linux
