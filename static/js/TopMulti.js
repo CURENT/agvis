@@ -1,3 +1,4 @@
+//topmulti.js is basically just the topology layer but adjusted to work for multiple layers and file input
 function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }) {
 	const images = this._images;
 	if (!images.allLoaded) return;
@@ -206,8 +207,17 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 	    }
 	}
 	*/
+	
 
+		
 		ctx.strokeStyle = `rgba(0, 0, 0, ${this._opacity})`;
+		
+		if (this._cline) {
+			
+			ctx.strokeStyle = `rgba(${this._lr}, ${this._lg}, ${this._lb}, ${this._opacity})`; 
+		}
+
+		
 		ctx.lineWidth = 2;
 		ctx.beginPath();
 
@@ -226,7 +236,9 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 			const toY = busPixelCoords.get(toIndex, 1);
 
 			const dist = Math.hypot(toX - fromX, toY - fromY);
+					
 
+			
 			if (dist > 12) {
 				ctx.moveTo(fromX, fromY);
 				ctx.lineTo(toX, toY);
@@ -235,9 +247,11 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 
 		ctx.closePath();
 		ctx.stroke();
-
+	
 		ctx.textAlign = "center";
 		ctx.textBaseline = "top";
+
+
 
 		// Draws the buses (vertices)
 		for (let i=0; i < nelems; ++i) {
@@ -245,6 +259,7 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 			const y = busPixelCoords.get(i, 1);
 			const busNumber = Bus.idx[i];
 			const image = busToImageLookup.get(busNumber);
+			
 			const size = 12;
 			ctx.drawImage(image, x - size/2, y - size/2, size, size);
 
@@ -254,6 +269,93 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 				ctx.fillText(busNumber.toString(), x, y + size/2);
 			}
 		}
+		
+		if (this._cnode) {
+			
+			var cimg = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			
+			for (let j = 0; j < cimg.data.length; j = j + 4) {
+				
+				if (cimg.data[j + 3] == 0) {
+					
+					continue;
+				}
+				
+				if ((cimg.data[j] == 0xfa && cimg.data[j + 1] == 0x80 && cimg.data[j + 2] == 0x72) || (cimg.data[j] == 0xff && cimg.data[j + 1] == 0xff && cimg.data[j + 2] == 0xff)) {
+					
+						cimg.data[j] = (this._nr & cimg.data[j]);
+						cimg.data[j + 1] = (this._ng & cimg.data[j + 1]);
+						cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
+						
+					}
+				}
+				
+				ctx.putImageData(cimg, 0, 0);
+			}
+		
+					/*
+			//Better but still laggy
+			if (this._cnode) {
+			
+				let cv = document.createElement("canvas");
+				cv.width = 12;
+				cv.height = 12;
+				let c2 = cv.getContext("2d");
+				c2.drawImage(image, 0, 0, size, size);
+				let cimg = c2.getImageData(0, 0, 12, 12);
+				
+				for (let j = 0; j < cimg.data.length; j = j + 4) {
+					
+					cimg.data[j] = (this._nr & cimg.data[j]);
+					cimg.data[j + 1] = (this._ng & cimg.data[j + 1]);
+					cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
+				
+				}
+				
+				ctx.putImageData(cimg, (x - (size / 2)), (y - (size / 2)));
+				
+			}
+			
+			else {
+				
+				ctx.drawImage(image, x - size/2, y - size/2, size, size);
+			}
+			*/
+			//This will make it so the line and node colors don't interact, but it makes the browser incredibly laggy
+			/*
+			if (this._cnode) {
+				
+				var cimg = ctx.getImageData((x - (size / 2)), (y - (size / 2)), (x + (size / 2)), (y + (size / 2)));
+				
+				for (let j = 0; j < cimg.data.length; j = j + 4) {
+					
+				cimg.data[j] = (this._nr & cimg.data[j]);
+				cimg.data[j + 1] = (this._ng & cimg.data[j + 1]);
+				cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
+				
+				}
+				
+				ctx.putImageData(cimg, (x - (size / 2)), (y - (size / 2)));
+			}
+			*/
+		/*
+		if (this._cnode) {
+			
+			var cimg = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			
+			for (let j = 0; j < cimg.data.length; j = j + 4) {
+				
+				cimg.data[j] = (this._nr & cimg.data[j]);
+				cimg.data[j + 1] = (this._ng & cimg.data[j + 1]);
+				cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
+				
+			}
+			
+			ctx.putImageData(cimg, 0, 0);
+		}
+		*/
+
+		
 		// TODO: Render zones
 	}
 }
@@ -268,7 +370,15 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 		this._cache = new WeakMap();
 		this._render = false;
 		this._render_bus_ids = false;
-		this._opacity = 0.25;
+		this._cnode = false;
+		this._cline = false;
+		this._nr = 255;
+		this._ng = 255;
+		this._nb = 255;
+		this._lr = 0;
+		this._lg = 0;
+		this._lb = 0;
+		this._opacity = 0.50;
 		this._newlayer = newlayer;
 
 		const images = {};
@@ -319,6 +429,46 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 	toggleRender() {
 		this._render = !this._render;
 		//console.log("Topology rendering: ", this._render);
+	},
+	
+	toggleCNode() {
+		
+		this._cnode = !this._cnode;
+	},
+	
+	toggleCLine() {
+		
+		this._cline = !this._cline;
+	},
+	
+	updateCNVal(cval1) {
+		
+		this._nr = parseInt(cval1.slice(1, 3), 16);
+		this._ng = parseInt(cval1.slice(3, 5), 16);
+		this._nb = parseInt(cval1.slice(5, 7), 16);
+		
+		console.log("Red: " + this._nr);
+		console.log("Green: " + this._ng);
+		console.log("Blue: " + this._nb);
+	},
+	
+	updateCLVal(cval2) {
+		
+		this._lr = parseInt(cval2.slice(1, 3), 16);
+		this._lg = parseInt(cval2.slice(3, 5), 16);
+		this._lb = parseInt(cval2.slice(5, 7), 16);
+		
+		if (this._lr == 0xfa && this._lg == 0x80 && this._lb == 0x72) {
+			
+			this._lr = this._lr + 1;
+			console.log("pinkish");
+		}
+		
+		if (this._lr == 0xff && this._lg == 0xff &&  this._lb == 0xff) {
+			
+			this._lb = this._lb - 1;
+			console.log("white");
+		}
 	}
 });
 
