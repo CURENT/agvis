@@ -6,6 +6,15 @@ class Window {
         this.num = num;
         this.options = options;
 
+	this.multilayer = [];
+	this.multihistory = [];
+	this.mlayercur = 0;
+	this.mnumfree = 0;
+	
+
+	
+
+
         this.map_name = "map" + num;
         this.dimec_name = "geovis" + num;
         this.time = 0.0;
@@ -238,7 +247,7 @@ class Window {
             self.communicationLayer.update(self.workspace);
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
-            self.searchLayer.update(self.workspace);
+            self.searchLayer.update(self.workspace, self);
 
             if (self.workspace.Varvgs) {
                 self.simTimeBox.update(self.workspace.Varvgs.t.toFixed(2));
