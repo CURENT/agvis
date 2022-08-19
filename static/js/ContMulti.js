@@ -27,7 +27,7 @@ void main() {
 function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate }) {
 	const context = this._context;
 	if (!context) return;
-	const SysParam = this._newlayer;
+	const SysParam = this._newlayer.data;
 	if (!SysParam) return;
 	const Bus = SysParam.Bus;
 	const Idxvgs = this._newlayer.Idxvgs;
@@ -236,7 +236,7 @@ L.MultiContLayer = L.CanvasLayer.extend({
 
     toggleRender() {
         this._render = !this._render;
-        console.log("Contour rendering: ", this._render);
+        console.log("MultiContour rendering: ", this._render);
     }
 
 });

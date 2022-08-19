@@ -4,7 +4,7 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 	if (!images.allLoaded) return;
 	const context = this._context;
 	if (!context) return;
-	const SysParam = this._newlayer;
+	const SysParam = this._newlayer.data;
 	if (!SysParam) return;
 	const Bus = SysParam.Bus;
 	const Line = SysParam.Line;
@@ -144,6 +144,35 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 				busToImageLookup.set(busNumber, images.syn);
 			}
 		}
+		
+		if (Bus.type != null) {
+			
+			for (let i = 0; i < nelems; i++) {
+				
+				const busNumber = Bus.idx[i];
+				const btype = Bus.type[i].toLowerCase();
+				
+				if (btype.indexOf("well") != -1) {
+					busToImageLookup.set(busNumber, images.well);
+				}
+				
+				else if (btype.indexOf("compressor") != -1) {
+					busToImageLookup.set(busNumber, images.comp);
+				}
+				
+				else if (btype.indexOf("load") != -1) {
+					busToImageLookup.set(busNumber, images.load);
+				}
+				
+				else if (btype.indexOf("ptg") != -1) {
+					busToImageLookup.set(busNumber, images.ptg);
+				}
+				
+				else if (btype.indexOf("gfg") != -1) {
+					busToImageLookup.set(busNumber, images.gfg);
+				}
+			}
+		}
 	}
 
 	let { lineVoltageRating } = paramCache;
@@ -152,7 +181,7 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 	}
 
 	let { lineVoltageRatingExtents } = paramCache;
-	if (!lineVoltageRatingExtents) {
+	if (!lineVoltageRatingExtents && (lineVoltageRating != null)) {
 		const min = Math.min(...lineVoltageRating);
 		const max = Math.max(...lineVoltageRating);
 		//console.log({ min, max });
@@ -160,7 +189,7 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 	}
 
 	let { zoomToLineVoltageRatingMinLookup } = paramCache;
-	if (!zoomToLineVoltageRatingMinLookup) {
+	if (!zoomToLineVoltageRatingMinLookup && (lineVoltageRating != null)) {
 		const minZoom = 1;
 		const maxZoom = 7;
 		const minVoltageRating = lineVoltageRatingExtents.min;
@@ -209,16 +238,16 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 	*/
 	
 
-		
-		ctx.strokeStyle = `rgba(0, 0, 0, ${this._opacity})`;
+		//{$this._opacity} - change back
+		ctx.strokeStyle = `rgba(0, 0, 0, ${this._lop})`;
 		
 		if (this._cline) {
 			
-			ctx.strokeStyle = `rgba(${this._lr}, ${this._lg}, ${this._lb}, ${this._opacity})`; 
+			ctx.strokeStyle = `rgba(${this._lr}, ${this._lg}, ${this._lb}, ${this._lop})`; 
 		}
 
-		
-		ctx.lineWidth = 2;
+		//Line Width 2
+		ctx.lineWidth = this._lthick;
 		ctx.beginPath();
 
 		for (let i=0; i < Line.idx.length; ++i){
@@ -250,7 +279,10 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 	
 		ctx.textAlign = "center";
 		ctx.textBaseline = "top";
-
+		
+		let ncop = Math.trunc(Math.round((this._nop * 255)));
+		let lcop = Math.trunc(Math.round((this._lop * 255)));
+//this._nop = Math.trunc((rval1 / 100.0) * 255);
 
 
 		// Draws the buses (vertices)
@@ -270,6 +302,24 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 			}
 		}
 		
+		if ((!this._cnode) && (1 != Math.floor(this._nop))) {
+			
+			var cimg = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			
+			for (let j = 0; j < cimg.data.length; j = j + 4) {
+				
+				if ((cimg.data[j + 3] == 0) || (cimg.data[j + 3] == lcop)) {
+					
+					continue;
+				}
+				
+				cimg.data[j + 3] = ncop;
+			}
+			
+			ctx.putImageData(cimg, 0, 0);
+		}
+		
+		
 		if (this._cnode) {
 			
 			var cimg = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -288,10 +338,19 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 						cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
 						
 					}
-				}
 				
-				ctx.putImageData(cimg, 0, 0);
+				
+				if (1 != Math.floor(this._nop)) {
+					
+					if (cimg.data[j + 3] != lcop) {
+					
+						cimg.data[j + 3] = ncop;
+					}
+				}
 			}
+				
+			ctx.putImageData(cimg, 0, 0);
+		}
 		
 					/*
 			//Better but still laggy
@@ -378,7 +437,10 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 		this._lr = 0;
 		this._lg = 0;
 		this._lb = 0;
-		this._opacity = 0.50;
+		this._nop = 1;
+		this._lop = 0.50;
+		this._lthick = 2;
+		//this._opacity = 0.50;
 		this._newlayer = newlayer;
 
 		const images = {};
@@ -391,6 +453,11 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 			{ name: 'synTEP', src: '/img/synTEP.svg' },
 			{ name: 'synEP', src: '/img/synEP.svg' },
 			{ name: 'synE', src: '/img/synE.svg' },
+			{ name: 'well', src: '/img/well.svg' },
+			{ name: 'comp', src: '/img/comp.svg' },
+			{ name: 'load', src: '/img/load.svg' },		
+			{ name: 'ptg', src: '/img/ptg.svg' },	
+			{ name: 'gfg', src: '/img/gfg.svg' }				
 		]) {
 			const image = new Image();
 			image.src = src;
@@ -469,6 +536,48 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 			this._lb = this._lb - 1;
 			console.log("white");
 		}
+	},
+	
+	updateNOp(rval1) {
+		
+		//this._nop = Math.trunc((rval1 / 100.0) * 255);
+		this._nop = rval1 / 100.0;
+	},
+	
+	updateLOp(rval2) {
+		
+		//this._lop = Math.trunc((rval2 / 100.0) * 255);
+		let temp = rval2;
+		
+		if (temp == 100) {
+			
+			temp = temp - 1;
+		}
+		
+		this._lop = temp / 100.0;
+	},
+	
+	updateLThick(rval3) {
+		
+		this._lthick = rval3;
+	},
+	
+	stealVals(oldlayer) {
+		
+		this._render = oldlayer._render;
+		this._render_bus_ids = oldlayer._render_bus_ids;
+		this._cnode = oldlayer._cnode;
+		this._cline = oldlayer._cline;
+		this._nr = oldlayer._nr;
+		this._ng = oldlayer._ng;
+		this._nb = oldlayer._nb;
+		this._lr = oldlayer._lr;
+		this._lg = oldlayer._lg;
+		this._lb = oldlayer._lb;
+		//this._opacity = oldlayer._opacity;
+		this._nop = oldlayer._nop;
+		this._lop = oldlayer._lop;
+		this._lthick = oldlayer._lthick;
 	}
 });
 

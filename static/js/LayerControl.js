@@ -143,6 +143,7 @@ function addSidebarLayers(win, options, sidebar) {
 			 newlayer.data
 			 */
 			const newlayer = {};
+			newlayer.data = {};
 
 			if (reader.readAsBinaryString) {
 
@@ -154,7 +155,7 @@ function addSidebarLayers(win, options, sidebar) {
 					
 					for (let k = 0; k < wb.SheetNames.length; k++) {
 
-						newlayer[wb.SheetNames[k]] = {};
+						newlayer.data[wb.SheetNames[k]] = {};
 						let rows = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[k]]);
 						let data = Papa.parse(rows);
 
@@ -168,7 +169,7 @@ function addSidebarLayers(win, options, sidebar) {
 							}
 
 							const temp = csv[m].slice(1, csv[m].length);
-							newlayer[wb.SheetNames[k]][csv[m][0]] = temp;
+							newlayer.data[wb.SheetNames[k]][csv[m][0]] = temp;
 						}
 					}
 					
@@ -215,7 +216,14 @@ function addSidebarLayers(win, options, sidebar) {
 					let lcolor2 = "color2_" + newlayer.num;
 					let ltog2 = "toggle2_" + newlayer.num;
 					let ltog3 = "toggle3_" + newlayer.num;
-				
+					let lbut2 = "button2_" + newlayer.num;
+					
+					let lrange1 = "range1_" + newlayer.num;
+					let lrange2 = "range2_" + newlayer.num;
+					let lrange3 = "range3_" + newlayer.num;
+					let llabel1 = "label1_" + newlayer.num;
+					let llabel2 = "label2_" + newlayer.num;					
+					let llabel3 = "label3_" + newlayer.num;
 					
 					let lid = "id" + newlayer.num;
 
@@ -252,9 +260,11 @@ function addSidebarLayers(win, options, sidebar) {
 						//console.log("CNUM: " + cnum); 
 						let clayer = win.multilayer[cnum];
 						//console.log(win.topologyLayer);
-						console.log(win.workspace.SysParam);
+
 						clayer.topo.toggleRender();
 						clayer.topo.update(win.workspace);
+						win.searchLayer.update(win.searchLayer._context, win);
+						
 						//console.log(clayer.topo);
 						//console.log("CBOX TEST:");
 						//console.log(clayer);
@@ -270,7 +280,7 @@ function addSidebarLayers(win, options, sidebar) {
 					dbutton.id = lbut;
 					dbutton.type = "button";
 					dbutton.value = "Delete Layer";
-					dbutton.style.marginLeft = "150px";
+					dbutton.style.cssFloat = "right";
 
 					dbutton.onclick = function() {
 
@@ -295,8 +305,8 @@ function addSidebarLayers(win, options, sidebar) {
 						let delem = document.getElementById("id" + bnum);
 						//let dls = document.getElementById("layerstore");
 						delem.remove();
-
-
+						
+						win.searchLayer.update(win.searchLayer._context, win);
 					};
 					
 					//Add the delete button to the div
@@ -355,6 +365,33 @@ function addSidebarLayers(win, options, sidebar) {
 						clayer.topo.update(win.workspace);
 					};
 					
+					const pbut = document.createElement("input");
+					pbut.id = lbut2;
+					pbut.type = "button";
+					pbut.value = "Prioritize Layer";
+					pbut.style.cssFloat = "right";
+
+					pbut.onclick = function() {
+						
+						let bid = this.id.slice(8);
+						let bnum = Number(bid);
+						//console.log("BNUM: " + bnum); 
+						let blayer = win.multilayer[bnum];
+						//blayer.topo.remove();
+						
+						let replayer = {};
+						replayer.num = blayer.num;
+						replayer.name = blayer.name;
+						replayer.data = blayer.data;
+						win.multilayer[bnum] = replayer;
+						replayer.topo = L.multitopLayer(replayer).addTo(win.map);
+						replayer.topo.stealVals(blayer.topo);
+						replayer.topo.update(win.workspace);
+
+						blayer.topo._render = false;
+						blayer.topo.redraw();
+						//Set the nelayer to null in the array, increase the amount of free spaces, and set the current free layer to this newlayer's num
+					}
 					
 					elem.appendChild(ctog2);
 					elem.appendChild(clabel2);
@@ -365,6 +402,7 @@ function addSidebarLayers(win, options, sidebar) {
 					
 					elem.appendChild(ctog3);
 					elem.appendChild(clabel3);
+					elem.appendChild(pbut);
 
 					const ndiv3 = document.createElement("div");
 					ndiv3.id = ldiv3;
@@ -428,9 +466,143 @@ function addSidebarLayers(win, options, sidebar) {
 					elem.appendChild(color2);
 					elem.appendChild(clabel5);
 					
+					
+					//Node opacity
+					const ndiv5 = document.createElement("div");
+					elem.appendChild(ndiv5);
+					
+					const range1 = document.createElement("input");
+					range1.id = lrange1;
+					range1.type = "range";
+					range1.max = 100;
+					range1.min = 0;
+					range1.step = 1;
+					range1.value = 100;
+					range1.style.marginLeft = "15px";
+					range1.style.marginRight = "5px";
+
+					
+					const rlabel1 = document.createElement("label");
+					rlabel1.for = lrange1;
+					rlabel1.id = llabel1;
+					rlabel1.innerText = "Node Opacity (0-100) -- Value: " + range1.value;
+					
+					
+					range1.onchange = function() {
+												
+						let cid = this.id.slice(7);
+						let cnum = Number(cid);
+						//console.log("CNUM: " + cnum); 
+						let clayer = win.multilayer[cnum];
+						let lab1 = document.getElementById("label1_" + cnum);
+						lab1.innerText = "Node Opacity (0-100) -- Value: " + this.value;
+						clayer.topo.updateNOp(this.value);
+						clayer.topo.update(win.workspace);
+						
+					};
+					
+					
+					elem.appendChild(range1);
+					elem.appendChild(rlabel1);
+					
+					
+					
+					//Line opacity
+					const ndiv6 = document.createElement("div");
+					elem.appendChild(ndiv6);
+					
+					const range2 = document.createElement("input");
+					range2.id = lrange2;
+					range2.type = "range";
+					range2.max = 100;
+					range2.min = 0;
+					range2.step = 1;
+					range2.value = 50;
+					range2.style.marginLeft = "15px";
+					range2.style.marginRight = "5px";
+
+					
+					const rlabel2 = document.createElement("label");
+					rlabel2.for = lrange2;
+					rlabel2.id = llabel2;
+					rlabel2.innerText = "Line Opacity (0-100) -- Value: " + range2.value;
+					
+					
+					range2.onchange = function() {
+												
+						let cid = this.id.slice(7);
+						let cnum = Number(cid);
+						//console.log("CNUM: " + cnum); 
+						let clayer = win.multilayer[cnum];
+						let lab2 = document.getElementById("label2_" + cnum);
+						lab2.innerText = "Line Opacity (0-100) -- Value: " + this.value;
+						clayer.topo.updateLOp(this.value);
+						clayer.topo.update(win.workspace);
+						
+					};
+					
+					elem.appendChild(range2);
+					elem.appendChild(rlabel2);
+					
+					//Line width
+					const ndiv7 = document.createElement("div");
+					elem.appendChild(ndiv7)
+					
+					const range3 = document.createElement("input");
+					range3.id = lrange3;
+					range3.type = "range";
+					range3.max = 7;
+					range3.min = 1;
+					range3.step = 1;
+					range3.value = 2;
+					range3.style.marginLeft = "15px";
+					range3.style.marginRight = "5px";
+
+					
+					const rlabel3 = document.createElement("label");
+					rlabel3.for = lrange3;
+					rlabel3.id = llabel3;
+					rlabel3.innerText = "Line Thickness (1-7) -- Value: " + range3.value;
+					
+					
+					range3.onchange = function() {
+												
+						let cid = this.id.slice(7);
+						let cnum = Number(cid);
+						//console.log("CNUM: " + cnum); 
+						let clayer = win.multilayer[cnum];
+						let lab3 = document.getElementById("label3_" + cnum);
+						lab3.innerText = "Line Thickness (0-7) -- Value: " + this.value;
+						clayer.topo.updateLThick(this.value);
+						clayer.topo.update(win.workspace);
+						
+					};
+					
+					elem.appendChild(range3);
+					elem.appendChild(rlabel3);
+					
+					
+					if (newlayer.data.Bus.color != null) {
+					
+						color1.value = newlayer.data.Bus.color[0];
+						newlayer.topo.updateCNVal(color1.value);
+						ctog2.click();
+					}
+					
+					if (newlayer.data.Line.color != null) {
+						
+						color2.value = newlayer.data.Line.color[0];
+						newlayer.topo.updateCLVal(color2.value);
+						ctog3.click();
+					}
+					
+					
 					//Add the div to the table
 					let ls = document.getElementById("layerstore");
 					ls.appendChild(elem);	
+					
+					
+					
 				};
 				
 				//Read the first file they input

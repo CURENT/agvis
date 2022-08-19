@@ -14,7 +14,43 @@ L.SearchLayer = L.LayerGroup.extend({
         });
 	},
 
-	update(context) {
+	update(context, win) {
+		
+		if (win.multilayer.length > 0) {
+		
+			this.clearLayers();
+			
+			for (let i = 0; i < win.multilayer.length; i++) {
+				
+				let mlayer = win.multilayer[i];
+				
+				if (mlayer == null) {
+					
+					continue;
+				}
+				
+				if (!mlayer.topo._render) {					
+					
+					continue;
+				}
+				
+				for (let j = 0; j < mlayer.data.Bus.idx.length; j++) {
+					
+					
+					const lat = mlayer.data.Bus.ycoord[j];
+					const lng = mlayer.data.Bus.xcoord[j];
+					const idx = mlayer.data.Bus.idx[j];
+					const title = mlayer.data.Bus.name[j];
+
+					const coords = new L.latLng(lat, lng);
+					let marker = new L.Marker(coords, {icon: L.divIcon(), opacity: 0, title: mlayer.name + ": " + idx + ", " + title});
+					
+					this.addLayer(marker);
+				}
+			}
+		}
+		
+		
         if (!this._needs_update) {
             return;
         }
@@ -40,7 +76,11 @@ L.SearchLayer = L.LayerGroup.extend({
 
         const Bus = SysParam.Bus;
 
-        this.clearLayers();
+        
+		if (win.multilayer.length == 0) {
+			
+			this.clearLayers();
+		}
 
         for (let i = 0; i < Bus.idx.length; i++) {
 			const lat = Bus.ycoord[i];
