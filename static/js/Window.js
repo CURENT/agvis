@@ -247,7 +247,7 @@ class Window {
             self.communicationLayer.update(self.workspace);
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
-            self.searchLayer.update(self.workspace);
+            self.searchLayer.update(self.workspace, self);
 
             if (self.workspace.Varvgs) {
                 self.simTimeBox.update(self.workspace.Varvgs.t.toFixed(2));

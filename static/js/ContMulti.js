@@ -24,15 +24,15 @@ void main() {
 }
 `;
 
-function renderContour(canvas, { size, bounds, project, needsProjectionUpdate }) {
+function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate }) {
 	const context = this._context;
 	if (!context) return;
-	const SysParam = context.SysParam;
+	const SysParam = this._newlayer.data;
 	if (!SysParam) return;
 	const Bus = SysParam.Bus;
-	const Idxvgs = context.Idxvgs;
+	const Idxvgs = this._newlayer.Idxvgs;
 	if (!Idxvgs) return;
-	const Varvgs = context.Varvgs;
+	const Varvgs = this._newlayer.Varvgs;
 	if (!Varvgs) return;
 
 	let paramCache = this._cache.get(SysParam);
@@ -188,19 +188,20 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
     }
 }
 
-L.ContourLayer = L.CanvasLayer.extend({
+L.MultiContLayer = L.CanvasLayer.extend({
 	options: {
-		render: renderContour,
+		render: renderMultiCont,
 	},
 
-	initialize(options) {
+	initialize(newlayer, options) {
 		this._context = null;
 		this._variableRange = null;
 		this._variableRelIndices = null;
 		this._uScaleMin = 0.8;
 		this._uScaleMax = 1.2;
 		this._cache = new WeakMap();
-        this._render = true;
+        this._render = false;
+		this._newlayer = newlayer;
 
         this.variableName = null;
 		L.CanvasLayer.prototype.initialize.call(this, options);
@@ -235,11 +236,12 @@ L.ContourLayer = L.CanvasLayer.extend({
 
     toggleRender() {
         this._render = !this._render;
-        console.log("Contour rendering: ", this._render);
+        console.log("MultiContour rendering: ", this._render);
     }
 
 });
 
-L.contourLayer = function(options) {
-	return new L.ContourLayer(options);
+L.multicontLayer = function(newlayer, options) {
+	console.log("New multicont");
+	return new L.MultiContLayer(newlayer, options);
 };
