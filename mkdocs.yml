@@ -4,4 +4,5 @@ nav:
   - Home: 'index.md'
   - 'Quick Start': 'quick_start/quick_start.md'
   - Examples: 'examples/examples.md'
+  - 'Release Notes': 'release-notes.md'
 theme: readthedocs
