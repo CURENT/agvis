@@ -221,9 +221,11 @@ function addSidebarLayers(win, options, sidebar) {
 					let lrange1 = "range1_" + newlayer.num;
 					let lrange2 = "range2_" + newlayer.num;
 					let lrange3 = "range3_" + newlayer.num;
+					let lrange4 = "range4_" + newlayer.num;
 					let llabel1 = "label1_" + newlayer.num;
 					let llabel2 = "label2_" + newlayer.num;					
 					let llabel3 = "label3_" + newlayer.num;
+					let llabel4 = "label4_" + newlayer.num;
 					
 					let lid = "id" + newlayer.num;
 
@@ -580,6 +582,44 @@ function addSidebarLayers(win, options, sidebar) {
 					
 					elem.appendChild(range3);
 					elem.appendChild(rlabel3);
+					
+					
+					//Node size
+					const ndiv8 = document.createElement("div");
+					elem.appendChild(ndiv8)
+					
+					const range4 = document.createElement("input");
+					range4.id = lrange4;
+					range4.type = "range";
+					range4.max = 36;
+					range4.min = 4;
+					range4.step = 1;
+					range4.value = 12;
+					range4.style.marginLeft = "15px";
+					range4.style.marginRight = "5px";
+
+					
+					const rlabel4 = document.createElement("label");
+					rlabel4.for = lrange4;
+					rlabel4.id = llabel4;
+					rlabel4.innerText = "Node Size (4-36) -- Value: " + range4.value;
+					
+					
+					range4.onchange = function() {
+												
+						let cid = this.id.slice(7);
+						let cnum = Number(cid);
+						//console.log("CNUM: " + cnum); 
+						let clayer = win.multilayer[cnum];
+						let lab4 = document.getElementById("label4_" + cnum);
+						lab4.innerText = "Node Size (4-36) -- Value: " + this.value;
+						clayer.topo.updateNSize(this.value);
+						clayer.topo.update(win.workspace);
+						
+					};
+					
+					elem.appendChild(range4);
+					elem.appendChild(rlabel4);
 					
 					
 					if (newlayer.data.Bus.color != null) {

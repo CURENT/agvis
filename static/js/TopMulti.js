@@ -292,7 +292,7 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 			const busNumber = Bus.idx[i];
 			const image = busToImageLookup.get(busNumber);
 			
-			const size = 12;
+			const size = this._nsize;
 			ctx.drawImage(image, x - size/2, y - size/2, size, size);
 
 			//const voltageRating = Bus.get(i, 1); Mic
@@ -440,6 +440,7 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 		this._nop = 1;
 		this._lop = 0.50;
 		this._lthick = 2;
+		this._nsize = 12;
 		//this._opacity = 0.50;
 		this._newlayer = newlayer;
 
@@ -562,6 +563,11 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 		this._lthick = rval3;
 	},
 	
+	updateNSize(rval4) {
+		
+		this._nsize = rval4;
+	},
+	
 	stealVals(oldlayer) {
 		
 		this._render = oldlayer._render;
@@ -578,6 +584,7 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 		this._nop = oldlayer._nop;
 		this._lop = oldlayer._lop;
 		this._lthick = oldlayer._lthick;
+		this._nsize = oldlayer._nsize;
 	}
 });
 
