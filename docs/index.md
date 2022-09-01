@@ -8,8 +8,8 @@ The source repository for AGVis can be found [here](https://github.com/CURENT/lt
 
 
 ## Quick Start
-Want to jump right into AGVis? Go to the [quick start guide](/quick_start/quick_start). It contains instructions for setting up AGVis and will take you through running a simple simulation.
+Want to jump right into AGVis? Go to the [quick start guide](./quick_start/quick_start). It contains instructions for setting up AGVis and will take you through running a simple simulation.
 
 ## Examples
-Already have AGVis set up but want to know how to use it better? No problem. Just go to the [examples](/examples/examples). The examples provide instructions on how to use AGVis to its fullest potential. They will walk you through many of the various features that AGVis offers in browser. 
+Already have AGVis set up but want to know how to use it better? No problem. Just go to the examples. The examples provide instructions on how to use AGVis to its fullest potential. They will walk you through many of the various features that AGVis offers in browser. 
 
