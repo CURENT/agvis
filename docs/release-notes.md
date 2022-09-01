@@ -5,7 +5,12 @@ AGVis uses a standard three digit (X.Y.Z) numbering system for versions. The fir
 ## Upgrading
 To upgrade AGVis, simply move to its directory and pull the most recent version from Git.
 
-## Version 2.0.0 (2022-08-XX)
+## Version 2.1.0 (2022-09-XX)
+- Added a Node size slider in the MultiLayer Menu
+- Adjusted zoom granularity for box and pinch zooms
+- Minor bug fix for Line thickness slider
+
+## Version 2.0.0 (2022-09-01)
 The MultiLayer Topology Update
 
 - Added the MultiLayer sidebar and all associated features within it:
