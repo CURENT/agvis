@@ -22,7 +22,8 @@ There are also some optional columns that add additonal information rendering no
 
 The Line sheet contains information on the lines connecting the nodes to each other. There are also three required columns--idx, bus1, and bus2. idx, once again, is an ID for each line. bus1 represents the "from" node. bus2 represents the "to" node. The Line sheet also has the optional name and color columns. As in the Bus sheet, the name column contains names for each Line. The color column should have one hexadecimal color value (**#@@@@@@**) in the first cell of the column.
  
-Here is an example Excel file with the required and optional columns filled out: ***FILE HERE***
+Here is an example Excel file with the required and optional columns filled out: [example.xlsx](https://github.com/CURENT/agvis/files/9473935/example.xlsx)
+
 
 ## MultiLayer Options
 
