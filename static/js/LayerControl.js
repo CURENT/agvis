@@ -574,7 +574,7 @@ function addSidebarLayers(win, options, sidebar) {
 						//console.log("CNUM: " + cnum); 
 						let clayer = win.multilayer[cnum];
 						let lab3 = document.getElementById("label3_" + cnum);
-						lab3.innerText = "Line Thickness (0-7) -- Value: " + this.value;
+						lab3.innerText = "Line Thickness (1-7) -- Value: " + this.value;
 						clayer.topo.updateLThick(this.value);
 						clayer.topo.update(win.workspace);
 						
