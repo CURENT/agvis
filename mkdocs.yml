@@ -3,6 +3,9 @@ site_url: https://agvis.readthedocs.io
 nav:
   - Home: 'index.md'
   - 'Quick Start': 'quick_start/quick_start.md'
-  - Examples: 'examples/examples.md'
-  - 'Release Notes': 'release-notes.md'
+  - Examples:
+          - 'Configuration': 'examples/examples.md'
+          - 'MultiLayer': 'examples/multi.md'
+  - About:
+          - 'Release Notes': 'release-notes.md'
 theme: readthedocs
