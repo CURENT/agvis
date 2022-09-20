@@ -167,6 +167,7 @@ clean() {
     docker rmi $(docker images -a -q)
     tmux kill-server
     rm /tmp/dime
+    rm /tmp/dime2
 }
 
 "$@"
