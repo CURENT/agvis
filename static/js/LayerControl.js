@@ -94,6 +94,66 @@ function transpose(a) {
 	});
 }
 
+/*
+function startSim(newlayer) {
+	       
+		const busVoltageIndices = this.workspace.Idxvgs.Bus.V.array;
+        const busThetaIndices = this.workspace.Idxvgs.Bus.theta.array;
+        const busfreqIndices= this.workspace.Idxvgs.Bus.w_Busfreq.array;
+
+        const nBus = busVoltageIndices.length;
+
+        // Build the idx list for simulator
+        let nPlotVariable = 1;
+
+        if (this.p2 !== undefined) {
+            nPlotVariable += 1;
+        }
+
+        if (this.p3 !== undefined) {
+            nPlotVariable += 1;
+        }
+
+        this.variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
+        this.variableRelIndices = {};
+
+        for (let i=0; i < busVoltageIndices.length; ++i) {
+            this.variableAbsIndices[i] = Number(busVoltageIndices[i]);
+        }
+        for (let i=0; i < busThetaIndices.length; ++i) {
+            this.variableAbsIndices[nBus + i] = Number(busThetaIndices[i]);
+        }
+        for (let i=0; i < busfreqIndices.length; ++i) {
+            this.variableAbsIndices[2*nBus + i] = Number(busfreqIndices[i]);
+        }
+        if (this.p1 !== undefined)
+            this.variableAbsIndices[3*nBus] = parseInt(this.p1);
+        if (this.p2 !== undefined)
+            this.variableAbsIndices[3*nBus + 1] = parseInt(this.p2);
+        if (this.p3 !== undefined)
+            this.variableAbsIndices[3*nBus + 2] = parseInt(this.p3);
+
+        // Build internal idx list
+        this.variableRelIndices["V"] = {"begin": 0, "end": nBus};
+        this.variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
+        this.variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
+
+        // Update variable Range
+        newlayer.cont.storeRelativeIndices(this.variableRelIndices);
+        newlayer.cont.showVariable("freq");
+
+        const fmin = (this.options.fmin === undefined) ? 0.9998 : this.options.fmin;
+        const fmax = (this.options.fmax === undefined) ? 1.0002 : this.options.fmax;
+
+        newlayer.cont.updateRange(fmin, fmax);
+}
+
+function endSim() {
+	
+	    this.time = this.end_time = Number(this.workspace.Varvgs.t.toFixed(2));
+        this.pbar.addTo(this.map);
+}
+*/
 //Adds in the Layers Sidebar
 function addSidebarLayers(win, options, sidebar) {
 	const table_id = "layerpanel" + win.num;
@@ -141,10 +201,14 @@ function addSidebarLayers(win, options, sidebar) {
 			 newlayer.name
 			 newlayer.num
 			 newlayer.data
+			 newlayer.sim
+			 newlayer.time
+			 newlayer.timescale
 			 */
 			const newlayer = {};
 			newlayer.data = {};
-
+			newlayer.sim = false;
+			
 			if (reader.readAsBinaryString) {
 
 				//Reads the data
@@ -154,22 +218,47 @@ function addSidebarLayers(win, options, sidebar) {
 					let wb = XLSX.read(dat.target.result, {type: "binary"});
 					
 					for (let k = 0; k < wb.SheetNames.length; k++) {
+						
+						if (wb.SheetNames[k] == "old_history") {
+							
+							newlayer.sim = true;
+							newlayer.time = 0.0;
+							newlayer.timescale = 0;
+							newlayer.data["history"] = {};
+							let rows = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[k]]);
+							let data = Papa.parse(rows);
+							newlayer.data["history"]["nBus"] = data.data[0][0];
+							
+							let turn = transpose(data.data);
+							const ttemp = turn[1].slice(1, turn[1].length);
+							newlayer.data["history"]["t"] = ttemp;
+							let dlength = newlayer.data["history"]["t"].length;
+							newlayer.data["history"]["varvgs"] = [];
+							for (let m = 0; m < dlength; m++) {
+								
+								const temp = data.data[m + 1].slice(2, data.data[m + 1].length);
+								newlayer.data["history"]["varvgs"].push(temp);
+							}	
+						}
+						
+						else {
+							
+							newlayer.data[wb.SheetNames[k]] = {};
+							let rows = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[k]]);
+							let data = Papa.parse(rows);
 
-						newlayer.data[wb.SheetNames[k]] = {};
-						let rows = XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[k]]);
-						let data = Papa.parse(rows);
+							let csv = transpose(data.data);
 
-						let csv = transpose(data.data);
+							for (let m = 0; m < csv.length; m++) {
 
-						for (let m = 0; m < csv.length; m++) {
+								if (csv[m][0] == "") {
 
-							if (csv[m][0] == "") {
+									continue;
+								}
 
-								continue;
+								const temp = csv[m].slice(1, csv[m].length);
+								newlayer.data[wb.SheetNames[k]][csv[m][0]] = temp;
 							}
-
-							const temp = csv[m].slice(1, csv[m].length);
-							newlayer.data[wb.SheetNames[k]][csv[m][0]] = temp;
 						}
 					}
 					
@@ -201,7 +290,6 @@ function addSidebarLayers(win, options, sidebar) {
 
 					console.log(newlayer);
 					newlayer.topo = L.multitopLayer(newlayer).addTo(win.map);
-					//newlayer.cont = L.multicontLayer(newlayer).addTo(win.map);
 
 
 					//ids for the dynamically generated elements
@@ -637,13 +725,32 @@ function addSidebarLayers(win, options, sidebar) {
 					}
 					
 					
+								
+					//Contour Layer Simulation stuff
+					if (newlayer.sim) {
+					
+					
+						console.log(newlayer.data["history"]);
+						const hr = document.createElement("hr");
+						elem.appendChild(hr);
+						
+						//newlayer.cont = L.multicontLayer(newlayer).addTo(win.map);
+						newlayer.pbar = new PlayMulti(newlayer, options. elem);
+						//startSim();
+						//endSim();
+						
+						
+						
+					}
+				
 					//Add the div to the table
 					let ls = document.getElementById("layerstore");
 					ls.appendChild(elem);	
-					
-					
-					
+				
 				};
+				
+				
+
 				
 				//Read the first file they input
 				reader.readAsBinaryString(opt_addlayer_input.files[0]);

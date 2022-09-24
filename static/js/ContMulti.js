@@ -30,11 +30,17 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 	const SysParam = this._newlayer.data;
 	if (!SysParam) return;
 	const Bus = SysParam.Bus;
-	const Idxvgs = this._newlayer.Idxvgs;
-	if (!Idxvgs) return;
-	const Varvgs = this._newlayer.Varvgs;
-	if (!Varvgs) return;
+	//const Idxvgs = this._newlayer.Idxvgs;
+	//if (!Idxvgs) return;
+	//const Varvgs = this._newlayer.Varvgs;
+	//if (!Varvgs) return;
 
+	const temparr = [];
+	x = "replace later";
+	temparr.push(this._newlayer.data["history"][varvgs][x].length);
+	
+	const Varvgs = new dime.NDArray("F", temparr, this._newlayer.data["history"][varvgs][x]);
+	
 	let paramCache = this._cache.get(SysParam);
 	if (!paramCache) {
 		paramCache = {};
@@ -75,7 +81,7 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 		busTriangles = paramCache.busTriangles =
 			new NDArray('C', [delaunay.triangles.length/3, 3], delaunay.triangles);
 	}
-
+/*
 	let idxvgsCache = this._cache.get(Idxvgs);
 	if (!idxvgsCache) {
 		idxvgsCache = {};
@@ -91,7 +97,7 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 		variableSubIndices.end -= variableSubIndices.begin - 1;
 		variableSubIndices.begin = 0;
 	}
-
+*/
 	let gl = this._cache.get(canvas);
 	if (!gl) {
 		gl = canvas.getContext('webgl2');
@@ -214,7 +220,7 @@ L.MultiContLayer = L.CanvasLayer.extend({
 
     onAdd(map) {
         L.CanvasLayer.prototype.onAdd.call(this, map);
-        this.getPane().classList.add("contour-pane");
+        this.getPane().classList.add("multicont-pane" + this._newlayer.num);
     },
 
 	storeRelativeIndices(idx) {
