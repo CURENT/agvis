@@ -142,6 +142,7 @@ class Window {
             nPlotVariable += 1;
         }
 
+		//console.log(nPlotVariable);
         this.variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
         this.variableRelIndices = {};
 
@@ -165,7 +166,8 @@ class Window {
         this.variableRelIndices["V"] = {"begin": 0, "end": nBus};
         this.variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
         this.variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
-
+		//console.log(this.variableRelIndices);
+		
         // Update variable Range
         this.contourLayer.storeRelativeIndices(this.variableRelIndices);
         this.contourLayer.showVariable("freq");
@@ -249,6 +251,8 @@ class Window {
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
             self.searchLayer.update(self.workspace, self);
+			
+			//console.log(self.workspace.Varvgs);
 
             if (self.workspace.Varvgs) {
                 self.simTimeBox.update(self.workspace.Varvgs.t.toFixed(2));
