@@ -24,14 +24,13 @@ AGVis runs on Linux or Windows, a quick start guide is available at [Quick Start
 
 If you use AGVis for research or consulting, please cite the following publications in your publication:
 
-> A Large-Scale Testbed as a Virtual Power Grid: For Closed-Loop Controls in Research and Testing[^ltb]
+> F. Li, K. Tomsovic and H. Cui, "A Large-Scale Testbed as a Virtual Power Grid: For Closed-Loop Controls in Research and Testing," in IEEE Power and Energy Magazine, vol. 18, no. 2, pp. 60-68, March-April 2020, doi: 10.1109/MPE.2019.2959054.[^ltb]
 
-> Hybrid Symbolic-Numeric Framework for Power System Modeling and Analysis[^andes]
+> H. Cui, F. Li and K. Tomsovic, "Hybrid Symbolic-Numeric Framework for Power System Modeling and Analysis," in IEEE Transactions on Power Systems, vol. 36, no. 2, pp. 1373-1384, March 2021, doi: 10.1109/TPWRS.2020.3017019.[^andes]
 
 [^ltb]: F. Li, K. Tomsovic and H. Cui, "A Large-Scale Testbed as a Virtual Power Grid: For Closed-Loop Controls in Research and Testing," in IEEE Power and Energy Magazine, vol. 18, no. 2, pp. 60-68, March-April 2020, doi: 10.1109/MPE.2019.2959054.
 
 [^andes]: H. Cui, F. Li and K. Tomsovic, "Hybrid Symbolic-Numeric Framework for Power System Modeling and Analysis," in IEEE Transactions on Power Systems, vol. 36, no. 2, pp. 1373-1384, March 2021, doi: 10.1109/TPWRS.2020.3017019.
-
 Please cite as **LTB AGVis** for the first occurence and then cite as **AGVis**.
 
 # Sponsors
