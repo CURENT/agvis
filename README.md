@@ -1,8 +1,6 @@
-# LTB AGVis
+# AGVis
 
-Another Grid Visualizer, visualization program for CURENT's Large-scale Test Bed, in the form of a web application.
-
-Full documentation is available at [AGVis](https://agvis.readthedocs.io).
+**L**arge-scale **T**est**B**ed - **A**nother **G**rid **Vis**ualizer (short as LTB-AGVis or AGVis), visualization program for [CURENT](https://github.com/CURENT) [Large-scale Testbed](https://github.com/CURENT/ltb2), in the form of a web application.
 
 # Why AGVis
 
@@ -15,6 +13,8 @@ AGVis visualizing the entire North America system topology:
 AGVis visualizing the WECC system:
 
 ![image](https://user-images.githubusercontent.com/79226045/203148756-edc046a3-35a1-4343-8ab2-67cfa337546c.png)
+
+Full documentation is available at [AGVis](https://agvis.readthedocs.io).
 
 # Quick Start
 
