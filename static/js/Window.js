@@ -12,8 +12,29 @@ class Window {
 	this.mnumfree = 0;
 	
 
-	
+		
+		
+		//Loops every 17 milliseconds to update the animation for the independent simulation data
+		//Animation step is associated with receiving info from DiME, so we have to use this for the bundled version
+		setInterval(function(multilayer) {
+			
+			let timestep = Number(Date.now());
+			for (let i = 0; i < multilayer.length; i++) {
+				
+				let multi = multilayer[i];
+				
+				if (multi == null) {
+					
+					continue;
+				}
+				
+				let pt = (timestep - multi.curtime) / 1000;
+				multi.pbar.updatePlaybackBar(pt, timestep);
+				multi.curtime = Number(timestep);
 
+				
+			}
+		}, 17, this.multilayer);
 
         this.map_name = "map" + num;
         this.dimec_name = "geovis" + num;
@@ -142,6 +163,7 @@ class Window {
             nPlotVariable += 1;
         }
 
+		//console.log(nPlotVariable);
         this.variableAbsIndices = new Float64Array(nBus * 3 + nPlotVariable);
         this.variableRelIndices = {};
 
@@ -165,7 +187,8 @@ class Window {
         this.variableRelIndices["V"] = {"begin": 0, "end": nBus};
         this.variableRelIndices["theta"] = {"begin": nBus, "end": 2 * nBus};
         this.variableRelIndices["freq"] = {"begin": 2 * nBus, "end": 3 * nBus};
-
+		//console.log(this.variableRelIndices);
+		
         // Update variable Range
         this.contourLayer.storeRelativeIndices(this.variableRelIndices);
         this.contourLayer.showVariable("freq");
@@ -180,7 +203,29 @@ class Window {
         this.time = this.end_time = Number(this.workspace.Varvgs.t.toFixed(2));
         this.pbar.addTo(this.map);
     }
-
+	/*
+	function updateTimer(multilayer) {
+		
+			let timestep = Date.now();
+			console.log(timestep);
+			for (let i = 0; i < multilayer.length; i++) {
+				
+				let multi = multilayer[i];
+				
+				if (multi == null) {
+					
+					continue;
+				}
+				
+				let pt = (timestep - multi.pbar.curtime) / 1000.0;
+				
+				multi.pbar.updatePlaybackBar(pt, timestep);
+				multi.topo.update(self.workspace);
+				multi.cont.update(self.workspace);
+				
+			}
+	}
+*/
     async drawThread() {
         const lineSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -228,14 +273,19 @@ class Window {
             }
 
             let dt = (currentTime - firstTime) / 1000.0;
-
+			
+			
+			
+			
             if (self.end_time !== null) {
                 dt *= self.timescale;
             }
 
             self.time += dt;
-
+			
             self.pbar.updatePlaybackBar(self.time);
+			
+
 
             self.workspace.currentTimeInSeconds = self.time;
             firstTime = currentTime;
@@ -249,6 +299,11 @@ class Window {
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
             self.searchLayer.update(self.workspace, self);
+			
+			
+
+			
+			//console.log(self.workspace.Varvgs);
 
             if (self.workspace.Varvgs) {
                 self.simTimeBox.update(self.workspace.Varvgs.t.toFixed(2));

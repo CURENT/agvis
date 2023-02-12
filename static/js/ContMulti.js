@@ -1,3 +1,4 @@
+/*
 const contourVertexShader = `
 precision mediump float;
 attribute vec2 aPosition;
@@ -23,24 +24,45 @@ void main() {
 	gl_FragColor = texture2D(uColormapSampler, vec2(value, 0.0));
 }
 `;
-
+*/
+//The mutilayer version of the contour layer
 function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate }) {
 	const context = this._context;
 	if (!context) return;
 	const SysParam = this._newlayer.data;
 	if (!SysParam) return;
 	const Bus = SysParam.Bus;
-	const Idxvgs = this._newlayer.Idxvgs;
-	if (!Idxvgs) return;
-	const Varvgs = this._newlayer.Varvgs;
-	if (!Varvgs) return;
+	//const Idxvgs = this._newlayer.Idxvgs;
+	//if (!Idxvgs) return;
+	//const Varvgs = this._newlayer.Varvgs;
+	//if (!Varvgs) return;
 
+	const temparr = [];
+	let x;
+	
+	//Select data based on where the timer for the animation is at
+	for (let j = 0; j < this._newlayer.data["history"]["t"].length; j++) {
+
+		let val = Number(this._newlayer.data["history"]["t"][j]);
+		if (val >= Number(this._newlayer.time)) {
+
+			x = j;
+			break;
+		}
+	}
+
+	
+	temparr.push(this._newlayer.data["history"]["varvgs"][x].length);
+	
+	const Varvgs = new dime.NDArray("F", temparr, this._newlayer.data["history"]["varvgs"][x]);
+	
 	let paramCache = this._cache.get(SysParam);
 	if (!paramCache) {
 		paramCache = {};
 		this._cache.set(SysParam, paramCache);
 	}
 
+	//I don't entirely understand how it works, but it basically uses delauney triangles to create heat maps between nodes, then it uses a gradient function to smooth it over
     const nelems = Bus.idx.length;
 
 	let { busLatLngCoords } = paramCache;
@@ -75,7 +97,7 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 		busTriangles = paramCache.busTriangles =
 			new NDArray('C', [delaunay.triangles.length/3, 3], delaunay.triangles);
 	}
-
+/*
 	let idxvgsCache = this._cache.get(Idxvgs);
 	if (!idxvgsCache) {
 		idxvgsCache = {};
@@ -91,7 +113,7 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 		variableSubIndices.end -= variableSubIndices.begin - 1;
 		variableSubIndices.begin = 0;
 	}
-
+*/
 	let gl = this._cache.get(canvas);
 	if (!gl) {
 		gl = canvas.getContext('webgl2');
@@ -147,7 +169,7 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 		-1, 1, 0, 1,
 	];
 
-	const vars = new dime.NDArray(Varvgs.vars.order, Varvgs.vars.shape, Float32Array.from(Varvgs.vars.array));
+	const vars = new dime.NDArray(Varvgs.order, Varvgs.shape, Float32Array.from(Varvgs.array));
 	const variableValue = vars.subarray(this._variableRange);
 
 	let maxVoltageDifference = Math.abs(variableValue.get(0, 0) - 1.0);
@@ -209,12 +231,13 @@ L.MultiContLayer = L.CanvasLayer.extend({
 
 	update(context) {
 		this._context = context;
+		//console.log("stuff");
             this.redraw();
     },
 
     onAdd(map) {
         L.CanvasLayer.prototype.onAdd.call(this, map);
-        this.getPane().classList.add("contour-pane");
+        this.getPane().classList.add("multicont-pane" + this._newlayer.num);
     },
 
 	storeRelativeIndices(idx) {
@@ -229,6 +252,7 @@ L.MultiContLayer = L.CanvasLayer.extend({
             this.redraw();
     },
 
+	//Update range for the current shown variable
 	updateRange(lower, upper){
 		this._uScaleMax = upper;
 		this._uScaleMin = lower;
@@ -237,8 +261,21 @@ L.MultiContLayer = L.CanvasLayer.extend({
     toggleRender() {
         this._render = !this._render;
         console.log("MultiContour rendering: ", this._render);
-    }
+    },
 
+	//Used for prioritize button, just copies over everything
+	stealVals(oldlayer) {
+		
+		this._context = oldlayer._context;
+		this._variableRange = oldlayer._variableRange;
+		this._variableRelIndices = oldlayer._variableRelIndices;
+		this._uScaleMin = oldlayer._uScaleMin;
+		this._uScaleMax = oldlayer._uScaleMax;
+		this._cache = oldlayer._cache;
+		this.variableName = oldlayer.variableName;
+		this._render = oldlayer._render;
+		
+	}
 });
 
 L.multicontLayer = function(newlayer, options) {
