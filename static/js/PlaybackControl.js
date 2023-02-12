@@ -16,6 +16,7 @@ let PlaybackControl = L.Control.extend({
         let playbackspeed = 1.0;
 
         let div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+		
         div.style.backgroundColor = "white";
         div.style.boxSizing = "border-box";
         div.style.padding = "4px";
@@ -130,6 +131,7 @@ let PlaybackControl = L.Control.extend({
             }
         }
 
+		
         return div;
     },
 
