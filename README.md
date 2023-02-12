@@ -1,66 +1,45 @@
 # AGVis
 
-Another Grid Visualizer, visualization program for CURENT's Large-scale Test Bed, in the form of a web application.
+**L**arge-scale **T**est**B**ed - **A**nother **G**rid **Vis**ualizer (short as LTB-AGVis or AGVis), visualization program for [CURENT](https://github.com/CURENT) [Large-scale Testbed](https://github.com/CURENT/ltb2), in the form of a web application.
 
-## Setup
+Online documentation is available at [AGVis](https://agvis.readthedocs.io).
 
-Note that [Docker](https://www.docker.com/products/docker-desktop) and [tmux](https://tmux.github.io/) are required on any system to run the visualization simulation.
+# Why AGVis
 
-### Linux
+AGVis is a geovisualization tool that facilitates the visualization of ***large-scale real-time*** power system simulation.
 
-First, clone related repositories
+AGVis visualizing the entire North America system topology:
 
-```
-$ git clone --recursive https://github.com/CURENT/ltb2
-```
+![image](https://user-images.githubusercontent.com/79226045/203147395-27561028-4a74-4ac1-91a5-01e7f811f898.png)
 
-Next, go into the directory for this repository and run `./go.sh build`:
+AGVis visualizing the WECC system:
 
-```
-$ cd agvis
-$ ./go.sh build
-```
+![image](https://user-images.githubusercontent.com/79226045/203148756-edc046a3-35a1-4343-8ab2-67cfa337546c.png)
 
-### Windows
+# Quick Start
 
-TBD
+AGVis runs on Linux or Windows, a quick start guide is available at [Quick Start](https://agvis.readthedocs.io/en/latest/quick_start/quick_start/)
 
-## Usage
+# Citing AGVis
 
-## With tmux
+If you use AGVis for research or consulting, please cite the following publications in your publication:
 
-To run the simulation, create a new tmux session and run `./go.sh dev`:
+> Parsly, N., Wang, J., West, N., Zhang, Q., Cui, H., & Li, F. (2022). "DiME and AGVIS A Distributed Messaging Environment and Geographical Visualizer for Large-scale Power System Simulation". arXiv. https://doi.org/https://arxiv.org/abs/2211.11990v1
 
-```
-$ tmux
-# Now inside the tmux session
-$ ./go.sh dev
-```
+> F. Li, K. Tomsovic and H. Cui, "A Large-Scale Testbed as a Virtual Power Grid: For Closed-Loop Controls in Research and Testing," in IEEE Power and Energy Magazine, vol. 18, no. 2, pp. 60-68, March-April 2020, doi: 10.1109/MPE.2019.2959054.
 
-The tmux session should now be populated with several panes, and the selected pane should contain a command to start the simulation. See [this page](https://tmuxcheatsheet.com/) for some example tmux commands.
+> H. Cui, F. Li and K. Tomsovic, "Hybrid Symbolic-Numeric Framework for Power System Modeling and Analysis," in IEEE Transactions on Power Systems, vol. 36, no. 2, pp. 1373-1384, March 2021, doi: 10.1109/TPWRS.2020.3017019.
 
-Now, point a Chromium-based web browser (note that Firefox and other browsers may not view the simulation correctly) to `http://localhost:8810`, and run the aforementioned command to start the simulation.
+Please refer as **LTB AGVis** for the first occurence and then refer as **AGVis**.
 
-## Manually
+# Sponsors
 
-The commands that tmux runs may also be run in any sort of shell session:
+This work was funded by NSF and Department of Energy under NSF Award EEC-1041877.
 
-```
-$ docker run --rm -t -v `pwd`/static:/srv -p 8810:8810 ltbvis:$USER python3 -m http.server -d /srv 8810 &
-$ docker run --rm -t -v /tmp:/tmp -p 8818:8818 agvis:$USER dime -vv -l unix:/tmp/dime2 -l ws:8818 &
-# When you want to start the simulation, type:
-$ docker run --rm -t -v /tmp:/tmp agvis:$USER andes -v 10 run /home/cui/wecc_vis.xlsx -r tds
-```
+# Contributors
 
-A few notes:
+AGVis is originally developed by Nicholas West and currently developed and maintained by Nicholas Parsly.
 
-* The exact Docker image tag may change depending on how you built it with `./go.sh build`
-* Existing Docker images, containers, and tmux sessions can be cleaned by ``./go.sh clean``
-* The simulation may also be altered as desired. wecc_vis.xlsx, ieee39.xlsx, and ACTIVSg2000.xlsx all come with this repository, and are copied to the image upon building.
-* None of the above commands necessarily require Docker, and may be subsituted as desired:
-  - The first line simply opens up an HTTP server, but any httpd (Apache, Nginx, Lighttpd, even something as basic as [mini_httpd](http://www.acme.com/software/mini_httpd/)) on port 8810 will suffice.
-  - dime2 can easily be compiled natively, see its README.md for instructions.
-  - Andes is a bit trickier to set up without Docker, so its recommended to be used in the above configuration. However, it can be done with enough effort. Install the correct Python dependencies, and run the commands in the Dockerfile to set it up.
-  
-## Documentation
-[AGVis](https://agvis.readthedocs.io)
+# License
+
+AGVis is licensed under [GPL v3 License](./LICENSE)
