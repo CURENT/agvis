@@ -5,7 +5,17 @@ AGVis uses a standard three digit (X.Y.Z) numbering system for versions. The fir
 ## Upgrading
 To upgrade AGVis, simply move to its directory and pull the most recent version from Git.
 
-## Version 2.1.0 (2022-09-XX)
+## Version 3.0.0 (2023-XX-XX)
+The Independent Data Reader Update
+
+- Added in the ability to interpret simulation data and animate it:
+	- Playback Bar for playing the animation at different speeds
+	- Frequency, Voltage Magnitude, and Voltage Angle displays
+	- Customizable ranges for those displays
+	- Customizable Timestamps
+	- More than one simulation playing at once
+
+## Version 2.1.0 (2023-2-12)
 - Added a Node size slider in the MultiLayer Menu
 - Adjusted zoom granularity for box and pinch zooms
 - Minor bug fix for Line thickness slider

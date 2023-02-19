@@ -6,6 +6,7 @@ nav:
   - Examples:
           - 'Configuration': 'examples/examples.md'
           - 'MultiLayer': 'examples/multi.md'
+          - 'Independent Data Reader': 'examples/idr.md'
   - About:
           - 'Release Notes': 'release-notes.md'
 theme: readthedocs
