@@ -6,6 +6,7 @@ from time import strftime
 
 import http.server
 import socketserver
+import socket
 import os
 
 from agvis.main import config_logger, find_log_path, get_log_dir
@@ -82,15 +83,24 @@ def main():
         web_app_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
         os.chdir(web_app_dir)
 
-        logger.info(f"AGVis serves on http://{args.host}:{args.port}")
+        if is_port_available(args.port):
+            available_port = args.port
+        else:
+            available_port = find_available_port(8810, 8900)
+            if available_port is not None:
+                logger.warning(f"Port conflict, switch port to {available_port}.")
+            else:
+                logger.error("No available port found in the default range.")
+
+        logger.info(f"AGVis serves on http://{args.host}:{available_port}")
 
         handler = http.server.SimpleHTTPRequestHandler
-        httpd = socketserver.TCPServer((args.host, args.port), handler)
+        httpd = socketserver.TCPServer((args.host, available_port), handler)
 
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            logger.info(f"Server stopped.")
+            logger.info(f"AGVis stopped.")
         finally:
             httpd.server_close()
     else:
@@ -99,3 +109,19 @@ def main():
     # Run the command
     if args.command is None:
         parser.parse_args(sys.argv.append('--help'))
+
+
+def is_port_available(port):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        try:
+            sock.bind(('localhost', port))
+            return True
+        except OSError:
+            return False
+
+
+def find_available_port(start_port, end_port):
+    for port in range(start_port, end_port + 1):
+        if is_port_available(port):
+            return port
+    return None
