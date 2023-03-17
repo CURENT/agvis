@@ -86,8 +86,13 @@ def main():
 
         handler = http.server.SimpleHTTPRequestHandler
         httpd = socketserver.TCPServer((args.host, args.port), handler)
-        httpd.serve_forever()
 
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            logger.info(f"Server stopped.")
+        finally:
+            httpd.server_close()
     else:
         preamble()
 
