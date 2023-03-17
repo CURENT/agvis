@@ -3,3 +3,8 @@
 env.sh
 *.zip
 /cases/*_out*.*
+
+# Editor files
+#mac
+.DS_Store
+*~
