@@ -1,0 +1,589 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Independent Data Reader &#8212; AGVis 3.0.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=12da95d707ffb74b382d" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/idr';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="AGVis Release Notes" href="../about/release-notes.html" />
+    <link rel="prev" title="MultiLayer" href="multi.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    <p class="title logo__title">AGVis 3.0.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../quick_start/quick_start.html">
+                        Quick Start
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="examples.html">
+                        Configuration
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="multi.html">
+                        MultiLayer
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Independent Data Reader
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../about/release-notes.html">
+                        About
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../quick_start/quick_start.html">
+                        Quick Start
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="examples.html">
+                        Configuration
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="multi.html">
+                        MultiLayer
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Independent Data Reader
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../about/release-notes.html">
+                        About
+                      </a>
+                    </li>
+                
+  </ul>
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Independent Data Reader</a><ul>
+<li><a class="reference internal" href="#add-layer">Add Layer</a><ul>
+<li><a class="reference internal" href="#o-his">O_His</a></li>
+<li><a class="reference internal" href="#optional-s-set">Optional S_Set</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#idr-options">IDR Options</a><ul>
+<li><a class="reference internal" href="#playback-bar">Playback Bar</a></li>
+<li><a class="reference internal" href="#shown-variable">Shown Variable</a></li>
+<li><a class="reference internal" href="#variable-range">Variable Range</a></li>
+<li><a class="reference internal" href="#timer">Timer</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#timestamps">Timestamps</a><ul>
+<li><a class="reference internal" href="#use-timestamp">Use Timestamp?</a></li>
+<li><a class="reference internal" href="#select-a-date">Select a Date</a></li>
+<li><a class="reference internal" href="#select-a-time">Select a Time</a></li>
+<li><a class="reference internal" href="#select-an-increment">Select an Increment</a></li>
+<li><a class="reference internal" href="#number-of-increments-per-second">Number of <strong>Increments</strong> per Second</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Independent Data Reader</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="independent-data-reader">
+<h1>Independent Data Reader<a class="headerlink" href="#independent-data-reader" title="Permalink to this headline">#</a></h1>
+<p>The Independent Data Reader is an extension of the MultiLayer functionality, allowing AGVis to interpet and animate simulation data provided by users in an Excel file. The features relating to the Independent Data Reader are appended to the MultiLayer features if a file is compatible with the IDR. It is also found in menu with the <strong>+/-</strong> icon.</p>
+<p><img alt="addlayericon" src="https://user-images.githubusercontent.com/59810286/220143360-257ab116-5ff9-4582-ac38-2f8ecd3c255e.png" /></p>
+<section id="add-layer">
+<h2>Add Layer<a class="headerlink" href="#add-layer" title="Permalink to this headline">#</a></h2>
+<p>When you open up the MultiLayer menu, you will only see the <strong>Add Layer</strong> button.</p>
+<p><img alt="addlayerbutton" src="https://user-images.githubusercontent.com/59810286/220143425-93d58747-bcf7-496c-b32e-1cb4f2acb933.png" /></p>
+<p>When you click on it, it will request an Excel file. <em><strong>The IDR requires an additional sheet, O_His, along with the Bus and Line sheets required for MultiLayer.</strong></em></p>
+<section id="o-his">
+<h3>O_His<a class="headerlink" href="#o-his" title="Permalink to this headline">#</a></h3>
+<p>The O_His sheet stores the simulation data for three variables, Frequency, Voltage Magnitude (also referred to simpy as Voltage), and Voltage Angle (also referred to as Theta). It expects 2 + (# of buses * 3) columns. Every row after the first row, is the data for a given time. The first row is a label row, while the first column is an index column. The first row of the first column must be the number of buses in the simulation. The second column, labeled “t”, contains the timesteps of the simulation. The (# of buses * 3) columns after the first two consist of the data for each bus for each variable at a given time. The first <em>n</em> columns (where n is the # of buses) after the time column contain data for the Voltage Magnitude. The second <em>n</em> columns contain data for the Voltage Angle. The third <em>n</em> columns contain data for the Frequency.</p>
+<p>Theoretically, each <em>n</em> columns for Frequency, Voltage Magnitude, and Voltage Angle could be replaced with <em>n</em> worth of different simulation data. These variables are simply the ones used originally with AGVis, and thus are used in the current version.</p>
+</section>
+<section id="optional-s-set">
+<h3>Optional S_Set<a class="headerlink" href="#optional-s-set" title="Permalink to this headline">#</a></h3>
+<p>The S_Set sheet is a completely optional sheet that allows users to preset certain configuration options. S_Set expects these columns: show, freq, v_mag, v_ang, tstamp, tdae, ttime, tinc, and tnum. The show column is where you specify which variable, Frequency, Voltage Magnitude or Voltage Angle, you would like the animation to show. It expects <strong>f</strong> (Frequency), <strong>v</strong> (Voltage Magnitude), or <strong>t</strong> (Voltage Angle). The freq, v_mag, and v_ang columns are used to set the range for those variables. The minimum should be set in the first cell underneath the column label, and the maximum should be set in the second cell underneath the label. tstamp indicates if you would like to use the custom Timestamp feature. It expects <strong>yes</strong> or <strong>no</strong>. tdate sets the date you would like to use with the Timestamp. The date should be formatted as <strong>YYYY-MM-DD</strong>. time, similarly sets the hours, minutes, and seconds for the Timestamp. It uses 24-hour time formatted as <strong>HH:MM:SS</strong>. tinc is the time increment you would like the timer step in. It expects <strong>Milliseconds</strong>, <strong>Seconds</strong>, <strong>Minutes</strong>, <strong>Hours</strong>, or <strong>Days</strong>. tnum is how many of that increment you would like to timer to increase by in a given second. It expects a <strong>positive integer or decimal</strong>.</p>
+<p>Here is an edited version of the wecc.xlsx file from the AGVis cases directory on GitHub with simulation data included: <a class="reference external" href="https://github.com/CURENT/agvis/files/10785612/sim_example.xlsx">sim_example.xlsx</a></p>
+</section>
+</section>
+<section id="idr-options">
+<h2>IDR Options<a class="headerlink" href="#idr-options" title="Permalink to this headline">#</a></h2>
+<p>After uploading a valid Excel sheet, the MultiLayer menu will fill with both the MultiLayer options and the IDR options:</p>
+<p><img alt="idr" src="https://user-images.githubusercontent.com/59810286/220143884-2d9b7b10-86c9-42b2-b5af-092272a6477d.png" /></p>
+<section id="playback-bar">
+<h3>Playback Bar<a class="headerlink" href="#playback-bar" title="Permalink to this headline">#</a></h3>
+<p>Once the file has finished uploading, the Playback Bar will appear underneath the Node settings.</p>
+<p><img alt="playback1" src="https://user-images.githubusercontent.com/59810286/220143948-ea92fb17-4c04-4049-bba5-c817cecc9615.png" /></p>
+<p>Pressing the “<strong>Restart</strong>” button will reset the simulation back to the beginning. Pressing the “<strong>Pause</strong>” button will pause the simulation. Specific times in the simulation can be selected by manually moving the top slider.</p>
+<p>The speed at which the simulation plays back can be adjusted as well by moving the bottom slider. A custom speed multiplier can be set by moving the slider all the way to the left.</p>
+<p><img alt="playback2" src="https://user-images.githubusercontent.com/59810286/220143984-9d644619-530c-4be4-8885-f30095191437.png" /></p>
+</section>
+<section id="shown-variable">
+<h3>Shown Variable<a class="headerlink" href="#shown-variable" title="Permalink to this headline">#</a></h3>
+<p>Underneath the Playback Bar are the shown variable buttons. These buttons determine what set of data is used for the simulation animation. The <strong>Frequency</strong> button is clicked by defaut.</p>
+<p><img alt="vset" src="https://user-images.githubusercontent.com/59810286/220144051-2f5ec712-3284-454c-a28c-92ffe52b6ce9.png" /></p>
+</section>
+<section id="variable-range">
+<h3>Variable Range<a class="headerlink" href="#variable-range" title="Permalink to this headline">#</a></h3>
+<p>The ranges underneath the shown variable buttons and timer are for adjusting the heat mapping for the simulation. The default for Frequency is <strong>0.9998 - 1.0002</strong>. The default for Voltage Magnitutde is <strong>0.8 - 1.2</strong>. The default for Voltage Angle is <strong>-1 - 1</strong>.</p>
+<p>Here are before and after shots for each variable:</p>
+<p><strong>Frequency</strong></p>
+<p><img alt="freq1" src="https://user-images.githubusercontent.com/59810286/220144107-59c90394-2a54-45ab-9494-126b8f3fd3fb.PNG" /></p>
+<p><img alt="freq2" src="https://user-images.githubusercontent.com/59810286/220144129-f9460590-5ee6-4d8a-9678-241817219b6e.PNG" /></p>
+<p><strong>Voltage Magnitude</strong></p>
+<p><img alt="volt1" src="https://user-images.githubusercontent.com/59810286/220144169-59c76235-42a1-40b0-b9f3-42d14fd6c637.PNG" /></p>
+<p><img alt="volt2" src="https://user-images.githubusercontent.com/59810286/220144203-84f449bb-542c-4075-bec6-35ea0083424f.PNG" /></p>
+<p><strong>Voltage Angle</strong></p>
+<p><img alt="thet1" src="https://user-images.githubusercontent.com/59810286/220144234-09ec6d84-d37d-430c-ba16-5815b7d9ce7d.PNG" /></p>
+<p><img alt="the2" src="https://user-images.githubusercontent.com/59810286/220144261-2ed48733-7e22-4dbc-b6b7-05caf77e2351.PNG" /></p>
+</section>
+<section id="timer">
+<h3>Timer<a class="headerlink" href="#timer" title="Permalink to this headline">#</a></h3>
+<p>The timer is underneath the shown variable buttons. It updates according to the length of the simulation. By default it counts up from the minimum time given in the data, but it can be adjusted using the Timestamp settings.</p>
+<p><img alt="timer" src="https://user-images.githubusercontent.com/59810286/220144310-7f936d4e-82db-40b9-b884-986d32e66341.png" /></p>
+</section>
+</section>
+<section id="timestamps">
+<h2>Timestamps<a class="headerlink" href="#timestamps" title="Permalink to this headline">#</a></h2>
+<p>Underneath the Node and Configuration settings are the Timestamp settings.</p>
+<p><img alt="timestamp1" src="https://user-images.githubusercontent.com/59810286/220144348-6d868bee-9092-4ac6-bf34-185dcc4fe3ca.png" /></p>
+<p>If the timestamp feature is active, the simulation timer under the variable ranges will change to reflect the settings. The timestamp feature can only be activated if all of its inputs are valid. The inputted time should be the time you want the simulation to start at.</p>
+<section id="use-timestamp">
+<h3>Use Timestamp?<a class="headerlink" href="#use-timestamp" title="Permalink to this headline">#</a></h3>
+<p>A simple Yes/No toggle for whether you want to use the timestamp feature. If it is clicked, it will use the given time, assuming a valid input. If it is set to unclicked, the timer will start at 0 and count up to the length of the simulation in seconds. The default setting is “<strong>unclicked</strong>”.</p>
+</section>
+<section id="select-a-date">
+<h3>Select a Date<a class="headerlink" href="#select-a-date" title="Permalink to this headline">#</a></h3>
+<p>The input for the starting date of the simulation. Clicking on it will bring up a datepicker. The date can also be typed in using “<strong>MM/DD/YYYY</strong>” format. This input has no default. If you want to use a timestamp, you must choose a date first.</p>
+</section>
+<section id="select-a-time">
+<h3>Select a Time<a class="headerlink" href="#select-a-time" title="Permalink to this headline">#</a></h3>
+<p>The input for the starting time of the simulation. Uses “<strong>HH:MM:SS AM/PM</strong>” format. The default setting is “<strong>12:00:00 AM</strong>”.</p>
+</section>
+<section id="select-an-increment">
+<h3>Select an Increment<a class="headerlink" href="#select-an-increment" title="Permalink to this headline">#</a></h3>
+<p>A list of the available time increments to use in the simulation. Essentially, each second of the simluation will increment the timer by a certain amount of the specified increment value. The available increments are <strong>Milliseconds</strong>, <strong>Seconds</strong>, <strong>Minutes</strong>, <strong>Hours</strong>, and <strong>Days</strong>. The default increment is <strong>Milliseconds</strong>.</p>
+</section>
+<section id="number-of-increments-per-second">
+<h3>Number of <strong>Increments</strong> per Second<a class="headerlink" href="#number-of-increments-per-second" title="Permalink to this headline">#</a></h3>
+<p>The number of time increments you want the timer to advance during a second of the simulation. This can take any non-negative (&gt;= 0), rational number as an input. Decimal inputs work as you might expect: using <strong>1.5 Days</strong>, for example, is equivalent to using <strong>36 Hours</strong>. The default value is <strong>1</strong>. If you put in 0, the timer will simply stay at the selected date and time throughout the entire simulation.</p>
+<p><img alt="timestamp2" src="https://user-images.githubusercontent.com/59810286/220144385-2baead4c-a471-4bd2-89b8-d16f68ab2b9b.PNG" /></p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="multi.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">MultiLayer</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../about/release-notes.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">AGVis Release Notes</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#add-layer">Add Layer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#o-his">O_His</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-s-set">Optional S_Set</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#idr-options">IDR Options</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#playback-bar">Playback Bar</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shown-variable">Shown Variable</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variable-range">Variable Range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#timer">Timer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#timestamps">Timestamps</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-timestamp">Use Timestamp?</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#select-a-date">Select a Date</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#select-a-time">Select a Time</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#select-an-increment">Select an Increment</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#number-of-increments-per-second">Number of <strong>Increments</strong> per Second</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div class="tocsection sourcelink">
+    <a href="../_sources/examples/idr.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            <div class="bd-footer-content__inner"></div>
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=12da95d707ffb74b382d"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=12da95d707ffb74b382d"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright 2023, Nicholas Parsly.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://sphinx-doc.org/">Sphinx</a> 4.5.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
