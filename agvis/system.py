@@ -65,7 +65,7 @@ class AGVisWeb:
             self.httpd = None
             self.thread.join()
             self.thread = None
-            logger.warning(f"AGVis stopped.")
+            logger.warning(f"AGVis stopped, you can close the web window.")
 
 
 class WebHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
