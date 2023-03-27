@@ -88,7 +88,7 @@ def main():
         else:
             available_port = find_available_port(8810, 8900)
             if available_port is not None:
-                logger.warning(f"Port {args.port} conflict, switch port to {available_port}.")
+                logger.warning(f"Port {args.port} is not available, switch port to {available_port}.")
             else:
                 logger.error("No available port found in the default range.")
 
@@ -100,7 +100,8 @@ def main():
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            logger.info(f"AGVis stopped.")
+            httpd.server_close()
+            logger.info("\nAGVis stopped.")
         finally:
             httpd.server_close()
     else:
