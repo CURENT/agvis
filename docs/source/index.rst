@@ -3,16 +3,28 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to AGVis
-################
+===================
+AGVis documentation
+===================
 
-What is AGVis?
---------------
+**Useful Links**: `Source Repository`_ | `Report Issues`_
+| `Q&A`_ | `LTB Repository`_
 
-**AGVis** (\ **A**\ nother **G**\ rid **Vis**\ ualizer) is a visualization program for CURENT's Large-scale Test Bed in the form of a web application. AGVis is capable of interfacing with two other CURENT projects, ANDES and DiME, to perform real-time visualizations of power systems. AGVis is currently in active development and a "lite" version that does not utilize ANDES to run simulations is currently in the works.
+.. _`Source Repository`: https://github.com/CURENT/agvis
+.. _`Report Issues`: https://github.com/CURENT/agvis/issues
+.. _`Q&A`: https://github.com/CURENT/agvis/discussions
+.. _`LTB Repository`: https://github.com/CURENT/ltb
+.. _`ANDES`: https://github.com/CURENT/andes
+.. _`DiME`: https://github.com/CURENT/dime
 
-The source repository for AGVis can be found `here <https://github.com/CURENT/ltbvis>`_.
+AGVis is a web-based open-source tool for geographical visualizations of energy systems.
+AGVis is capable of real-time geographical visualization of power systems when coupled
+with `ANDES`_ and `DiME`_.
+AGVis is currently in active development and a standalone visualization of power systems
+using user defined data is currently in the works.
 
+AGVis is the visualization module for the CURENT Largescale Testbed (LTB). More information about
+CURENT LTB can be found at the `LTB Repository`_.
 
 Quick Start
 -----------
@@ -26,9 +38,10 @@ Already have AGVis set up but want to know how to use it better? No problem. Jus
 
 
 .. toctree::
+   :caption: AGVis Manual
    :maxdepth: 2
    :hidden:
-        
+
    Quick Start <quick_start/quick_start.md>
    Configuration <examples/examples.md>
    MultiLayer <examples/multi.md>
