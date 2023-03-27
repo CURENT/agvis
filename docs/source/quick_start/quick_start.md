@@ -1,5 +1,7 @@
-# Using AGVis On Server through SSH
-## Running AGVis
+# Quick Start
+
+## Using AGVis On Server through SSH
+### Running AGVis
 Using a terminal (we would suggest [VSCode](https://code.visualstudio.com/)), log into the Linux server with SSH. Then use this command to download the LTB repository:
 ```
 git clone https://github.com/CURENT/ltb2 --recursive
@@ -19,19 +21,19 @@ tmux
 
 By running those two commands, your window should be populated with several tmux sessions. At this point you may need to forward ports 8810 and 8818 if they are not automatically forwarded. Once your ports are set up, you should be able to go to "localhost:8810" in your browser and see AGVis running. If you then run the command in the bottom tmux window, the simulation will start playing. 
 
-## Troubleshooting
-### Port Already in Use Error
+### Troubleshooting
+#### Port Already in Use Error
 If you receive this error, then you may need to check the /tmp directory in your environment. If there is a folder called "dime" or "dime2", remove it. That should fix the error.
 
-### ANDES Does Not Exist Error
+#### ANDES Does Not Exist Error
 If ANDES doesn't exist, then your best bet is usually just rebuilding your environment. Running ```./go.sh clean``` and then running the second and third set of commands again should fix the issue.
 
-# Using AGVis Locally
-## On Linux
-### A Side Note
+## Using AGVis Locally
+### On Linux
+#### A Side Note
 As of writing this, tmux, a command used for running AGVis is not available on Windows-based systems. This can be worked around by running AGVis in the Windows Subsystem for Linux (WSL). The additional setup required for this is included at the bottom of the instructions.
 
-### Setup
+#### Setup
 Docker Desktop is a required program for running AGVis locally. The installer can be downloaded here: https://www.docker.com/products/docker-desktop/.
 
 Open your terminal and run these commands to download the necessary folders:
@@ -47,7 +49,7 @@ cd agvis
 ./go.sh build
 ```
 
-#### Troubleshooting
+##### Troubleshooting
 Your system may run into an issue when attempting to clone necessary GitHub folders while the image is building. If this occurs, you may need to edit the "Dockerfile" by adding the line
 ```
 RUN git config --global url."https://github.com/".insteadOf git://github.com/
@@ -57,7 +59,7 @@ as shown in the following image.
 <img width="601" alt="docker3" src="https://user-images.githubusercontent.com/59810286/162656954-7a289951-76ce-4c2e-9553-cbf801047739.PNG">
 
 
-### Running AGVis
+#### Running AGVis
 With the setup done, running AGVis is fairly trivial. Enter these two commands into your terminal:
 ```
 tmux
@@ -76,7 +78,7 @@ tmux detach
 ```
 to shut down the process.
 
-### Further Information
+#### Further Information
 [AGVis Repository](https://github.com/CURENT/agvis)
 
 [DiME Repository](https://github.com/CURENT/dime)
@@ -88,8 +90,8 @@ to shut down the process.
 [ANDES Documentation](https://docs.andes.app/en/stable/)
 
 
-## Additional Setup for Windows
-### WSL
+### Additional Setup for Windows
+#### WSL
 If you have not installed the Windows Subsystem for Linux (WSL) open Windows Powershell and run this command:
 ```
 wsl --install
@@ -110,7 +112,7 @@ Once they are finished, close the Ubuntu window. Return to the Powershell window
 wsl.exe --set-version Ubuntu 2
 ```
 
-### Docker
+#### Docker
 Once the command finishes upgrading to WSL 2, open Docker Desktop. If you have yet to install Docker Desktop, please see the instructions under the "Linux Setup" section. Click on the "Settings" icon.
 
 <img width="960" alt="docker0" src="https://user-images.githubusercontent.com/59810286/162659572-758ebc5d-c8f0-49f8-a4f2-3dc444bb1ee8.PNG">
