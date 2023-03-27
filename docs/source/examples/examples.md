@@ -1,4 +1,4 @@
-# Examples
+# Configuration
 
 All examples on this page will use the same simulation run in the [quick start guide](/quick_start/quick_start).
 
