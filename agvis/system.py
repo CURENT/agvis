@@ -8,8 +8,6 @@ import threading
 
 import logging
 
-from agvis.cli import is_port_available, find_available_port
-
 logger = logging.getLogger(__name__)
 
 
