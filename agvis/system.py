@@ -21,6 +21,7 @@ class AGVisWeb:
         self.port = port
         self.httpd = None
         self.thread = None
+        self.url = None
 
     def run(self, open_browser=False):
         """
@@ -42,7 +43,8 @@ class AGVisWeb:
             self.thread = threading.Thread(target=self.httpd.serve_forever)
             self.thread.daemon = True
             self.thread.start()
-            logger.info(f"AGVis serves on http://{self.host}:{self.port}")
+            self.url = 'http://' + self.host + ':' + str(self.port)
+            logger.info(f"AGVis serves on {self.url}")
             if open_browser:
                 # Open URL in default browser
                 url = 'http://' + self.host + ':' + str(self.port)
@@ -82,6 +84,8 @@ class WebHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             super().do_GET()
 
     def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
         # Add custom POST request handling logic here
         if self.path == '/upload':
             pass
