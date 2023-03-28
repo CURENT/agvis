@@ -88,7 +88,7 @@ def main():
         else:
             available_port = find_available_port(8810, 8900)
             if available_port is not None:
-                logger.warning(f"Port conflict, switch port to {available_port}.")
+                logger.warning(f"Port {args.port} conflict, switch port to {available_port}.")
             else:
                 logger.error("No available port found in the default range.")
 
