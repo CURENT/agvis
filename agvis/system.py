@@ -4,43 +4,95 @@ import http.server
 import socketserver
 import socket
 import webbrowser
+import threading
 
 import logging
-
-from agvis.cli import is_port_available, find_available_port
 
 logger = logging.getLogger(__name__)
 
 
-def run(host='127.0.1', port=8810, open_browser=False):
+class AGVisWeb:
     """
-    Load the AGVis CLI.
-    Returns
-    -------
-    function
-        The AGVis CLI handler.
+    AGVis web application.
     """
-    web_app_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
-    os.chdir(web_app_dir)
 
-    if is_port_available(port):
-        available_port = port
-    else:
-        available_port = find_available_port(8810, 8900)
-        if available_port is not None:
-            logger.warning(f"Port {port} conflict, switch port to {available_port}.")
+    def __init__(self, host='localhost', port=8810):
+        self.host = host
+        self.port = port
+        self.httpd = None
+        self.thread = None
+
+    def run(self, open_browser=False):
+        """
+        Start the AGVis.
+
+        Parameters
+        ----------
+        open_browser: bool
+            True to open the browser automatically.
+
+        Returns
+        -------
+        bool
+            True if the AGVis is started successfully, otherwise False.
+        """
+        try:
+            server_address = ('', self.port)
+            self.httpd = WebHTTPServer(server_address, WebHTTPRequestHandler)
+            self.thread = threading.Thread(target=self.httpd.serve_forever)
+            self.thread.daemon = True
+            self.thread.start()
+            logger.info(f"AGVis serves on http://{self.host}:{self.port}")
+            if open_browser:
+                # Open URL in default browser
+                url = 'http://' + self.host + ':' + str(self.port)
+                webbrowser.open(url)
+            return True
+        except OSError:
+            msg = f"Start AGVis on port {str(self.port)} failed, please try another port."
+            logger.warning(msg)
+            return False
+
+    def stop(self):
+        """
+        Stop the AGVis.
+        """
+        if self.httpd:
+            self.httpd.shutdown()
+            self.httpd.server_close()
+            self.httpd = None
+            self.thread.join()
+            self.thread = None
+            logger.warning(f"AGVis stopped, you can close the web window.")
+
+
+class WebHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+    # TODO:
+    def __init__(self, *args, **kwargs):
+        # Get the path of the requested file
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
+        super().__init__(*args, directory=path, **kwargs)
+
+    def do_GET(self):
+        if self.path == '/':
+            # TODO: Add custom request handling logic here
+            super().do_GET()
         else:
-            logger.error("No available port found in the default range.")
+            # For all other requests, use the default behavior
+            super().do_GET()
 
-    logger.info(f"AGVis serves on http://{host}:{available_port}")
+    def do_POST(self):
+        # Add custom POST request handling logic here
+        if self.path == '/upload':
+            pass
+        else:
+            # For all other POST requests, use the default behavior
+            super().do_POST()
 
-    handler = http.server.SimpleHTTPRequestHandler
-    httpd = socketserver.TCPServer((host, available_port), handler)
 
-    httpd.server_activate()
+class WebHTTPServer(socketserver.TCPServer):
+    allow_reuse_address = True
 
-    if open_browser:
-        # Open URL in default browser
-        url = 'http://' + host + ':' + str(available_port)
-        webbrowser.open(url)
-    return httpd
+    def server_bind(self):
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.socket.bind(self.server_address)
