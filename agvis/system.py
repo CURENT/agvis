@@ -16,12 +16,13 @@ class AGVisWeb:
     AGVis web application.
     """
 
-    def __init__(self, host='localhost', port=8810):
+    def __init__(self, host='localhost', port=8810, socket_path=None):
         self.host = host
         self.port = port
         self.httpd = None
         self.thread = None
         self.url = None
+        self.socket_path = None
 
     def run(self, open_browser=False):
         """
@@ -49,6 +50,13 @@ class AGVisWeb:
                 # Open URL in default browser
                 url = 'http://' + self.host + ':' + str(self.port)
                 webbrowser.open(url)
+
+            if self.socket_path:
+                self.server_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                self.server_socket.bind(self.socket_path)
+                self.server_socket.listen(1)
+                logger.info(f"AGVis is listening on socket file {self.socket_path}")
+
             return True
         except OSError:
             msg = f"Start AGVis on port {str(self.port)} failed, please try another port."
@@ -66,6 +74,20 @@ class AGVisWeb:
             self.thread.join()
             self.thread = None
             logger.warning(f"AGVis stopped, you can close the web window.")
+        if self.server_socket:
+            self.server_socket.close()
+            self.server_socket = None
+
+    def accept_connection(self):
+        """
+        Wait for a connection over the Unix domain socket.
+        """
+        if self.server_socket:
+            conn, addr = self.server_socket.accept()
+            logger.info(f"AGVis received a connection from {addr}")
+            return conn
+        else:
+            return None
 
 
 class WebHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
