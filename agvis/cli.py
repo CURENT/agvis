@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 def create_parser():
     """
     Create a parser for the command-line interface.
+
     Returns
     -------
     argparse.ArgumentParser

@@ -19,6 +19,7 @@ def config_logger(stream_level=logging.INFO, *,
     Configure an AGVis logger with a `FileHandler` and a `StreamHandler`.
     This function is called at the beginning of ``agvis.main.main()``.
     Updating ``stream_level`` and ``file_level`` is now supported.
+
     Parameters
     ----------
     stream : bool, optional
@@ -36,6 +37,7 @@ def config_logger(stream_level=logging.INFO, *,
         `StreamHandler` verbosity level.
     file_level : {10, 20, 30, 40, 50}, optional
         `FileHandler` verbosity level.
+
     Returns
     -------
     None
@@ -92,6 +94,7 @@ def get_log_dir():
     """
     Get the directory for log file.
     The default is ``<tempdir>/agvis``, where ``<tempdir>`` is provided by ``tempfile.gettempdir()``.
+
     Returns
     -------
     str
