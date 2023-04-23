@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class AGVisWeb:
+class webapp(object):
     """
     AGVis web application.
     """
@@ -73,10 +73,7 @@ class AGVisWeb:
             self.httpd = None
             self.thread.join()
             self.thread = None
-            logger.warning(f"AGVis stopped, you can close the web window.")
-        if self.server_socket:
-            self.server_socket.close()
-            self.server_socket = None
+            logger.warning(f"AGVis stopped, you can close the brwoser window.")
 
     def accept_connection(self):
         """
