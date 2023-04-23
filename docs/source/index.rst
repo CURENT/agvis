@@ -46,4 +46,4 @@ Already have AGVis set up but want to know how to use it better? No problem. Jus
    Configuration <examples/examples.md>
    MultiLayer <examples/multi.md>
    Independent Data Reader <examples/idr.md>
-   Release notes <about/release-notes.md>
+   release-notes
