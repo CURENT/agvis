@@ -14,6 +14,7 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import agvis
 
 # -- Project information -----------------------------------------------------
 
@@ -22,8 +23,10 @@ copyright = '2023, Nicholas Parsly'
 author = 'Nicholas Parsly'
 
 # The full version, including alpha/beta/rc tags
-release = '3.0.0'
-
+# The short X.Y version.
+version = agvis.__version__
+# The full version, including alpha/beta/rc tags.
+release = agvis.__version__
 
 # -- General configuration ---------------------------------------------------
 
@@ -31,7 +34,7 @@ release = '3.0.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-        'myst_parser'
+    'myst_parser'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -50,12 +53,41 @@ exclude_patterns = []
 #
 html_theme = 'pydata_sphinx_theme'
 
+html_theme_options = {
+    "use_edit_page_button": True,
+}
+
+html_context = {
+    "github_url": "https://github.com",
+    "github_user": "CURENT",
+    "github_repo": "agvis",
+    "github_version": "master",
+    "doc_path": "docs/source",
+}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
 html_sidebars = {
-
-        '**': [ 'localtoc.html',]
+    '**': ['localtoc.html',]
 }
+
+htmlhelp_basename = 'agvis'
+
+# Example configuration for intersphinx: refer to the Python standard library.
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3/', None),
+    'numpy': ('https://docs.scipy.org/doc/numpy/', None),
+    'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
+    'pandas': ('https://pandas.pydata.org/pandas-docs/stable', None),
+    'matplotlib': ('https://matplotlib.org', None),
+}
+
+# Favorite icon
+html_favicon = 'images/curent.ico'
+
+# sphinx-panels shouldn't add bootstrap css since the pydata-sphinx-theme
+# already loads it
+panels_add_bootstrap_css = False

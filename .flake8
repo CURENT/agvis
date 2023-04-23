@@ -1,0 +1,3 @@
+[flake8]
+exclude = .git,__pycache__,build,dist,demos,cases,versioneer.py,agvis/_version.py,docs/source/conf.py,docs/source/_build,benchmarks,.history
+max-line-length=115
