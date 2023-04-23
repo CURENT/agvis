@@ -4,28 +4,30 @@
 Release notes
 =============
 
-AGVis uses a standard three digit (X.Y.Z) numbering system for versions.
-The first number indicates major releases of AGVis, like significant code rewrites and important new features.
-The second number is for minor releases, which are primarily just smaller features.
-The third number is for revisions--think bug fixes and small changes to UI.
-
-To upgrade AGVis, simply move to its directory and pull the most recent version from Git.
-
+The APIs before v3.0.0 are in beta and may change without prior notice.
 
 v3.0 Notes
 ==========
 
-v3.0.0 (2023-XX-XX)
+v3.0.0 (2023-04-23)
 -------------------
 
-The Independent Data Reader Update
-
-- Added in the ability to interpret simulation data and animate it:
+The Independent Data Reader, contributed by Nicholas Parsly:
+  - Added in the ability to interpret simulation data and animate it:
   - Playback Bar for playing the animation at different speeds
   - Frequency, Voltage Magnitude, and Voltage Angle displays
   - Customizable ranges for those displays
   - Customizable Timestamps
   - More than one simulation playing at once
+
+Support interactive usage in python, developed by Jinning Wang:
+  - Added in the ability to use AGVis as a python module
+  - Added in the ability to use AGVis as a python package
+
+Packing and distribution, contributed by Jinning Wang
+  - Packing AGVis as a python package
+  - Enhance command line usage
+  - Add interactive usage
 
 v2.0 Notes
 ==========
