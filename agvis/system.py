@@ -88,34 +88,64 @@ class webapp(object):
 
 
 class WebHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
-    # TODO:
+    """
+    A custom HTTP request handler that extends the SimpleHTTPRequestHandler
+    class to add custom handling logic for GET and POST requests.
+    """
+
     def __init__(self, *args, **kwargs):
         # Get the path of the requested file
         path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
         super().__init__(*args, directory=path, **kwargs)
 
     def do_GET(self):
-        if self.path == '/':
-            # TODO: Add custom request handling logic here
-            super().do_GET()
-        else:
-            # For all other requests, use the default behavior
-            super().do_GET()
+        super().do_GET()
 
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        # Add custom POST request handling logic here
-        if self.path == '/upload':
-            pass
-        else:
-            # For all other POST requests, use the default behavior
-            super().do_POST()
+        super().do_POST()
 
 
 class WebHTTPServer(socketserver.TCPServer):
+    """
+    A custom TCP server that extends the TCPServer class to allow
+    reusing the server address.
+
+    Attributes
+    ----------
+    allow_reuse_address : bool
+        A boolean flag that determines whether the server address can
+        be reused.
+
+    Notes
+    -----
+    This class extends the functionality of the TCPServer class by
+    providing the ability to reuse the server address, which can be
+    useful in cases where a new server instance needs to be created
+    quickly after shutting down the previous one.
+
+    Examples
+    --------
+    >>> server = WebHTTPServer(('localhost', 8000), RequestHandlerClass)
+    >>> server.server_bind()
+    """
     allow_reuse_address = True
 
     def server_bind(self):
+        """
+        Bind the server to the specified address.
+
+        This method sets the SO_REUSEADDR option to 1 to allow
+        reusing the server address, and then binds the server to
+        the specified address.
+
+        Returns
+        -------
+        None
+
+        Examples
+        --------
+        >>> server = WebHTTPServer(('localhost', 8000), RequestHandlerClass)
+        >>> server.server_bind()
+        """
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind(self.server_address)
