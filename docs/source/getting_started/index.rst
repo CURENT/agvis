@@ -3,11 +3,11 @@
 
    <embed>
    <h1 style="letter-spacing: 0.4em; font-size: 2.5em !important;
-   margin-bottom: 0; padding-bottom: 0"> ANDES </h1>
+   margin-bottom: 0; padding-bottom: 0"> AGVIS </h1>
 
    <p style="color: #00746F; font-variant: small-caps; font-weight: bold;
    margin-bottom: 2em">
-   Python Software for Symbolic Power System Modeling and Numerical Analysis</p>
+   Geo-visualization for energy system</p>
    </embed>
 
 .. _getting-started:
@@ -23,7 +23,6 @@ Getting started
     overview
     install
     tutorial/index
-    config
     copyright
 
 Quick install
@@ -36,27 +35,27 @@ Quick install
     Working with conda?
     ^^^^^^^^^^^^^^^^^^^
 
-    ANDES is available on conda-forge and can be installed with
+    AGVis is available on conda-forge and can be installed with
     Anaconda, Miniconda, and Mambaforge:
 
     ++++++++++++++++++++++
 
     .. code-block:: bash
 
-        conda install -c conda-forge andes
+        conda install -c conda-forge agvis
 
     ---
 
     Prefer pip?
     ^^^^^^^^^^^
 
-    ANDES can be installed via pip from `PyPI <https://pypi.org/project/pandas>`__.
+    agvis can be installed via pip from `PyPI <https://pypi.org/project/pandas>`__.
 
     ++++
 
     .. code-block:: bash
 
-        pip install andes
+        pip install agvis
 
     ---
     :column: col-12 p-3
@@ -72,5 +71,5 @@ Quick install
     Are you a developer?
     ^^^^^^^^^^^^^^^^^^^^
 
-    Installing from source? Looking to develop models? Check the
+    Installing from source? Looking to develop new functions? Check the
     guide in :ref:`Develop Install`.

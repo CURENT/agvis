@@ -34,13 +34,17 @@ CURENT LTB can be found at the `LTB Repository`_.
 Quick Start
 -----------
 
-Want to jump right into AGVis? Go to the `quick start guide <./quick_start/quick_start.html>`_. It contains instructions for setting up AGVis and will take you through running a simple simulation.
+Want to jump right into AGVis? Go to the :ref:`tutorial`. It contains instructions for setting up AGVis and
+will take you through running a simple simulation.
+
 
 Examples
 --------
 
-Already have AGVis set up but want to know how to use it better? No problem. Just go to the examples. The examples provide instructions on how to use AGVis to its fullest potential. They will walk you through many of the various features that AGVis offers in browser. 
-
+Already have AGVis set up but want to know how to use it better? No problem.
+Just go to the :ref:`tutorial`, :ref:`tutorial`, and :ref:`tutorial`. The examples provide instructions on
+how to use AGVis to its fullest potential.
+They will walk you through many of the various features that AGVis offers in browser. 
 
 .. toctree::
    :caption: AGVis Manual
@@ -48,7 +52,7 @@ Already have AGVis set up but want to know how to use it better? No problem. Jus
    :hidden:
 
    getting_started/index
-   Configuration <examples/examples.md>
+   config
    MultiLayer <examples/multi.md>
    Independent Data Reader <examples/idr.md>
    release-notes

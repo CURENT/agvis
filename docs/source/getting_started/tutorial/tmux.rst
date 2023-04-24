@@ -40,3 +40,5 @@ ANDES Does Not Exist Error
 """""""""""""""""""""""""""""""""""""""""""""""
 If ANDES doesn't exist, then your best bet is usually just rebuilding your environment.
 Running ``./go.sh clean`` and then running the second and third set of commands again should fix the issue.
+
+.. _input-formats:

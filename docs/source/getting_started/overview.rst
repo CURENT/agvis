@@ -7,6 +7,7 @@ Package Overview
 AGVis is an open-source geovisualization tool for energy system.
 Main features of AGVis include
 
+  - a geographical visualization of power system simulation results
   - a MultiLayer feature that allows users to add multiple layers of data
     (e.g., gas network, communication network, etc.) to the map
   - an independent data reader that can visualize user-defined data
