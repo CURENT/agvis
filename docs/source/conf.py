@@ -81,7 +81,7 @@ html_theme_options = {
 
 html_context = {
     "github_url": "https://github.com",
-    "github_user": "CURENT",
+    "github_user": "jinningwang",
     "github_repo": "agvis",
     "github_version": "master",
     "doc_path": "docs/source",
@@ -92,9 +92,9 @@ html_context = {
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-html_sidebars = {
-    '**': ['localtoc.html',]
-}
+# html_sidebars = {
+#     '**': ['localtoc.html',]
+# }
 
 htmlhelp_basename = 'agvis'
 
