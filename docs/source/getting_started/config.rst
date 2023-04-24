@@ -12,7 +12,10 @@ Custom Speed and Simulation Playback
 
 Once a simulation has finished running, a playback bar will appear on the bottom left of the window.
 
-<img width="960" alt="speedarrow" src="https://user-images.githubusercontent.com/59810286/171210742-ed48434b-404e-4e6f-97c1-143315cea8ba.png">
+.. image:: /images/config/speedarrow.png
+   :alt: speedarrow
+   :width: 960px
+   :height: 415.3px
 
 Pressing the "**Stop**" button will reset the simulation back to the beginning. Pressing the "**Pause**" button will pause the simulation. Specific times in the simulation can be selected by manually moving the top slider.
 
