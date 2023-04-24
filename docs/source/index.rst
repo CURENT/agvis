@@ -13,9 +13,14 @@ AGVis documentation
 .. _`Source Repository`: https://github.com/CURENT/agvis
 .. _`Report Issues`: https://github.com/CURENT/agvis/issues
 .. _`Q&A`: https://github.com/CURENT/agvis/discussions
-.. _`LTB Repository`: https://github.com/CURENT/ltb
+.. _`LTB Repository`: https://github.com/CURENT
 .. _`ANDES`: https://github.com/CURENT/andes
 .. _`DiME`: https://github.com/CURENT/dime
+
+.. image:: /images/sponsors/CURENT_Logo_NameOnTrans.png
+   :alt: CURENT Logo
+   :width: 300px
+   :height: 74.2px
 
 AGVis is a web-based open-source tool for geographical visualizations of energy systems.
 AGVis is capable of real-time geographical visualization of power systems when coupled
@@ -42,7 +47,7 @@ Already have AGVis set up but want to know how to use it better? No problem. Jus
    :maxdepth: 2
    :hidden:
 
-   Quick Start <quick_start/quick_start.md>
+   getting_started/index
    Configuration <examples/examples.md>
    MultiLayer <examples/multi.md>
    Independent Data Reader <examples/idr.md>
