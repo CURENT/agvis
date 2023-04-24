@@ -15,49 +15,64 @@ Once a simulation has finished running, a playback bar will appear on the bottom
 .. image:: /images/config/speedarrow.png
    :alt: speedarrow
    :width: 960px
-   :height: 415.3px
 
 Pressing the "**Stop**" button will reset the simulation back to the beginning. Pressing the "**Pause**" button will pause the simulation. Specific times in the simulation can be selected by manually moving the top slider.
 
 The speed at which the simulation plays back can be adjusted as well by moving the bottom slider. A custom speed multiplier can be set by moving the slider all the way to the left.
 
-<img width="369" alt="customespeedbox" src="https://user-images.githubusercontent.com/59810286/171211579-18ac3c40-ec26-4f98-bca8-b585d81a8aaa.png">
+.. image:: /images/config/customespeedbox.png
+   :alt: customespeedbox
+   :width: 369px
 
 Searching
 ==================
 
 Clicking on the magnifying glass icon on the top left will open the search function.
 
-<img width="960" alt="searcharrow" src="https://user-images.githubusercontent.com/59810286/171214775-dba0ec90-b436-4e36-9331-a6751e4a54de.png">
+.. image:: /images/config/searcharrow.png
+   :alt: searcharrow
+   :width: 960px
 
 Beginning to type in the name of a node from the simulation will bring up a list of the nodes most closely matching your input.
 
-<img width="110" alt="opensearchcrop" src="https://user-images.githubusercontent.com/59810286/171215319-3d3e7217-ae28-4c69-978e-2f937714c8c1.png">
+.. image:: /images/config/opensearchcrop.png
+   :alt: opensearchcrop
+   :width: 110px
 
 Clicking on one of the options will cause the window to find and zoom in on the chosen node. The window can be zoomed back out using the "**-**" button in the top left. The window can be zoomed in using the "**+**" button above the "**-**" button.
 
-<img width="959" alt="foundgrid" src="https://user-images.githubusercontent.com/59810286/171215418-85684db7-2e45-49eb-9fc5-81c22e32c886.png">
+.. image:: /images/config/foundgrid.png
+   :alt: foundgrid
+   :width: 959px
 
 Adjusting Configuration
 ==================================
 
 Clicking on the cog icon in the sidebar on the right will open the configuration menu.
 
-<img width="960" alt="configarrow" src="https://user-images.githubusercontent.com/59810286/171216489-c095cddf-3646-446a-8dca-13271f5ddecf.png">
+.. image:: /images/config/configarrow.png
+   :alt: configarrow
+   :width: 960px
 
 The configuration menu is for adjusting a wide variety of things like the hostname and the range of certain variables in the simulation. Configurations you have made can be saved using the "**Save config**" button and can be loaded in another instance with the "**Load config**"" button.
 
 Changing the range of the angle, frequency, and voltage can have substantial effects on the simulation. Here is the simulation at 5.45 seconds with default settings.
 
-<img width="959" alt="confignoton" src="https://user-images.githubusercontent.com/59810286/171219797-5237ef10-8ff1-4a90-94e1-c7dabc7747b2.PNG">
+.. image:: /images/config/confignoton.png
+   :alt: confignoton
+   :width: 959px
 
 Here is a new configuration for the simulation.
 
-<img width="338" alt="configbox" src="https://user-images.githubusercontent.com/59810286/171220559-d635c486-f330-4b20-9ec7-0600365d2525.png">
+.. image:: /images/config/configbox.png
+   :alt: configbox
+   :width: 338px
 
 And here is the simulation at 5.45 with this change.
 
-<img width="960" alt="configon2" src="https://user-images.githubusercontent.com/59810286/171220730-bab99647-e609-492a-a275-c59c765775bd.PNG">
+.. image:: /images/config/configon2.png
+   :alt: configon2
+   :width: 960px
 
 Needless to say, the change is quite drastic.
 
@@ -66,7 +81,9 @@ Timestamps
 
 Underneath the configuration settings are the timestamp settings.
 
-<img width="959" alt="timestamp_menu" src="https://user-images.githubusercontent.com/59810286/173458240-2af4d9e4-9a44-4a37-9d98-768421116832.png">
+.. image:: /images/config/timestamp_menu.png
+   :alt: timestamp_menu
+   :width: 959px
 
 If the timestamp feature is active, the simulation timer in the top right will change based on the inputted time. The timestamp feature can only be activated if all of its inputs are valid. The inputted time should be the time you want the simulation to start at.
 
@@ -105,20 +122,28 @@ Timestamp Examples
 
 Here is an example of the timestamp feature being being updated with a valid set of values:
 
-<img width="960" alt="timestamp_validtime" src="https://user-images.githubusercontent.com/59810286/173661002-a60a92bf-6d33-416b-8459-29b6ef05984e.PNG">
+.. image:: /images/config/timestamp_validtime.png
+   :alt: timestamp_menu
+   :width: 960px
 
 Note how the format for a timestamp is **Year-Month-Day Hours-Minutes-Seconds-Milliseconds**. Timestamps use 24-hour time.
 
 Next is an example of the timestamp with a simulation. We'll use the same settings from above:
 
-<img width="960" alt="timestamp_exmid" src="https://user-images.githubusercontent.com/59810286/173662911-47ccc52a-985c-47f6-8f73-e4b17804d545.PNG">
+.. image:: /images/config/timestamp_exmid.png
+   :alt: timestamp_menu
+   :width: 960px
 
-<img width="960" alt="timestamp_exend" src="https://user-images.githubusercontent.com/59810286/173662684-f7e34f85-47c6-4829-8672-02842a9f3f49.PNG">
+.. image:: /images/config/timestamp_exend.png
+   :alt: timestamp_menu
+   :width: 960px
 
 The first of these two pictures is near the middle of the simulation running. The second is from after the simulation has finished. Given that the timestamp is set to increment 15 minutes per second and that the simulation is exactly 20 seconds long, the simulation should end 5 hours after the starting time, which the second picture shows.
 
 Here is an example of the error message you will receive for trying to update to an invalid set of inputs:
 
-<img width="960" alt="timestamp_badinput" src="https://user-images.githubusercontent.com/59810286/173661556-e9c49434-1fb2-4354-8cf7-a52a8fd8b7e3.PNG">
+.. image:: /images/config/timestamp_badinput.png
+   :alt: timestamp_menu
+   :width: 960px
 
 The error in this case is the negative value for the time increments.
