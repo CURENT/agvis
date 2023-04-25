@@ -5,17 +5,19 @@ API reference
 =============
 
 
-System
+Web
 ======
 
 .. autosummary::
    :maxdepth:4
    :recursive:
    :toctree: _generated
-   :caption: System
+   :caption: Web
    :template: autosummary/module_toctree.rst
 
-   agvis.system
+   agvis.web
+   agvis.httprequest
+   agvis.httpserver
 
 
 Others

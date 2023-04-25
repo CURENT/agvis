@@ -34,7 +34,6 @@ release = agvis.__version__
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'myst_parser',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.githubpages',
@@ -48,6 +47,7 @@ extensions = [
     'IPython.sphinxext.ipython_console_highlighting',
     'numpydoc',
     'sphinx_copybutton',
+    'myst_nb'
 ]
 
 # Configuration options for plot_directive. See:
