@@ -90,5 +90,6 @@ CURENT LTB can be found at the `LTB Repository`_.
    config
    multi
    idr
+   modeling/index
    release-notes
    api
