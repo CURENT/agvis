@@ -9,7 +9,21 @@ The APIs before v3.0.0 are in beta and may change without prior notice.
 v3.0 Notes
 ==========
 
-v3.0.0 (2023-04-23)
+v3.1.0 (2023-04-24)
+-------------------
+
+Support interactive usage in python, developed by Jinning Wang:
+  - Usage as a python module
+
+Packing and distribution, contributed by Jinning Wang
+  - Packing AGVis as a python package
+  - Enhance command line usage
+  - Add interactive usage
+
+Documentation, contributed by Jinning Wang and Nicholas Parsly
+  - Improve documentation by reorganizing the structure
+
+v3.0.0 (2023-02-20)
 -------------------
 
 The Independent Data Reader, contributed by Nicholas Parsly:
@@ -19,15 +33,6 @@ The Independent Data Reader, contributed by Nicholas Parsly:
   - Customizable ranges for those displays
   - Customizable Timestamps
   - More than one simulation playing at once
-
-Support interactive usage in python, developed by Jinning Wang:
-  - Added in the ability to use AGVis as a python module
-  - Added in the ability to use AGVis as a python package
-
-Packing and distribution, contributed by Jinning Wang
-  - Packing AGVis as a python package
-  - Enhance command line usage
-  - Add interactive usage
 
 v2.0 Notes
 ==========
