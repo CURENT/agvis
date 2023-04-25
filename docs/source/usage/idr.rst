@@ -9,7 +9,7 @@ allowing AGVis to interpet and animate simulation data provided by users in an E
 The features relating to the Independent Data Reader are appended to the MultiLayer
 features if a file is compatible with the IDR. It is also found in menu with the **+/-** icon.
 
-.. image:: /images/idr/addlayericon.png
+.. image:: diagrams/idr/addlayericon.png
    :alt: addlayericon
    :width: 960px
 
@@ -18,7 +18,7 @@ Add Layer
 
 When you open up the MultiLayer menu, you will only see the **Add Layer** button.
 
-.. image:: /images/idr/addlayerbutton.png
+.. image:: diagrams/idr/addlayerbutton.png
    :alt: addlayerbutton
    :width: 960px
 
@@ -71,7 +71,7 @@ IDR Options
 After uploading a valid Excel sheet, the MultiLayer menu will fill with both the MultiLayer options
 and the IDR options:
 
-.. image:: /images/idr/idr.png
+.. image:: diagrams/idr/idr.png
    :alt: idr
    :width: 960px
 
@@ -80,7 +80,7 @@ Playback Bar
 
 Once the file has finished uploading, the Playback Bar will appear underneath the Node settings.
 
-.. image:: /images/idr/playback1.png
+.. image:: diagrams/idr/playback1.png
    :alt: playback1
    :width: 960px
 
@@ -91,7 +91,7 @@ manually moving the top slider.
 The speed at which the simulation plays back can be adjusted as well by moving the bottom slider.
 A custom speed multiplier can be set by moving the slider all the way to the left.
 
-.. image:: /images/idr/playback2.png
+.. image:: diagrams/idr/playback2.png
    :alt: playback2
    :width: 960px
 
@@ -101,7 +101,7 @@ Shown Variable
 Underneath the Playback Bar are the shown variable buttons. These buttons determine what set of
 data is used for the simulation animation. The **Frequency** button is clicked by defaut.
 
-.. image:: /images/idr/vset.png
+.. image:: diagrams/idr/vset.png
    :alt: vset
    :width: 960px
 
@@ -116,31 +116,31 @@ Here are before and after shots for each variable:
 
 **Frequency**
 
-.. image:: /images/idr/freq1.png
+.. image:: diagrams/idr/freq1.png
    :alt: freq1
    :width: 960px
 
-.. image:: /images/idr/freq2.png
+.. image:: diagrams/idr/freq2.png
    :alt: freq2
    :width: 960px
 
 **Voltage Magnitude**
 
-.. image:: /images/idr/volt1.png
+.. image:: diagrams/idr/volt1.png
    :alt: volt1
    :width: 960px
 
-.. image:: /images/idr/volt2.png
+.. image:: diagrams/idr/volt2.png
    :alt: volt2
    :width: 960px
 
 **Voltage Angle**
 
-.. image:: /images/idr/thet1.png
+.. image:: diagrams/idr/thet1.png
    :alt: thet1
    :width: 960px
 
-.. image:: /images/idr/the2.png
+.. image:: diagrams/idr/the2.png
    :alt: the2
    :width: 960px
 
@@ -151,7 +151,7 @@ The timer is underneath the shown variable buttons. It updates according to the 
 simulation. By default it counts up from the minimum time given in the data, but it can be adjusted
 using the Timestamp settings.
 
-.. image:: /images/idr/timer.png
+.. image:: diagrams/idr/timer.png
    :alt: timer
    :width: 960px
 
@@ -161,7 +161,7 @@ Timestamps
 
 Underneath the Node and Configuration settings are the Timestamp settings.
 
-.. image:: /images/idr/timestamp1.png
+.. image:: diagrams/idr/timestamp1.png
    :alt: timestamp1
    :width: 960px
 
@@ -199,6 +199,6 @@ take any non-negative (>= 0), rational number as an input. Decimal inputs work a
 **1.5 Days**, for example, is equivalent to using **36 Hours**. The default value is **1**. If you put
 in 0, the timer will simply stay at the selected date and time throughout the entire simulation.
 
-.. image:: /images/idr/timestamp2.png
+.. image:: diagrams/idr/timestamp2.png
    :alt: timestamp2
    :width: 960px

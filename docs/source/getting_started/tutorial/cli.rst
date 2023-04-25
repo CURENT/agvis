@@ -59,7 +59,7 @@ run
 
 You can open the web application in your browser.
 
-.. image:: /images/tutorial/webapplication.png
+.. image:: diagrams/webapplication.png
    :alt: webapplication
    :width: 960px
 

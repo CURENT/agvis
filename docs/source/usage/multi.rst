@@ -9,7 +9,7 @@ render nodes, lines, and (soon) previous simulation data without having to use A
 DiME. These features are currently contained within the menu on the side bar with
 the **+/-** icon.
 
-.. image:: /images/idr/addlayericon.png
+.. image:: diagrams/idr/addlayericon.png
    :alt: addlayericon
    :width: 960px
 
@@ -18,7 +18,7 @@ Add Layer
 
 When you open up the MultiLayer menu, you will only see the **Add Layer** button.
 
-.. image:: /images/multi/addlayer.png
+.. image:: diagrams/multi/addlayer.png
    :alt: addlayer
    :width: 960px
 
@@ -60,7 +60,7 @@ MultiLayer Options
 After uploading a valid Excel sheet, the MultiLayer menu will fill with the name of the file and options
 for how to display the it:
 
-.. image:: /images/multi/newlayer.png
+.. image:: diagrams/multi/newlayer.png
    :alt: newlayer
    :width: 960px
 
@@ -70,7 +70,7 @@ Toggle Rendering
 Toggles whether the nodes and buses of that specific file are shown on the map. It's default state is
 **off**.
 
-.. image:: /images/multi/newlayer2.png
+.. image:: diagrams/multi/newlayer2.png
    :alt: newlayer2
    :width: 960px
 
@@ -83,7 +83,7 @@ the toggles are **off** by default. *Custom Node Color* is white (#FFFFFF) by de
 *Custom Line Color* is black (#000000) by default. The toggles will turn on and the custom color
 settings will be set upon upload if the file has specified color columns.
 
-.. image:: /images/multi/customcolor.png
+.. image:: diagrams/multi/customcolor.png
    :alt: customcolor
    :width: 960px
 
@@ -94,11 +94,11 @@ The *Node Opacity* and *Line Opacity* settings are fairly self-explanatory. They
 the opacities of the nodes and lines. *Node Opacity* defaults to **100** and *Line Opacity*
 defaults to **50**. 
 
-.. image:: /images/multi/low_node_opacity.png
+.. image:: diagrams/multi/low_node_opacity.png
    :alt: low_node_opacity
    :width: 960px
 
-.. image:: /images/multi/high_line_opacity.png
+.. image:: diagrams/multi/high_line_opacity.png
    :alt: high_node_opacity
    :width: 960px
 
@@ -111,7 +111,7 @@ the nodes. It defaults to **12**, has a minimum of **4**, and has a maximum of *
 
 Here are before and after shots for each variable:
 
-.. image:: /images/multi/bignodebigline.png
+.. image:: diagrams/multi/bignodebigline.png
    :alt: bignodebigline
    :width: 960px
 
@@ -123,14 +123,14 @@ at a time, it is possible that two different layers will have some overlap. The 
 will give a layer rendering priority over the others, meaning that it will be drawn over all the others.
 Here is an image of two layers that overlap:
 
-.. image:: /images/multi/priority1.png
+.. image:: diagrams/multi/priority1.png
    :alt: priority1
    :width: 960px
 
 Note that the "ieee39" layer is drawn over the "npcc" layer. Now here is another image of these two
 layers after pressing the *Prioritize Layer* button for "necc":
 
-.. image:: /images/multi/priority2.png
+.. image:: diagrams/multi/priority2.png
    :alt: priority2
    :width: 960px
 
@@ -144,7 +144,7 @@ Deletes a layer, removing it from the menu and from the map.
 Having gone through all the MultiLayer options, here is what the example Excel file looks like rendered
 (with adjustments to node size and line opacity for clarity):
 
-.. image:: /images/multi/exampleupload.png
+.. image:: diagrams/multi/exampleupload.png
    :alt: exampleupload
    :width: 960px
 

@@ -12,7 +12,7 @@ Custom Speed and Simulation Playback
 
 Once a simulation has finished running, a playback bar will appear on the bottom left of the window.
 
-.. image:: /images/config/speedarrow.png
+.. image:: diagrams/config/speedarrow.png
    :alt: speedarrow
    :width: 960px
 
@@ -22,7 +22,7 @@ Specific times in the simulation can be selected by manually moving the top slid
 The speed at which the simulation plays back can be adjusted as well by moving the bottom slider. A custom speed multiplier can be set by
 moving the slider all the way to the left.
 
-.. image:: /images/config/customespeedbox.png
+.. image:: diagrams/config/customespeedbox.png
    :alt: customespeedbox
    :width: 369px
 
@@ -31,20 +31,20 @@ Searching
 
 Clicking on the magnifying glass icon on the top left will open the search function.
 
-.. image:: /images/config/searcharrow.png
+.. image:: diagrams/config/searcharrow.png
    :alt: searcharrow
    :width: 960px
 
 Beginning to type in the name of a node from the simulation will bring up a list of the nodes most closely matching your input.
 
-.. image:: /images/config/opensearchcrop.png
+.. image:: diagrams/config/opensearchcrop.png
    :alt: opensearchcrop
    :width: 110px
 
 Clicking on one of the options will cause the window to find and zoom in on the chosen node. The window can be zoomed back
 out using the "**-**" button in the top left. The window can be zoomed in using the "**+**" button above the "**-**" button.
 
-.. image:: /images/config/foundgrid.png
+.. image:: diagrams/config/foundgrid.png
    :alt: foundgrid
    :width: 959px
 
@@ -53,7 +53,7 @@ Adjusting Configuration
 
 Clicking on the cog icon in the sidebar on the right will open the configuration menu.
 
-.. image:: /images/config/configarrow.png
+.. image:: diagrams/config/configarrow.png
    :alt: configarrow
    :width: 960px
 
@@ -64,19 +64,19 @@ Configurations you have made can be saved using the "**Save config**" button and
 Changing the range of the angle, frequency, and voltage can have substantial effects on the simulation. Here is the simulation at 5.45
 seconds with default settings.
 
-.. image:: /images/config/confignoton.png
+.. image:: diagrams/config/confignoton.png
    :alt: confignoton
    :width: 959px
 
 Here is a new configuration for the simulation.
 
-.. image:: /images/config/configbox.png
+.. image:: diagrams/config/configbox.png
    :alt: configbox
    :width: 338px
 
 And here is the simulation at 5.45 with this change.
 
-.. image:: /images/config/configon2.png
+.. image:: diagrams/config/configon2.png
    :alt: configon2
    :width: 960px
 
@@ -87,7 +87,7 @@ Timestamps
 
 Underneath the configuration settings are the timestamp settings.
 
-.. image:: /images/config/timestamp_menu.png
+.. image:: diagrams/config/timestamp_menu.png
    :alt: timestamp_menu
    :width: 959px
 
@@ -137,7 +137,7 @@ Timestamp Examples
 
 Here is an example of the timestamp feature being being updated with a valid set of values:
 
-.. image:: /images/config/timestamp_validtime.png
+.. image:: diagrams/config/timestamp_validtime.png
    :alt: timestamp_menu
    :width: 960px
 
@@ -145,11 +145,11 @@ Note how the format for a timestamp is **Year-Month-Day Hours-Minutes-Seconds-Mi
 
 Next is an example of the timestamp with a simulation. We'll use the same settings from above:
 
-.. image:: /images/config/timestamp_exmid.png
+.. image:: diagrams/config/timestamp_exmid.png
    :alt: timestamp_menu
    :width: 960px
 
-.. image:: /images/config/timestamp_exend.png
+.. image:: diagrams/config/timestamp_exend.png
    :alt: timestamp_menu
    :width: 960px
 
@@ -159,7 +159,7 @@ should end 5 hours after the starting time, which the second picture shows.
 
 Here is an example of the error message you will receive for trying to update to an invalid set of inputs:
 
-.. image:: /images/config/timestamp_badinput.png
+.. image:: diagrams/config/timestamp_badinput.png
    :alt: timestamp_menu
    :width: 960px
 
