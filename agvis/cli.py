@@ -1,17 +1,21 @@
+"""
+AGVis command-line interface and argument parsers.
+"""
+
 import argparse
+import importlib
 import logging
 import platform
 import sys
 from time import strftime
 
-import http.server
-import socketserver
-import socket
-import os
-
 from agvis.main import config_logger, find_log_path, get_log_dir
 
 logger = logging.getLogger(__name__)
+
+command_aliases = {
+    'selftest': ['st'],
+}
 
 
 def create_parser():
@@ -33,11 +37,23 @@ def create_parser():
         type=int, default=20, choices=(1, 10, 20, 30, 40))
 
     sub_parsers = parser.add_subparsers(dest='command', help='[run] serve the web; '
+                                        '[selftest] run self test; '
                                         )
 
     run = sub_parsers.add_parser('run')
     run.add_argument('--host', default='127.0.0.1', help='Host to bind the server (default: 127.0.0.1)')
     run.add_argument('--port', default=8810, type=int, help='Port to bind the server (default: 8810)')
+
+    misc = sub_parsers.add_parser('misc')
+    misc.add_argument('--license', action='store_true', help='Display software license', dest='show_license')
+    misc.add_argument('-C', '--clean', help='Clean output files', action='store_true')
+    misc.add_argument('-r', '--recursive', help='Recursively clean outputs (combined useage with --clean)',
+                      action='store_true')
+    misc.add_argument('--version', action='store_true', help='Display version information')
+
+    selftest = sub_parsers.add_parser('selftest', aliases=command_aliases['selftest'])
+
+    demo = sub_parsers.add_parser('demo')  # NOQA
 
     return parser
 
@@ -80,31 +96,10 @@ def main():
                   )
     logger.debug(args)
 
-    if args.command == 'run':
-        web_app_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
-        os.chdir(web_app_dir)
+    module = importlib.import_module('agvis.main')
 
-        if is_port_available(args.port):
-            available_port = args.port
-        else:
-            available_port = find_available_port(8810, 8900)
-            if available_port is not None:
-                logger.warning(f"Port {args.port} is not available, switch port to {available_port}.")
-            else:
-                logger.error("No available port found in the default range.")
-
-        logger.info(f"AGVis serves on http://{args.host}:{available_port}")
-
-        handler = http.server.SimpleHTTPRequestHandler
-        httpd = socketserver.TCPServer((args.host, available_port), handler)
-
-        try:
-            httpd.serve_forever()
-        except KeyboardInterrupt:
-            httpd.server_close()
-            logger.info("\nAGVis stopped.")
-        finally:
-            httpd.server_close()
+    if args.command in ('plot', 'doc'):
+        logger.warning(f"Command '{args.command}' is not supported.")
     else:
         preamble()
 
@@ -112,18 +107,11 @@ def main():
     if args.command is None:
         parser.parse_args(sys.argv.append('--help'))
 
+    else:
+        cmd = args.command
+        for fullcmd, aliases in command_aliases.items():
+            if cmd in aliases:
+                cmd = fullcmd
 
-def is_port_available(port):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-        try:
-            sock.bind(('localhost', port))
-            return True
-        except OSError:
-            return False
-
-
-def find_available_port(start_port, end_port):
-    for port in range(start_port, end_port + 1):
-        if is_port_available(port):
-            return port
-    return None
+        func = getattr(module, cmd)
+        return func(cli=True, **vars(args))
