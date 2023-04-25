@@ -4,7 +4,9 @@
 
 Geographical visualizer for energy system.
 
-Online documentation is available at [AGVis](https://agvis.readthedocs.io).
+|               | Latest                                                                                                                                        | Stable                                                                                                                                        |
+|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| Documentation | [![Latest Documentation](https://readthedocs.org/projects/agvis/badge/?version=stable)](https://agvis.readthedocs.io/en/latest/?badge=stable) | [![Documentation Status](https://readthedocs.org/projects/agvis/badge/?version=latest)](https://agvis.readthedocs.io/en/latest/?badge=latest)|
 
 # Why AGVis
 
