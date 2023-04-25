@@ -36,7 +36,7 @@ and help commands ::
     (3) forgot to activated the environment with AGVis
 
 
-.. agvis-run:
+.. _agvis-run:
 
 agvis run
 ----------------
@@ -83,7 +83,7 @@ After using, you can stop the web application by pressing ``Ctrl+C`` in the term
     AGVis stopped, you can close the brwoser.
 
 
-.. agvis-misc:
+.. _agvis-misc:
 
 agvis misc
 ----------
