@@ -53,7 +53,7 @@ They will walk you through many of the various features that AGVis offers in bro
 
    getting_started/index
    config
-   MultiLayer <examples/multi.md>
+   multi
    idr
    release-notes
    api
