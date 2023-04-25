@@ -1,4 +1,4 @@
-{{ fullname | escape | underline}}
+{{ fullname | escape | underline }}
 
 .. currentmodule:: {{ module }}
 
@@ -15,7 +15,7 @@
 
    {% for item in methods %}
        {% if item != "__init__" %}
-          ~{{ name }}.{{ item }}
+          {{ objname }}.{{ item }}
        {% endif %}
    {%- endfor %}
    {% endif %}
@@ -29,7 +29,7 @@
       :toctree: _generated/
 
    {% for item in attributes %}
-      ~{{ name }}.{{ item }}
+      {{ objname }}.{{ item }}
    {%- endfor %}
    {% endif %}
    {% endblock %}
