@@ -87,9 +87,7 @@ CURENT LTB can be found at the `LTB Repository`_.
    :hidden:
 
    getting_started/index
-   config
-   multi
-   idr
+   usage/index
    modeling/index
    release-notes
    api
