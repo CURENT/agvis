@@ -19,8 +19,8 @@ import agvis
 # -- Project information -----------------------------------------------------
 
 project = 'AGVis'
-copyright = '2023, Nicholas Parsly'
-author = 'Nicholas Parsly'
+copyright = '2023, Nicholas Parsly, Jinning Wang'
+author = 'Nicholas Parsly, Jinning Wang'
 
 # The full version, including alpha/beta/rc tags
 # The short X.Y version.
