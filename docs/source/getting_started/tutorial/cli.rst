@@ -36,6 +36,69 @@ and help commands ::
     (3) forgot to activated the environment with AGVis
 
 
+.. agvis-run:
+
+agvis run
+----------------
+
+run
+..........
+
+``agvis run`` is the entry point for starting the web application.
+::
+
+
+        _   _____   ___     | Version 3.0.0
+       /_\ / __\ \ / (_)___ | Python 3.9.16 on Linux, 04/24/2023 07:49:26 PM
+      / _ \ (_ |\ V /| (_-< | 
+     /_/ \_\___| \_/ |_/__/ | Web-based geographical visualizer.
+
+    Working directory: "/Users/jinningwang/Documents/work/agvis"
+    AGVis serves on http://127.0.0.1:8810, open your browser and visit it.
+    AGVis started from the command line. Press Ctrl+C to stop it.
+
+You can open the web application in your browser.
+
+.. image:: /images/tutorial/webapplication.png
+   :alt: webapplication
+   :width: 960px
+
+stop
+..........
+
+After using, you can stop the web application by pressing ``Ctrl+C`` in the terminal.
+::
+
+
+        _   _____   ___     | Version 3.0.0
+       /_\ / __\ \ / (_)___ | Python 3.9.16 on Linux, 04/24/2023 07:49:26 PM
+      / _ \ (_ |\ V /| (_-< | 
+     /_/ \_\___| \_/ |_/__/ | Web-based geographical visualizer.
+
+    Working directory: "/Users/jinningwang/Documents/work/agvis"
+    AGVis serves on http://127.0.0.1:8810, open your browser and visit it.
+    AGVis started from the command line. Press Ctrl+C to stop it.
+    ^C
+
+    AGVis stopped, you can close the brwoser.
+
+
+.. agvis-misc:
+
+agvis misc
+----------
+``agvis misc`` contains miscellaneous functions, such as version check and
+output cleaning.
+
+Cleanup
+.......
+``agvis misc -C --clean``
+
+Option to remove any generated files by ANDES and AGVis.
+Removes files with any of the following suffix: ``_out.txt`` (power flow report),
+``_out.npy`` (time domain data), ``_out.lst`` (time domain variable list),
+and ``_eig.txt`` (eigenvalue report).
+
 Version
 .......
 Check the version of AGVis and the core packages it uses, use
