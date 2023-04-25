@@ -75,5 +75,3 @@ which is equivalent to the following shell command:
 .. code:: bash
 
     agvis run
-
-.. _tmux:

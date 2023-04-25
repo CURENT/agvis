@@ -54,6 +54,6 @@ They will walk you through many of the various features that AGVis offers in bro
    getting_started/index
    config
    MultiLayer <examples/multi.md>
-   Independent Data Reader <examples/idr.md>
+   idr
    release-notes
    api
