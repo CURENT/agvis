@@ -37,6 +37,10 @@ class HTTPServer(socketserver.TCPServer):
     """
     allow_reuse_address = True
 
+    def __init__(self, server_address, RequestHandlerClass, directory=None):
+        self.directory = directory
+        super().__init__(server_address, RequestHandlerClass)
+
     def server_bind(self):
         """
         Bind the server to the specified address.

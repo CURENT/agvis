@@ -4,6 +4,7 @@ A simple web application module to serve the AGVis web application on a specifie
 This module provides a webapp class to create a web application, which can be started, stopped, and accessed using its methods.
 The module uses Python's built-in HTTP server and socket server, and also supports logging.
 """
+import os
 import socket
 import webbrowser
 import threading
@@ -20,7 +21,8 @@ class webapp(object):
     AGVis web application.
     """
 
-    def __init__(self, host='localhost', port=8810, socket_path=None):
+    def __init__(self, host='localhost', port=8810, socket_path=None,
+                 static_path=None):
         self.host = host
         self.port = port
         self.httpd = None
@@ -29,18 +31,23 @@ class webapp(object):
         self.socket_path = socket_path
         self.server_socket = None
         self.stop_event = threading.Event()
+        default_static_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
+        self.static_path = static_path or default_static_path
 
     def _start_server(self):
         """
         Initialize and start the HTTP server and Unix domain socket.
         """
         server_address = ('', self.port)
-        self.httpd = HTTPServer(server_address, HTTPRequestHandler)
+        self.httpd = HTTPServer(server_address, HTTPRequestHandler, directory=self.static_path)
         self.thread = threading.Thread(target=self.httpd.serve_forever)
         self.thread.daemon = True
         self.thread.start()
         self.url = 'http://' + self.host + ':' + str(self.port)
-        logger.info(f"AGVis serves on {self.url}, open your browser and visit it.")
+        msg = f"AGVis serves static files from directory '{self.static_path}'\n" \
+            f"at URL '{self.url}'. Open your web browser and\n" \
+            f"navigate to the URL to access the application."
+        logger.info(msg)
         if self.socket_path:
             self.server_socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             self.server_socket.bind(self.socket_path)
