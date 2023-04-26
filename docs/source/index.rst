@@ -90,4 +90,3 @@ CURENT LTB can be found at the `LTB Repository`_.
    usage/index
    modeling/index
    release-notes
-   api
