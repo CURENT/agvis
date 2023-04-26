@@ -47,7 +47,8 @@ extensions = [
     'IPython.sphinxext.ipython_console_highlighting',
     'numpydoc',
     'sphinx_copybutton',
-    'myst_nb'
+    'myst_nb',
+    'myst_parser',
 ]
 
 # Configuration options for plot_directive. See:
