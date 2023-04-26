@@ -31,5 +31,12 @@ venv/
 .installed.cfg
 *.egg
 
+# Sphinx documentation
+docs/source/_examples
+docs/build/
+docs/jupyter_execute/
+docs/source/_build/
+_generated
+
 # testfile
 icebar
