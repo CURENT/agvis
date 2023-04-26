@@ -172,6 +172,7 @@ def remove_output(recursive=False):
 
 def run(filename='', input_path='', verbose=20,
         host='localhost', port=8810, socket_path=None,
+        static=None,
         **kwargs):
     """
     Entry point to run AGVis.
@@ -207,7 +208,10 @@ def run(filename='', input_path='', verbose=20,
     # TODO: visualize a case or given inpu file
     cases = _find_cases(filename, input_path) #NOQA
 
-    web = agvis.webapp(host=host, port=port, socket_path=socket_path)
+    web = agvis.webapp(host=host, port=port,
+                       socket_path=socket_path,
+                       static_path=static,
+                       )
     web._run_cli()
     return True
 

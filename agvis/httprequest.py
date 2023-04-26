@@ -18,10 +18,11 @@ class HTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     class to add custom handling logic for GET and POST requests.
     """
 
-    def __init__(self, *args, directory=None, **kwargs):
+    def __init__(self, static_path, *args, **kwargs):
         # Get the path of the requested file
-        path = directory or os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
-        super().__init__(*args, directory=path, **kwargs)
+        default_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
+        directory = static_path or default_path
+        super().__init__(*args, directory=directory, **kwargs)
 
     def do_GET(self):
         super().do_GET()

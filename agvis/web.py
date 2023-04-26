@@ -39,7 +39,8 @@ class webapp(object):
         Initialize and start the HTTP server and Unix domain socket.
         """
         server_address = ('', self.port)
-        self.httpd = HTTPServer(server_address, HTTPRequestHandler, directory=self.static_path)
+        handler = lambda *args, **kwargs: HTTPRequestHandler(self.static_path, *args, **kwargs)
+        self.httpd = HTTPServer(server_address, handler)
         self.thread = threading.Thread(target=self.httpd.serve_forever)
         self.thread.daemon = True
         self.thread.start()
