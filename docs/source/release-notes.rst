@@ -9,6 +9,10 @@ The APIs before v3.0.0 are in beta and may change without prior notice.
 v3.0 Notes
 ==========
 
+v3.1.2 (2023-04-26)
+-------------------
+- Minor fix of the documentation, contributed by Jinning Wang
+
 v3.1.1 (2023-04-25)
 -------------------
 - Improve documentation, contributed by Jinning Wang
