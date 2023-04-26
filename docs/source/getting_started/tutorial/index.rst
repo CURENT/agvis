@@ -13,7 +13,6 @@ This chapter describes the most common usages.
 
    cli
    interactive
-   tmux
+   docker
    formats
-   cheatsheet
    makedocs
