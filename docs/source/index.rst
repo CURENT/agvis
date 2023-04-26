@@ -42,7 +42,8 @@ CURENT LTB can be found at the `LTB Repository`_.
     ^^^^^^^^^^^^^^^
 
     Want to jump right into AGVis? Go to the :ref:`tutorial`. It contains instructions
-    for setting up AGVis and will take you through running a simple simulation.
+    for setting up AGVis and will take you through command-line interface to run a
+    simple visualization.
 
     +++
 
@@ -56,16 +57,45 @@ CURENT LTB can be found at the `LTB Repository`_.
     Examples
     ^^^^^^^^
 
-    Already have AGVis set up but want to know how to use it better? No problem.
-    Just go to the Configuration, MultiLayer, and Independent Data Reader. The examples
-    provide instructions on how to use AGVis to its fullest potential. They will walk
-    you through many of the various features that AGVis offers in browser. 
+    The usage provide instructions on how to use AGVis to its various features,
+    including Configuration, MultiLayer, and Independent Data Reader. 
 
     +++
 
-    .. link-button:: configuration
+    .. link-button:: usage
             :type: ref
-            :text: To the examples
+            :text: To the advanced usage
+            :classes: btn-block btn-secondary stretched-link
+
+    ---
+
+    Model development guide
+    ^^^^^^^^^^^^^^^^^^^^^^^
+
+    Looking to implement new functionalities in AGVis?
+    The development guide provides in-depth information on the
+    implementation of the geo-geographical visualization.
+
+    +++
+
+    .. link-button:: development
+            :type: ref
+            :text: To the development guide
+            :classes: btn-block btn-secondary stretched-link
+    ---
+
+    API reference
+    ^^^^^^^^^^^^^
+
+    The API reference contains a detailed description of the ANDES package. The
+    reference describes how the methods work and which parameters can be used.
+    It assumes that you have an understanding of the key concepts.
+
+    +++
+
+    .. link-button:: api_reference
+            :type: ref
+            :text: To the API reference
             :classes: btn-block btn-secondary stretched-link
 
     ---
@@ -90,3 +120,4 @@ CURENT LTB can be found at the `LTB Repository`_.
    usage/index
    modeling/index
    release-notes
+   api
