@@ -2,7 +2,7 @@
 
 <img src="docs/source/images/sponsors/CURENT_Logo_NameOnTrans.png" alt="CURENT ERC Logo" width="300" height="auto">
 
-Geographical visualizer for energy system.
+Geographical visualizer for energy system, serving as the visualization module for the [CURENT Largescale Testbed][LTB Repository].
 
 |               | Latest                                                                                                                                        | Stable                                                                                                                                        |
 |---------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
@@ -22,7 +22,18 @@ AGVis visualizing the WECC system:
 
 # Quick Start
 
-AGVis runs on Linux or Windows, a quick start guide is available at [Quick Start](https://agvis.readthedocs.io/en/latest/quick_start/quick_start/)
+AGVis runs on Linux or Windows, a quick start guide is available at [Tutorial][tutorial].
+
+AGVis is currently under active development.
+Use the following resources to get involved.
+
++ Start from the [documentation][readthedocs] for installation and tutorial.
++ Check out examples in the [advanced usage][advanced usage]
++ Ask a question in the [GitHub Discussions][Github Discussions]
++ Report bugs or issues by submitting a [GitHub issue][GitHub issues]
++ Submit contributions using [pull requests][GitHub pull requests]
++ Read release notes highlighted [here][release notes]
++ Check out and and cite our [paper][arxiv paper]
 
 # Citing AGVis
 
@@ -48,3 +59,18 @@ See [GitHub contributors][GitHub contributors] for the contributor list.
 # License
 
 AGVis is licensed under [GPL v3 License](./LICENSE)
+
+
+* * *
+[GitHub releases]:       https://github.com/CURENT/agvis/releases
+[GitHub issues]:         https://github.com/CURENT/agvis/issues
+[Github Discussions]:    https://github.com/CURENT/agvis/discussions
+[GitHub insights]:       https://github.com/CURENT/agvis/pulse
+[GitHub pull requests]:  https://github.com/CURENT/agvis/pulls
+[GitHub contributors]:   https://github.com/CURENT/agvis/graphs/contributors
+[readthedocs]:           https://agvis.readthedocs.io
+[advanced usage]:       https://agvis.readthedocs.io/en/latest/usage/index.html
+[release notes]:         https://agvis.readthedocs.io/en/latest/release-notes.html
+[arxiv paper]:           https://arxiv.org/abs/2211.11990
+[tutorial]:              https://agvis.readthedocs.io/en/latest/getting_started/tutorial/index.html
+[LTB Repository]:       https://github.com/CURENT
