@@ -41,7 +41,7 @@ CURENT LTB can be found at the `LTB Repository`_.
     Getting started
     ^^^^^^^^^^^^^^^
 
-    Want to jump right into AGVis? Go to the :ref:`tutorial`. It contains instructions
+    New to AGVis? Getting started contains instructions
     for setting up AGVis and will take you through command-line interface to run a
     simple visualization.
 
@@ -54,7 +54,7 @@ CURENT LTB can be found at the `LTB Repository`_.
 
     ---
 
-    Examples
+    Advanced usage
     ^^^^^^^^
 
     The usage provide instructions on how to use AGVis to its various features,
@@ -74,7 +74,7 @@ CURENT LTB can be found at the `LTB Repository`_.
 
     Looking to implement new functionalities in AGVis?
     The development guide provides in-depth information on the
-    implementation of the geo-geographical visualization.
+    implementation of the geographical visualization.
 
     +++
 
@@ -87,9 +87,8 @@ CURENT LTB can be found at the `LTB Repository`_.
     API reference
     ^^^^^^^^^^^^^
 
-    The API reference contains a detailed description of the ANDES package. The
+    The API reference contains a detailed description of the AGVis package. The
     reference describes how the methods work and which parameters can be used.
-    It assumes that you have an understanding of the key concepts.
 
     +++
 
