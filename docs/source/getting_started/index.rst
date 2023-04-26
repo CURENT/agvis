@@ -28,6 +28,9 @@ Getting started
 Quick install
 =============
 
+Before AGVis comes to conda-forge and PyPI, you can install it from source,
+check the guide in :ref:`Develop Install`.
+
 .. panels::
     :card: + install-card
     :column: col-lg-6 col-md-6 col-sm-12 col-xs-12 p-3
@@ -35,8 +38,7 @@ Quick install
     Working with conda?
     ^^^^^^^^^^^^^^^^^^^
 
-    AGVis is available on conda-forge and can be installed with
-    Anaconda, Miniconda, and Mambaforge:
+    AGVis will come to conda-forge soon, stay tuned!
 
     ++++++++++++++++++++++
 
@@ -49,7 +51,7 @@ Quick install
     Prefer pip?
     ^^^^^^^^^^^
 
-    agvis can be installed via pip from `PyPI <https://pypi.org/project/pandas>`__.
+    AGVis will come to PyPI soon, stay tuned!
 
     ++++
 
