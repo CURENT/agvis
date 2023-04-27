@@ -23,6 +23,7 @@ Getting started
     overview
     install
     tutorial/index
+    testcases
     copyright
 
 Quick install
