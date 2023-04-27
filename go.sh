@@ -56,6 +56,9 @@ dev2() {
 }
 
 clean() {
+    echo "Cleaning ANDES output file..."
+    andes misc -C --recursive
+
     echo "Stopping and removing all Docker containers and images..."
     if [ -n "$(docker ps -aq)" ]; then
         docker stop $(docker ps -aq)
