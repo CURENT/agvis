@@ -49,12 +49,7 @@ Please refer as **LTB AGVis** for the first occurence and then refer as **AGVis*
 # Sponsors and Contributors
 
 This work was supported in part by the Engineering Research Center
-Program of the National Science Foundation and the Department of Energy
-under NSF Award Number EEC-1041877 and the CURENT Industry Partnership
-Program.
-
-This work was supported in part by the Advanced Grid Research and Development Program
-in the Office of Electricity at the U.S. Department of Energy.
+Program of the National Science Foundation and the Department of Energy under NSF Award Number EEC-1041877 and the CURENT Industry Partnership Program.
 
 AGVis is originally developed by Nicholas West and currently developed and maintained by Nicholas Parsly.
 
