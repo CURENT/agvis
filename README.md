@@ -4,9 +4,9 @@
 
 Geographical visualizer for energy system, serving as the visualization module for the [CURENT Largescale Testbed][LTB Repository].
 
-|               | Latest                                                                                                                                        | Stable                                                                                                                                        |
-|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| Documentation | [![Latest Documentation](https://readthedocs.org/projects/agvis/badge/?version=stable)](https://agvis.readthedocs.io/en/latest/?badge=stable) | [![Documentation Status](https://readthedocs.org/projects/agvis/badge/?version=latest)](https://agvis.readthedocs.io/en/latest/?badge=latest)|
+|               | Latest                                                                                                                                   | Stable                                                                                                                                   |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Documentation | [![Latest Documentation](https://readthedocs.org/projects/agvis/badge/?version=stable)](https://agvis.readthedocs.io/en/latest/?badge=stable) | [![Documentation Status](https://readthedocs.org/projects/agvis/badge/?version=latest)](https://agvis.readthedocs.io/en/latest/?badge=latest) |
 
 # Why AGVis
 
@@ -36,7 +36,7 @@ AGVis is currently under active development. Use the following resources to get 
 + Report bugs or issues by submitting a [GitHub issue][GitHub issues]
 + Submit contributions using [pull requests][GitHub pull requests]
 + Read release notes highlighted [here][release notes]
-+ Check out and and cite our [paper][arxiv paper]
++ Check out and cite our [paper][arxiv paper]
 
 # Citing AGVis
 
@@ -47,6 +47,7 @@ If you use AGVis for research or consulting, please cite the following publicati
 Please refer as **LTB AGVis** for the first occurence and then refer as **AGVis**.
 
 # Sponsors and Contributors
+
 This work was supported in part by the Engineering Research Center
 Program of the National Science Foundation and the Department of Energy
 under NSF Award Number EEC-1041877 and the CURENT Industry Partnership
@@ -63,19 +64,19 @@ See [GitHub contributors][GitHub contributors] for the contributor list.
 
 AGVis is licensed under [GPL v3 License](./LICENSE)
 
+---
 
-* * *
-[GitHub releases]:       https://github.com/CURENT/agvis/releases
-[GitHub issues]:         https://github.com/CURENT/agvis/issues
-[Github Discussions]:    https://github.com/CURENT/agvis/discussions
-[GitHub insights]:       https://github.com/CURENT/agvis/pulse
-[GitHub pull requests]:  https://github.com/CURENT/agvis/pulls
-[GitHub contributors]:   https://github.com/CURENT/agvis/graphs/contributors
-[readthedocs]:           https://agvis.readthedocs.io
-[advanced usage]:       https://agvis.readthedocs.io/en/latest/usage/index.html
-[release notes]:         https://agvis.readthedocs.io/en/latest/release-notes.html
-[arxiv paper]:           https://arxiv.org/abs/2211.11990
-[tutorial]:              https://agvis.readthedocs.io/en/latest/getting_started/tutorial/index.html
-[LTB Repository]:       https://github.com/CURENT
-[Visualization Gallery]:      https://ltb.readthedocs.io/projects/agvis/en/latest/getting_started/testcases.html#visualization-gallery
-[Demo Videos]:            https://www.youtube.com/watch?v=VwsG5QuUKF8&list=PLE1ipkSMcqsbY8V8-DqVsMmlLMpXKtkld&ab_channel=CURENTLTB
+[GitHub releases]: https://github.com/CURENT/agvis/releases
+[GitHub issues]: https://github.com/CURENT/agvis/issues
+[Github Discussions]: https://github.com/CURENT/agvis/discussions
+[GitHub insights]: https://github.com/CURENT/agvis/pulse
+[GitHub pull requests]: https://github.com/CURENT/agvis/pulls
+[GitHub contributors]: https://github.com/CURENT/agvis/graphs/contributors
+[readthedocs]: https://agvis.readthedocs.io
+[advanced usage]: https://agvis.readthedocs.io/en/latest/usage/index.html
+[release notes]: https://agvis.readthedocs.io/en/latest/release-notes.html
+[arxiv paper]: https://arxiv.org/abs/2211.11990
+[tutorial]: https://agvis.readthedocs.io/en/latest/getting_started/tutorial/index.html
+[LTB Repository]: https://github.com/CURENT
+[Visualization Gallery]: https://ltb.readthedocs.io/projects/agvis/en/latest/getting_started/testcases.html#visualization-gallery
+[Demo Videos]: https://www.youtube.com/watch?v=VwsG5QuUKF8&list=PLE1ipkSMcqsbY8V8-DqVsMmlLMpXKtkld&ab_channel=CURENTLTB
