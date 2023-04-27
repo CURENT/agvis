@@ -12,6 +12,7 @@ v3.0 Notes
 v3.1.3 (2023-04-27)
 -------------------
 - Update to the ``cli`` and ``web`` includes a new input argument ``static_path``
+- Update case files for visualization
 
 v3.1.2 (2023-04-26)
 -------------------
