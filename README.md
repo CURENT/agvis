@@ -12,20 +12,23 @@ Geographical visualizer for energy system, serving as the visualization module f
 
 AGVis is a geovisualization tool that facilitates the visualization of ***large-scale real-time*** power system simulation.
 
-AGVis visualizing the entire North America system topology:
+AGVis can visualize the entire North America power grid topology:
 
-![image](https://user-images.githubusercontent.com/79226045/203147395-27561028-4a74-4ac1-91a5-01e7f811f898.png)
+![image](./docs/source/getting_started/cases/northamerica.png)
 
-AGVis visualizing the WECC system:
+Visit [Visualization Gallery][Visualization Gallery] for more examples.
 
-![image](https://user-images.githubusercontent.com/79226045/203148756-edc046a3-35a1-4343-8ab2-67cfa337546c.png)
+AGVis can also visualize the dynamic results of the Western Electric Coordinating Council (WECC) power system:
+
+![image](./docs/source/getting_started/cases/wecc_dyn.png)
+
+Check out [Demo Videos][Demo Videos] for demonstration videos.
 
 # Quick Start
 
 AGVis runs on Linux or Windows, a quick start guide is available at [Tutorial][tutorial].
 
-AGVis is currently under active development.
-Use the following resources to get involved.
+AGVis is currently under active development. Use the following resources to get involved.
 
 + Start from the [documentation][readthedocs] for installation and tutorial.
 + Check out examples in the [advanced usage][advanced usage]
@@ -74,3 +77,5 @@ AGVis is licensed under [GPL v3 License](./LICENSE)
 [arxiv paper]:           https://arxiv.org/abs/2211.11990
 [tutorial]:              https://agvis.readthedocs.io/en/latest/getting_started/tutorial/index.html
 [LTB Repository]:       https://github.com/CURENT
+[Visualization Gallery]:      https://ltb.readthedocs.io/projects/agvis/en/latest/getting_started/testcases.html#visualization-gallery
+[Demo Videos]:            https://www.youtube.com/watch?v=VwsG5QuUKF8&list=PLE1ipkSMcqsbY8V8-DqVsMmlLMpXKtkld&ab_channel=CURENTLTB

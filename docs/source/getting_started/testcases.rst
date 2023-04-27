@@ -30,8 +30,8 @@ Below is a summary of the test cases for visualization.
     The devices ``BusFreq`` are required in the test case to measure the Bus voltage,
     angle, and frequency.
 
-Topology Gallery
-============================
+Visualization Gallery
+==========================================
 
 Below, you can see the power grid topologies visualized by AGVis.
 
@@ -46,6 +46,13 @@ WECC 179-bus
 ------------------
 .. figure:: cases/wecc.png
    :alt: wecc
+   :width: 960px
+   :align: left
+
+WECC 179-bus dynamic results
+----------------------------------------
+.. figure:: cases/wecc_dyn.png
+   :alt: wecc_dyn
    :width: 960px
    :align: left
 
@@ -74,6 +81,13 @@ Texas Synthetic 2000-bus
 ----------------------------------------
 .. figure:: cases/ACTIVSg2000.png
    :alt: ACTIVSg2000
+   :width: 960px
+   :align: left
+
+North American
+----------------------------------------
+.. figure:: cases/northamerica.png
+   :alt: northamerica
    :width: 960px
    :align: left
 
