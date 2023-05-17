@@ -9,6 +9,14 @@ The APIs before v3.0.0 are in beta and may change without prior notice.
 v3.0 Notes
 ==========
 
+v3.2.0 (2023-05-17)
+------------------
+Major Improvements to the IDR:
+
+- Added the ability to upload more than one file at a time
+- Added the ability to read CSV files
+- Updated the file parsing to now handle ANDES output files as a format
+
 v3.1.3 (2023-04-27)
 -------------------
 - Update to the ``cli`` and ``web`` includes a new input argument ``static_path``

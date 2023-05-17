@@ -53,7 +53,6 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 
 	
 	temparr.push(this._newlayer.data["history"]["varvgs"][x].length);
-	
 	const Varvgs = new dime.NDArray("F", temparr, this._newlayer.data["history"]["varvgs"][x]);
 	
 	let paramCache = this._cache.get(SysParam);

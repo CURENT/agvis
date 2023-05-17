@@ -29,7 +29,10 @@ class Window {
 				}
 				
 				let pt = (timestep - multi.curtime) / 1000;
+				
+				if (multi.pbar != null) {
 				multi.pbar.updatePlaybackBar(pt, timestep);
+				}
 				multi.curtime = Number(timestep);
 
 				
