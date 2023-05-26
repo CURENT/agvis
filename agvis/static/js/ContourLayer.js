@@ -22,7 +22,7 @@ uniform float uOpacity;
 void main() {
 	float value = (vValue - uScaleMin) / (uScaleMax - uScaleMin);
 	vec4 color = texture2D(uColormapSampler, vec2(value, 0.0));
-	color.a *= uOpacity; // Apply opacity to the color
+	color.a *= uOpacity;
 	gl_FragColor = color;
 }
 `;
