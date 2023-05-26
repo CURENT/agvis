@@ -17,10 +17,13 @@ varying float vValue;
 uniform sampler2D uColormapSampler;
 uniform float uScaleMin;
 uniform float uScaleMax;
+uniform float uOpacity;
 
 void main() {
 	float value = (vValue - uScaleMin) / (uScaleMax - uScaleMin);
-	gl_FragColor = texture2D(uColormapSampler, vec2(value, 0.0));
+	vec4 color = texture2D(uColormapSampler, vec2(value, 0.0));
+	color.a *= uOpacity; // Apply opacity to the color
+	gl_FragColor = color;
 }
 `;
 
@@ -166,6 +169,8 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		},
 	});
 
+	const uOpacity = this._opacity;
+
     if(this._render) {
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.enable(gl.BLEND);
@@ -179,6 +184,7 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
             uScaleMax,
             uProjection,
             uColormapSampler,
+			uOpacity,
         });
         twgl.drawBufferInfo(gl, aIndicesBufferInfo, gl.TRIANGLES);
 
@@ -199,6 +205,7 @@ L.ContourLayer = L.CanvasLayer.extend({
 		this._variableRelIndices = null;
 		this._uScaleMin = 0.8;
 		this._uScaleMax = 1.2;
+		this._opacity = 1.0;
 		this._cache = new WeakMap();
         this._render = true;
 
@@ -236,7 +243,12 @@ L.ContourLayer = L.CanvasLayer.extend({
     toggleRender() {
         this._render = !this._render;
         console.log("Contour rendering: ", this._render);
-    }
+    },
+
+	updateOpacity(opacity) {
+        this._opacity = opacity;
+		this.redraw();
+    },
 
 });
 
