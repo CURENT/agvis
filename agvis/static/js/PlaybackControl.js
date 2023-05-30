@@ -76,9 +76,14 @@ let PlaybackControl = L.Control.extend({
         opacitybar.max = 1;
         opacitybar.step = 0.01;
         opacitybar.value = 1.0;
-        opacitybar.style.marginRight = '20px';
+
+        let opacityspan = L.DomUtil.create('span', '', rdiv);
+        opacityspan.innerHTML = " 1.00 ";
+        opacityspan.style.marginRight = '20px';
 
         opacitybar.oninput = function(e) {
+            a = Number(e.target.value).toFixed(2);
+            opacityspan.innerHTML = ' ' + a + ' ';
             win.contourLayer.updateOpacity(e.target.value);
         }
 
