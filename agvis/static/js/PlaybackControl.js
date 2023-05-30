@@ -68,7 +68,7 @@ let PlaybackControl = L.Control.extend({
         rdiv.style.float = "right";
 
         let opacitylabel = L.DomUtil.create('span', '', rdiv);
-        opacitylabel.innerHTML = "Opacity";
+        opacitylabel.innerHTML = "Opacity ";
         let opacitybar = L.DomUtil.create('input', '', rdiv);
         this.opacitybar = opacitybar;
         opacitybar.type = "range";
@@ -78,17 +78,17 @@ let PlaybackControl = L.Control.extend({
         opacitybar.value = 1.0;
 
         let opacityspan = L.DomUtil.create('span', '', rdiv);
-        opacityspan.innerHTML = " 1.00 ";
+        opacityspan.innerHTML = " 100 ";
         opacityspan.style.marginRight = '20px';
 
         opacitybar.oninput = function(e) {
-            a = Number(e.target.value).toFixed(2);
+            a = Math.round(e.target.value*100);
             opacityspan.innerHTML = ' ' + a + ' ';
             win.contourLayer.updateOpacity(e.target.value);
         }
 
         let playbackspeedlabel = L.DomUtil.create('span', '', rdiv);
-        playbackspeedlabel.innerHTML = "Speed";
+        playbackspeedlabel.innerHTML = "Speed ";
         let playbackspeedrange = L.DomUtil.create('input', '', rdiv);
         playbackspeedrange.type = "range";
         playbackspeedrange.value = 2;
