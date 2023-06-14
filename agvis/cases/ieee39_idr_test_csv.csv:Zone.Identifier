@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/
+HostUrl=https://objects.githubusercontent.com/github-production-repository-file-5c1aeb/205443045/11104362?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20230331%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20230331T212044Z&X-Amz-Expires=300&X-Amz-Signature=dc539da6449358d5b79789e536f49ce85b14cab2a1c5e13f98a29a1c22117e7f&X-Amz-SignedHeaders=host&actor_id=59810286&key_id=0&repo_id=205443045&response-content-disposition=attachment%3Bfilename%3Dieee39_ev_out.csv&response-content-type=text%2Fcsv
