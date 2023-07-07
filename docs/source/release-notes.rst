@@ -9,6 +9,11 @@ The APIs before v3.0.0 are in beta and may change without prior notice.
 v3.0 Notes
 ==========
 
+v3.2.1 (2023-07-07)
+-------------------
+
+- Added in an extensive developer documentation
+
 v3.2.0 (2023-05-17)
 ------------------
 Major Improvements to the IDR:
