@@ -1,5 +1,9 @@
-from flask import Flask, render_template, request, jsonify, send_file, send_from_directory, abort
+from flask import Flask, render_template, send_from_directory
 import requests
+
+# gunicorn agvis.app:app -w=1 -b localhost:8810
+# dime -vv -l unix:/tmp/dime2 -l ws:8818
+# andes run wecc.xlsx -r tds --dime-address ipc:///tmp/dime2
 
 app = Flask(__name__)
 app.requests_session = requests.Session()
@@ -14,5 +18,3 @@ def static_proxy(path):
 
 if __name__ == '__main__':
     app.run()
-
-    
