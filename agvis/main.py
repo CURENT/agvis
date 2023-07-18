@@ -213,6 +213,8 @@ def run(filename='', input_path='', verbose=20,
     #                    static_path=static,
     #                    )
     # web._run_cli()
+    agvis.app.run_app("agvis.app:app", host=host, port=port)
+
     return True
 
 
