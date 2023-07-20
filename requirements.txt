@@ -1,4 +1,5 @@
 numpy
 andes
+dime-client
 flask
 gunicorn
