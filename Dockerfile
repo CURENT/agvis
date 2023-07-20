@@ -25,8 +25,8 @@ RUN python3 -m pip install \
         --no-cache-dir \
     && python3 -m pip install \
         git+https://github.com/zmalkmus/agvisdev.git@docker \
-        --no-cache-dir
-    # && python3 -m pip install gunicorn --no-cache-dir
+        --no-cache-dir \
+    && python3 -m pip install gunicorn --no-cache-dir
 
 # Create a new user named 'cui' and a work directory
 RUN useradd -ms /bin/bash cui && \
