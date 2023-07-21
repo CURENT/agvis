@@ -51,7 +51,7 @@ dev2() {
     tmux split-window -v
     tmux select-layout tiled
     # tmux send-keys -t0 "docker run -u root --rm -t -v /tmp:/tmp -v `pwd`/agvis/static:/srv -p 8810:8810 $tag agvis run --static /srv --port $((port+0))" Enter
-    tmux send-keys -t0 "docker run -u root --rm -t -v /tmp:/tmp -v `pwd`/agvis/static:/srv -p 8810:8810 $tag agvis run --static /srv --port $((port+0))" Enter
+    tmux send-keys -t0 "docker run -u root --rm -t -v /tmp:/tmp -v `pwd`/agvis/static:/srv -p 8810:8810 $tag agvis run --port $((port+0))" Enter
     tmux send-keys -t1 "docker run --rm -t -v /tmp:/tmp -p 8818:8818 $tag dime -vv -l unix:/tmp/dime2 -l ws:$((port+8))" Enter
     tmux send-keys -t2 "docker run -u root --rm -t -v /tmp:/tmp -v `pwd`/agvis/cases:/home/cui/work $tag andes run wecc.xlsx -r tds --dime-address ipc:///tmp/dime2"
 }
