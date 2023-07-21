@@ -3,3 +3,4 @@ andes
 dime-client
 flask
 gunicorn
+requests
