@@ -24,7 +24,7 @@ RUN python3 -m pip install \
         git+https://github.com/cuihantao/andes.git@develop \
         --no-cache-dir \
     && python3 -m pip install \
-        git+https://github.com/zmalkmus/agvisdev.git@docker \
+        git+https://github.com/zmalkmus/agvisdev.git \
         --no-cache-dir \
     && python3 -m pip install gunicorn --no-cache-dir
 
