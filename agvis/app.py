@@ -5,7 +5,7 @@ import requests
 app = Flask(__name__)
 app.requests_session = requests.Session()
 
-def run_app(app_module, host='127.0.0.1', port=8810, workers=1):
+def run_app(app_module, host='localhost', port=8810, workers=1):
     command = [
         'gunicorn',
         '-b', f'{host}:{port}',
@@ -24,5 +24,4 @@ def static_proxy(path):
     return send_from_directory('static', path)
 
 if __name__ == '__main__':
-    # app.run()
     run_app()
