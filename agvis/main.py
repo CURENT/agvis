@@ -208,11 +208,7 @@ def run(filename='', input_path='', verbose=20,
     # TODO: visualize a case or given inpu file
     cases = _find_cases(filename, input_path) #NOQA
 
-    # web = agvis.webapp(host=host, port=port,
-    #                    socket_path=socket_path,
-    #                    static_path=static,
-    #                    )
-    # web._run_cli()
+    # Run the flask web app
     agvis.app.run_app("agvis.app:app", host=host, port=port)
 
     return True
