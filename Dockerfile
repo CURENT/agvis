@@ -55,6 +55,7 @@ WORKDIR /home/cui/work
 
 # Copy the Andes config file to the new user's home directory
 COPY andes.rc /home/cui/.andes
+COPY . .
 
 # Set the entrypoint and command for the container
 ENTRYPOINT []

@@ -24,4 +24,4 @@ def static_proxy(path):
     return send_from_directory('static', path)
 
 if __name__ == '__main__':
-    run_app(host="0.0.0.0")
+    run_app()
