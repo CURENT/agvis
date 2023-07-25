@@ -38,7 +38,9 @@ RUN python3 -m andes selftest && \
 
 # Build DiME 2 and install the Python client library
 WORKDIR /tmp
-RUN git clone https://github.com/CURENT/dime.git && \
+# RUN git clone https://github.com/CURENT/dime.git && \
+RUN git clone https://github.com/zmalkmus/dimedev.git && \
+    # cd dime/dime/server && \
     cd dimedev/dime/server && \
     make clean && \
     make && \
