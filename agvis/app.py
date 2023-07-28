@@ -1,3 +1,4 @@
+import os
 import subprocess
 from flask import Flask, render_template, send_from_directory
 import requests
@@ -16,8 +17,9 @@ def static_proxy(path):
 def run_app(app_module, host='localhost', port=8810, workers=1):
     try:
 
-        print(f"AGVis will be served at http://{host}:{port}. Static files are located at \"agvis/static\"")
-        print("Open your web browser and navigate to the URL to access the application.")
+        print(f"AGVis serves static files from directory \"{os.path.join(os.getcwd(), 'agvis/static')}\"")
+        print(f"at the URL http://{host}:{port}. Open your web browser and")
+        print("navigate to the URL to access the application.")
         print("\nStarting AGVis... Press Ctrl+C to stop.")
 
         command = [
@@ -29,8 +31,6 @@ def run_app(app_module, host='localhost', port=8810, workers=1):
         
         with app.requests_session as session:
             subprocess.run(command, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f'An error occured while trying to start AGVis: {e}')
     except KeyboardInterrupt:
         print('\nAGVis has been stopped. You may now close the browser.')
     except Exception as e:
