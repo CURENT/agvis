@@ -24,6 +24,7 @@ RUN python3 -m pip install \
         git+https://github.com/cuihantao/andes.git@develop \
         --no-cache-dir \
     && python3 -m pip install \
+        # git+https://github.com/CURENT/agvis.git \
         git+https://github.com/zmalkmus/agvisdev.git \
         --no-cache-dir
 
@@ -38,8 +39,9 @@ RUN python3 -m andes selftest && \
 
 # Build DiME 2 and install the Python client library
 WORKDIR /tmp
-RUN git clone https://github.com/CURENT/dime.git && \
-    cd dime/server && \
+# RUN git clone https://github.com/CURENT/dime.git && \
+RUN git clone https://github.com/zmalkmus/dimedev.git && \
+    cd dimedev/dime/server && \
     make clean && \
     make && \
     make install && \
