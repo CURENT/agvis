@@ -9,6 +9,24 @@ The APIs before v3.0.0 are in beta and may change without prior notice.
 v3.0 Notes
 ==========
 
+v3.2.1 (2023-07-07)
+-------------------
+
+- Added in an extensive developer documentation
+
+v3.2.0 (2023-05-17)
+------------------
+Major Improvements to the IDR:
+
+- Added the ability to upload more than one file at a time
+- Added the ability to read CSV files
+- Updated the file parsing to now handle ANDES output files as a format
+
+Replaced simple.http server backend with Flask
+
+- Uses Gunicorn as the WSGI
+- Removed static file parameter in agvis run command
+
 v3.1.3 (2023-04-27)
 -------------------
 - Update to the ``cli`` and ``web`` includes a new input argument ``static_path``
