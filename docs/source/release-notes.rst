@@ -22,6 +22,11 @@ Major Improvements to the IDR:
 - Added the ability to read CSV files
 - Updated the file parsing to now handle ANDES output files as a format
 
+Replaced simple.http server backend with Flask
+
+- Uses Gunicorn as the WSGI
+- Removed static file parameter in agvis run command
+
 v3.1.3 (2023-04-27)
 -------------------
 - Update to the ``cli`` and ``web`` includes a new input argument ``static_path``
