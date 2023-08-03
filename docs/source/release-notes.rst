@@ -15,7 +15,7 @@ v3.2.1 (2023-07-07)
 - Added in an extensive developer documentation
 
 v3.2.0 (2023-05-17)
-------------------
+-------------------
 Major Improvements to the IDR:
 
 - Added the ability to upload more than one file at a time
