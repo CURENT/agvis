@@ -6,13 +6,10 @@ class Window {
         this.num = num;
         this.options = options;
 
-	this.multilayer = [];
-	this.multihistory = [];
-	this.mlayercur = 0;
-	this.mnumfree = 0;
-	
-
-		
+        this.multilayer = [];
+        this.multihistory = [];
+        this.mlayercur = 0;
+        this.mnumfree = 0;
 		
 		//Loops every 17 milliseconds to update the animation for the independent simulation data
 		//Animation step is associated with receiving info from DiME, so we have to use this for the bundled version
@@ -65,14 +62,11 @@ class Window {
             zoom: 5,
         });
 
-        //this.map.timescale = 1.0;
-        //this.map.end_time = null;
         this.map.handshake = true;
 
+        this.legend = L.legend({ position: 'bottomleft' }).addTo(this.map);
         this.pbar = new PlaybackControl(this, options);
-
         this.tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(this.map);
-
         this.zoneLayer = L.zoneLayer().addTo(this.map);
         this.topologyLayer = L.topologyLayer().addTo(this.map);
         this.contourLayer = L.contourLayer().addTo(this.map);
