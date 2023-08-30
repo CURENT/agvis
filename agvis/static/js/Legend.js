@@ -19,7 +19,7 @@ L.DynamicLegend = L.Control.extend({
         topLabels.style.width = '100%';
         topLabels.style.height = '16px';
 
-        let left = L.DomUtil.create('div', '', topLabels);
+        let title = L.DomUtil.create('div', '', topLabels);
         title.style.float = 'left';
         title.style.width = '40%';
         title.innerHTML = "<p id=\"legend-title\">Frequency</p>";
