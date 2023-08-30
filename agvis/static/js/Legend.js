@@ -12,16 +12,7 @@ L.DynamicLegend = L.Control.extend({
         div.style.paddingLeft = '15px';
         div.style.paddingRight = '15px';
         div.style.width = '300px';
-        // div.style.height = "100px";
         div.style.height = '75px';
-
-        // Title if we need it
-        // let title = L.DomUtil.create('div', '', div);
-        // title.style.width = '100%';
-        // title.style.textAlign = 'center';
-        // title.style.fontSize = '14px';
-        // title.style.fontWeight = 'bold';
-        // title.innerHTML = 'Dynamic Results';
 
         // Labels at the top of the bar
         let topLabels = L.DomUtil.create('div', '', div);
@@ -29,14 +20,14 @@ L.DynamicLegend = L.Control.extend({
         topLabels.style.height = '16px';
 
         let left = L.DomUtil.create('div', '', topLabels);
-        left.style.float = 'left';
-        left.style.width = '40%';
-        left.innerHTML = "<p>Contour</p>";
+        title.style.float = 'left';
+        title.style.width = '40%';
+        title.innerHTML = "<p id=\"legend-title\">Frequency</p>";
 
         let right = L.DomUtil.create('div', '', topLabels);
         right.style.float = 'right';
         right.style.width = '60%';
-        right.innerHTML = "<p>Bus + Hz</p>";
+        right.innerHTML = "<p id=\"legend-units\">Bus + Hz</p>";
 
         // Create Dynamic Gradient
         let gradient = L.DomUtil.create('div', 'legend-gradient', div);
@@ -45,7 +36,6 @@ L.DynamicLegend = L.Control.extend({
         gradient.style.height = '20px';
         gradient.style.border = '1px solid grey';
         gradient.style.borderRadius = '2px';
-        // gradient.style.margin = 'auto';
 
         // Labels below the bar
         let bottomLabels = L.DomUtil.create('div', '', div);
@@ -53,11 +43,11 @@ L.DynamicLegend = L.Control.extend({
 
         left = L.DomUtil.create('div', '', bottomLabels);
         left.style.float = 'left';
-        left.innerHTML = "<p>-0.1100</p>";
+        left.innerHTML = "<p id=\"legend-range-left\">-0.1100</p>";
 
         right = L.DomUtil.create('div', '', bottomLabels);
         right.style.float = 'right';
-        right.innerHTML = "<p>+0.1100</p>";
+        right.innerHTML = "<p id=\"legend-range-right\">+0.1100</p>";
 
         return div;
     }
