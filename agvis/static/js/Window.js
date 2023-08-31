@@ -60,7 +60,7 @@ class Window {
         });
 
         this.map.handshake = true;
-        this.legend = L.dynamicLegend().addTo(this.map);
+        this.legend = new L.DynamicLegend(this, options).addTo(this.map);
         this.pbar = new PlaybackControl(this, options);
         this.tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(this.map);
         this.zoneLayer = L.zoneLayer().addTo(this.map);

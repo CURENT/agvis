@@ -1,9 +1,22 @@
+const states = {    /* States to handle on change events */
+    frequency: 0,
+    angle: 1,
+    voltage: 2,
+}
+
 L.DynamicLegend = L.Control.extend({
     options: {
         position: 'bottomright',
     },
 
+    initialize: function(win, options) {
+        this.win = win;
+        if (options) L.Util.setOptions(this, options);
+        this.state = states.frequency;
+    },
+
     onAdd: function() {
+
         // Legend Container
         let div = L.DomUtil.create('div', 'leaflet-bar');
         div.style.backgroundColor = 'white';
@@ -43,14 +56,12 @@ L.DynamicLegend = L.Control.extend({
 
         left = L.DomUtil.create('div', '', bottomLabels);
         left.style.float = 'left';
-        left.innerHTML = "<p id=\"legend-range-left\">-0.1100</p>";
+        left.innerHTML = "<p id=\"legend-range-left\">" + this.options.fmin + "</p>";
 
         right = L.DomUtil.create('div', '', bottomLabels);
         right.style.float = 'right';
-        right.innerHTML = "<p id=\"legend-range-right\">+0.1100</p>";
+        right.innerHTML = "<p id=\"legend-range-right\">" + this.options.fmax + "</p>";
 
         return div;
     }
 });
-
-L.dynamicLegend = function() { return new L.DynamicLegend(); }
