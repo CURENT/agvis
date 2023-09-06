@@ -127,11 +127,6 @@ function addSidebarConfig(win, options, sidebar) {
     const opt_vlabel          = document.querySelector(`#${table_id} span[name='opt_vlabel']`);
     const opt_flabel          = document.querySelector(`#${table_id} span[name='opt_flabel']`);
     const ts_up               = document.querySelector(`#${table_id} input[name='ts_up']`);
-    // const legend              = document.getElementById('legend');
-    // const legend_title        = document.getElementById('legend-title');
-    // const legend_units        = document.getElementById('legend-units');
-    // const legend_range_left   = document.getElementById('legend-range-left');
-    // const legend_range_right  = document.getElementById('legend-range-right');
     
     //Updating function for Timestamp
     ts_up.onclick = function() {
