@@ -108,28 +108,30 @@ function addSidebarConfig(win, options, sidebar) {
 
     });
 
-    const opt_dimehost = document.querySelector(`#${table_id} input[name='opt_dimehost']`);
-    const opt_dimeport = document.querySelector(`#${table_id} input[name='opt_dimeport']`);
-    const opt_amin = document.querySelector(`#${table_id} input[name='opt_amin']`);
-    const opt_amax = document.querySelector(`#${table_id} input[name='opt_amax']`);
-    const opt_vmin = document.querySelector(`#${table_id} input[name='opt_vmin']`);
-    const opt_vmax = document.querySelector(`#${table_id} input[name='opt_vmax']`);
-    const opt_fmin = document.querySelector(`#${table_id} input[name='opt_fmin']`);
-    const opt_fmax = document.querySelector(`#${table_id} input[name='opt_fmax']`);
-    const opt_opacity = document.querySelector(`#${table_id} input[name='opt_opacity']`);
-    const opt_togglezones = document.querySelector(`#${table_id} input[name='opt_togglezones']`);
+    const opt_dimehost        = document.querySelector(`#${table_id} input[name='opt_dimehost']`);
+    const opt_dimeport        = document.querySelector(`#${table_id} input[name='opt_dimeport']`);
+    const opt_amin            = document.querySelector(`#${table_id} input[name='opt_amin']`);
+    const opt_amax            = document.querySelector(`#${table_id} input[name='opt_amax']`);
+    const opt_vmin            = document.querySelector(`#${table_id} input[name='opt_vmin']`);
+    const opt_vmax            = document.querySelector(`#${table_id} input[name='opt_vmax']`);
+    const opt_fmin            = document.querySelector(`#${table_id} input[name='opt_fmin']`);
+    const opt_fmax            = document.querySelector(`#${table_id} input[name='opt_fmax']`);
+    const opt_opacity         = document.querySelector(`#${table_id} input[name='opt_opacity']`);
+    const opt_togglezones     = document.querySelector(`#${table_id} input[name='opt_togglezones']`);
     const opt_togglebuslabels = document.querySelector(`#${table_id} input[name='opt_togglebuslabels']`);
-
-    const opt_loadconfig = document.querySelector(`#${table_id} input[name='opt_loadconfig']`);
-    const opt_saveconfig = document.querySelector(`#${table_id} input[name='opt_saveconfig']`);
-    const opt_loadsimulation = document.querySelector(`#${table_id} input[name='opt_loadsimulation']`);
-    const opt_savesimulation = document.querySelector(`#${table_id} input[name='opt_savesimulation']`);
-
-    const opt_alabel = document.querySelector(`#${table_id} span[name='opt_alabel']`);
-    const opt_vlabel = document.querySelector(`#${table_id} span[name='opt_vlabel']`);
-    const opt_flabel = document.querySelector(`#${table_id} span[name='opt_flabel']`);
-
-    const ts_up = document.querySelector(`#${table_id} input[name='ts_up']`);
+    const opt_loadconfig      = document.querySelector(`#${table_id} input[name='opt_loadconfig']`);
+    const opt_saveconfig      = document.querySelector(`#${table_id} input[name='opt_saveconfig']`);
+    const opt_loadsimulation  = document.querySelector(`#${table_id} input[name='opt_loadsimulation']`);
+    const opt_savesimulation  = document.querySelector(`#${table_id} input[name='opt_savesimulation']`);
+    const opt_alabel          = document.querySelector(`#${table_id} span[name='opt_alabel']`);
+    const opt_vlabel          = document.querySelector(`#${table_id} span[name='opt_vlabel']`);
+    const opt_flabel          = document.querySelector(`#${table_id} span[name='opt_flabel']`);
+    const ts_up               = document.querySelector(`#${table_id} input[name='ts_up']`);
+    // const legend              = document.getElementById('legend');
+    // const legend_title        = document.getElementById('legend-title');
+    // const legend_units        = document.getElementById('legend-units');
+    // const legend_range_left   = document.getElementById('legend-range-left');
+    // const legend_range_right  = document.getElementById('legend-range-right');
     
     //Updating function for Timestamp
     ts_up.onclick = function() {
@@ -281,6 +283,8 @@ function addSidebarConfig(win, options, sidebar) {
             if (win.contourLayer.variableName === "theta") {
                 win.contourLayer.updateRange(options.amin, options.amax);
             }
+
+            win.legend.update();
         }
     }
 
@@ -299,6 +303,8 @@ function addSidebarConfig(win, options, sidebar) {
             if (win.contourLayer.variableName === "theta") {
                 win.contourLayer.updateRange(options.amax, options.amax);
             }
+
+            win.legend.update();
         }
     };
 
@@ -317,6 +323,8 @@ function addSidebarConfig(win, options, sidebar) {
             if (win.contourLayer.variableName === "V") {
                 win.contourLayer.updateRange(options.vmin, options.vmax);
             }
+
+            win.legend.update();
         }
     };
 
@@ -335,6 +343,8 @@ function addSidebarConfig(win, options, sidebar) {
             if (win.contourLayer.variableName === "V") {
                 win.contourLayer.updateRange(options.vmin, options.vmax);
             }
+
+            win.legend.update();
         }
     }
 
@@ -353,6 +363,8 @@ function addSidebarConfig(win, options, sidebar) {
             if (win.contourLayer.variableName === "freq") {
                 win.contourLayer.updateRange(options.fmin, options.fmax);
             }
+
+            win.legend.update();
         }
     };
 
@@ -371,6 +383,8 @@ function addSidebarConfig(win, options, sidebar) {
             if (win.contourLayer.variableName === "freq") {
                 win.contourLayer.updateRange(options.fmin, options.fmax);
             }
+
+            win.legend.update();
         }
     };
 
@@ -388,6 +402,8 @@ function addSidebarConfig(win, options, sidebar) {
             dt = dt.toUTCString();
 
             document.cookie = `opacity${win.num}=${val};expires=${dt};path=/`;
+
+            win.legend.update();
         }
     };
 

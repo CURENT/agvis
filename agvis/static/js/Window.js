@@ -3,6 +3,14 @@ class Window {
         this.workspace = {};
         this.history = {};
 
+        // Keep track of the view state
+        this.states = {
+            angl: 0,
+            volt: 1,
+            freq: 2,
+        }
+        this.state = this.states.freq;
+
         this.num = num;
         this.options = options;
 
@@ -262,9 +270,6 @@ class Window {
 
             let dt = (currentTime - firstTime) / 1000.0;
 			
-			
-			
-			
             if (self.end_time !== null) {
                 dt *= self.timescale;
             }
@@ -273,8 +278,6 @@ class Window {
 			
             self.pbar.updatePlaybackBar(self.time);
 			
-
-
             self.workspace.currentTimeInSeconds = self.time;
             firstTime = currentTime;
 
@@ -287,10 +290,7 @@ class Window {
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
             self.searchLayer.update(self.workspace, self);
-			
-			
-
-			
+		
 			//console.log(self.workspace.Varvgs);
 
             if (self.workspace.Varvgs) {
@@ -346,6 +346,8 @@ class Window {
 
             self.contourLayer.showVariable("theta");
             self.contourLayer.updateRange(amin, amax);
+            self.state = self.states.angl;
+            self.legend.update();
         });
 
         const voltageButton = L.easyButton('<span>V</span>', function(btn, map) {
@@ -354,6 +356,8 @@ class Window {
 
             self.contourLayer.showVariable("V");
             self.contourLayer.updateRange(vmin, vmax);
+            self.state = self.states.volt;
+            self.legend.update();
         });
 
         const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map) {
@@ -362,6 +366,8 @@ class Window {
 
             self.contourLayer.showVariable("freq");
             self.contourLayer.updateRange(fmin, fmax);
+            self.state = self.states.freq;
+            self.legend.update();
         });
 
         /// Added toggle buttons for different layer views
