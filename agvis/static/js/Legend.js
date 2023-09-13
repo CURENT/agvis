@@ -1,17 +1,10 @@
 /**
- * ==================================================================================================
+ * ============================================================================
  * File Name:   Legend.js
  * Author:      Zack Malkmus
- * Date:        9/6/2023 
- * Description: Creates a draggable and updating legend for LTB AGVis
- * ==================================================================================================
- */
-
-/**
- * Create a new dynamic legend for AGVis.
- * 
+ * Date:        9/6/2023 (last modified)
+ * ============================================================================
  * This class creates a new legend for AGVis that is draggable and updatable
- * 
  * @author  Zack Malkmus
  * @param   {Object} win - The AGVis window that the legend is associated with.
  * @returns {Object}       The new legend element.
@@ -142,21 +135,18 @@ L.DynamicLegend = L.Control.extend({
      * @see      Window.js
      */
     update: function() {
-        // Voltage Angle
         if (this.win.state == this.win.states.angl) {
             this.title.innerHTML = "<span>V Angle</span>";
             this.units.innerHTML = "<span>(rad)</span>";
             this.min.innerHTML = "<span>" + this.win.options.amin + "</span>";
             this.max.innerHTML = "<span>" + this.win.options.amax + "</span>";
         } 
-        // Voltage Magnitude
         else if (this.win.state == this.win.states.volt) {
             this.title.innerHTML = "<span>V Magnitude</span>";
             this.units.innerHTML = "<span>(p.u.)</span>";
             this.min.innerHTML = "<span>" + this.win.options.vmin + "</span>";
             this.max.innerHTML = "<span>" + this.win.options.vmax + "</span>";
         }
-        // Frequency
         else if (this.win.state == this.win.states.freq) {
             this.title.innerHTML = "<span>Frequency</span>";
             this.units.innerHTML = "<span>(p.u.)</span>";
