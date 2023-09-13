@@ -3,21 +3,25 @@ class Window {
         this.workspace = {};
         this.history = {};
 
+        // Keep track of the view state
+        this.states = {
+            angl: 0,
+            volt: 1,
+            freq: 2,
+        }
+        this.state = this.states.freq;
+
         this.num = num;
         this.options = options;
 
-	this.multilayer = [];
-	this.multihistory = [];
-	this.mlayercur = 0;
-	this.mnumfree = 0;
-	
-
-		
+        this.multilayer = [];
+        this.multihistory = [];
+        this.mlayercur = 0;
+        this.mnumfree = 0;
 		
 		//Loops every 17 milliseconds to update the animation for the independent simulation data
 		//Animation step is associated with receiving info from DiME, so we have to use this for the bundled version
 		setInterval(function(multilayer) {
-			
 			let timestep = Number(Date.now());
 			for (let i = 0; i < multilayer.length; i++) {
 				
@@ -31,8 +35,6 @@ class Window {
 				let pt = (timestep - multi.curtime) / 1000;
 				multi.pbar.updatePlaybackBar(pt, timestep);
 				multi.curtime = Number(timestep);
-
-				
 			}
 		}, 17, this.multilayer);
 
@@ -65,22 +67,16 @@ class Window {
             zoom: 5,
         });
 
-        //this.map.timescale = 1.0;
-        //this.map.end_time = null;
         this.map.handshake = true;
-
+        this.legend = new L.DynamicLegend(this, options).addTo(this.map);
         this.pbar = new PlaybackControl(this, options);
-
         this.tileLayer = L.tileLayer(TILE_LAYER_URL).addTo(this.map);
-
         this.zoneLayer = L.zoneLayer().addTo(this.map);
         this.topologyLayer = L.topologyLayer().addTo(this.map);
         this.contourLayer = L.contourLayer().addTo(this.map);
         this.communicationLayer = L.communicationLayer().addTo(this.map);
         this.searchLayer = L.searchLayer().addTo(this.map);
-
         this.map.addControl(this.searchLayer.control);
-
         this.simTimeBox = L.simTimeBox({ position: 'topright' }).addTo(this.map);
 
         // side bar
@@ -274,9 +270,6 @@ class Window {
 
             let dt = (currentTime - firstTime) / 1000.0;
 			
-			
-			
-			
             if (self.end_time !== null) {
                 dt *= self.timescale;
             }
@@ -285,8 +278,6 @@ class Window {
 			
             self.pbar.updatePlaybackBar(self.time);
 			
-
-
             self.workspace.currentTimeInSeconds = self.time;
             firstTime = currentTime;
 
@@ -299,10 +290,7 @@ class Window {
             self.topologyLayer.update(self.workspace);
             self.contourLayer.update(self.workspace);
             self.searchLayer.update(self.workspace, self);
-			
-			
-
-			
+		
 			//console.log(self.workspace.Varvgs);
 
             if (self.workspace.Varvgs) {
@@ -358,6 +346,8 @@ class Window {
 
             self.contourLayer.showVariable("theta");
             self.contourLayer.updateRange(amin, amax);
+            self.state = self.states.angl;
+            self.legend.update();
         });
 
         const voltageButton = L.easyButton('<span>V</span>', function(btn, map) {
@@ -366,6 +356,8 @@ class Window {
 
             self.contourLayer.showVariable("V");
             self.contourLayer.updateRange(vmin, vmax);
+            self.state = self.states.volt;
+            self.legend.update();
         });
 
         const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map) {
@@ -374,6 +366,8 @@ class Window {
 
             self.contourLayer.showVariable("freq");
             self.contourLayer.updateRange(fmin, fmax);
+            self.state = self.states.freq;
+            self.legend.update();
         });
 
         /// Added toggle buttons for different layer views
