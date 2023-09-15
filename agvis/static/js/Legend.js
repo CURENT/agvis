@@ -4,11 +4,10 @@
  * Author:      Zack Malkmus
  * Date:        9/6/2023 (last modified)
  * ============================================================================
- * This class creates a new legend for AGVis that is draggable and updatable
- * @author  Zack Malkmus
- * @param   {Object} win - The AGVis window that the legend is associated with.
- * @returns {Object}       The new legend element.
+ * The DynamicLegend class creates a new dynamic legend for AGVis that is 
+ * draggable and updatable.
  */
+
 L.DynamicLegend = L.Control.extend({
     options: {
         position: 'bottomright',
