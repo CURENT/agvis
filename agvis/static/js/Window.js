@@ -16,7 +16,6 @@
  * Developers that want to add new features to AGVis will inevitably have to either 
  * interface with a Window directly or with one of its components.
  */
-
 class Window {
     /**
      * The constructor for the Window class. 
