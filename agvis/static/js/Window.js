@@ -149,7 +149,7 @@ class Window {
             position: 'right',                     // left or right
         }).addTo(this.map);
 
-        /* add a new panel */
+        // Add new panels to the sidebar
         let visPlotName = this.map_name + "Vis";
         let visPane = '';
 
@@ -443,7 +443,7 @@ class Window {
         // UI Buttons
         // ====================================================================
 
-        /// Bar of icons for voltage, theta and frequency
+        // voltage angle
         const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map) {
             const amin = (self.options.amin === undefined) ? -1.0 : self.options.amin;
             const amax = (self.options.amax === undefined) ?  1.0 : self.options.amax;
@@ -453,7 +453,8 @@ class Window {
             self.state = self.states.angl;
             self.legend.update();
         });
-
+        
+        // voltage magnitude
         const voltageButton = L.easyButton('<span>V</span>', function(btn, map) {
             const vmin = (self.options.vmin === undefined) ? 0.8 : self.options.vmin;
             const vmax = (self.options.vmax === undefined) ? 1.2 : self.options.vmax;
@@ -464,6 +465,7 @@ class Window {
             self.legend.update();
         });
 
+        // frequency
         const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map) {
             const fmin = (self.options.fmin === undefined) ? 0.9998 : self.options.fmin;
             const fmax = (self.options.fmax === undefined) ? 1.0002 : self.options.fmax;
