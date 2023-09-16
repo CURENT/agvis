@@ -1,3 +1,14 @@
+/* ***********************************************************************************
+ * File Name:   ContMulti.js
+ * Authors:     Nicholas West, Nicholas Parsley
+ * Date:        9/16/2023 (last modified)
+ * 
+ * ContMulti.js contains the code relating to the MultiContiLayer. MultiContLayer
+ * shares many things with the ContourLayer (like MultiTopLayer does with TopologyLayer).
+ * Once again, the main difference is that the MultiContLayer uses data from a newlayer
+ * as opposed to the Window's workspace.
+ * ***********************************************************************************/
+
 /*
 const contourVertexShader = `
 precision mediump float;
@@ -25,7 +36,17 @@ void main() {
 }
 `;
 */
-//The mutilayer version of the contour layer
+
+/**
+ * Render the multi contour layer
+ * 
+ * @param   {HTML Canvas Element} canvas                - The canvas that the layer will be drawn on.
+ * @param   {Point Class}         size                  - Represents the current size of the map in pixels.
+ * @param   {LatLngBounds Class}  bounds                - Represents the geographical bounds of the map.
+ * @param   {Function}            project               - The latLngToContainerPoint function specifically for CanvasLayer._map.
+ * @param   {Boolean}             needsProjectionUpdate - Determines whether the Layer’s projection needs to be updated.
+ * @returns
+ */
 function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate }) {
 	const context = this._context;
 	if (!context) return;
@@ -40,7 +61,7 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 	const temparr = [];
 	let x;
 	
-	//Select data based on where the timer for the animation is at
+	// Select data based on where the timer for the animation is at
 	for (let j = 0; j < this._newlayer.data["history"]["t"].length; j++) {
 
 		let val = Number(this._newlayer.data["history"]["t"][j]);
@@ -62,7 +83,7 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 		this._cache.set(SysParam, paramCache);
 	}
 
-	//I don't entirely understand how it works, but it basically uses delauney triangles to create heat maps between nodes, then it uses a gradient function to smooth it over
+	// I don't entirely understand how it works, but it basically uses delauney triangles to create heat maps between nodes, then it uses a gradient function to smooth it over
     const nelems = Bus.idx.length;
 
 	let { busLatLngCoords } = paramCache;
@@ -210,11 +231,41 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
     }
 }
 
+/**
+ * The MultContLayer Class
+ * 
+ * @var     {Object}                 MultiContLayer._context            - Another name for the Window's workspace
+ * @var     {Object}                 MultiContLayer._variableRange      - Minimum and maximum index for a given variable in "begin" and "end" respectively
+ * @var     {Object}                 MultiContLayer._variableRelIndices - Stores the ranges for all the variables
+ * @var     {Number}                 MultiContLayer._uScaleMin          - Minimum range of a variable
+ * @var     {Number}                 MultiContLayer._uScaleMax          - Maximum range of a variable
+ * @var     {Number}                 MultiContLayer._opacity            - The opacity for the heatmap. Applied in a fragment shader.
+ * @var     {Boolean}                MultiContLayer._render             - Determines if MultiContLayer has been rendered or not.
+ * @var     {WeakMap}                ContourLayer._cache                - Caches the information used in the rendering functions
+ * @var     {NDArray}                busLatLngCoords                    - Stores the latitude and longitude for each node. Stored as a [# nodes][2] array. Accessed by busLatLngCoords[lat][lng].
+ * @var     {NDArray}                busPixelCoords                     - Stores the pixel location for each node. Stored in the same manner as busLatLngCoords.
+ * @var     {NDArray}                busTriangles                       - Stores all of the Delaunay triangles. Effectively stored as a [# of triangles][3] array.
+ * @var     {WebGL2RenderingContext} gl                                 - The canvas context used for rendering the MultiContLayer animations.
+ * @var     {ProgramInfo}            programInfo                        - A TWGL Object that contains the shaders and context.
+ * @var     {WebGlTexture}           uColormapSampler                   - The texture map used to create the heatmaps.
+ * 
+ * @returns
+ */
 L.MultiContLayer = L.CanvasLayer.extend({
 	options: {
 		render: renderMultiCont,
 	},
 
+	/**
+	 * Initializes the MultiContLayer's setting
+	 * 
+	 * @constructs MultiContLayer
+	 * @memberof   MultiContiLayer
+	 * 
+	 * @param {*}      newlayer 
+	 * @param {Object} options  - (Optional) The options Object from Window. Unused beyond being passed to the CanvasLayer initialization function.
+	 * @returns
+	 */
 	initialize(newlayer, options) {
 		this._context = null;
 		this._variableRange = null;
@@ -229,21 +280,50 @@ L.MultiContLayer = L.CanvasLayer.extend({
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
 
+	/**
+	 * Updates the values for the variables and then re-renders the MultiContLayer.
+	 * 
+	 * @memberof MultiContLayer
+	 * 
+	 * @param {Object} - The workspace from Window.
+	 * @returns
+	 */
 	update(context) {
 		this._context = context;
-		//console.log("stuff");
-            this.redraw();
+        this.redraw();
     },
 
+	/**
+	 * Handles adding the MultiContLayer to the map.
+	 * 
+	 * @memberof MultiContLayer
+	 * 
+	 * @param {map} map - The map from Window
+	 * @returns 
+	 */
     onAdd(map) {
         L.CanvasLayer.prototype.onAdd.call(this, map);
         this.getPane().classList.add("multicont-pane" + this._newlayer.num);
     },
 
+	/**
+	 * Passes the relative indices for the simulation variables from Window to MultiContLayer.
+	 * 
+	 * @memberof MultiContLayer
+	 * 
+	 * @param {Object} idx - Relative indices
+	 * @returns
+	 */
 	storeRelativeIndices(idx) {
 		this._variableRelIndices = idx;
 	},
 
+	/**
+	 * Changes the simulation variable being used for the animation and requests that the current frame be redrawn.
+	 * 
+	 * @param {String} name - The name of the variable used to key into the MultiContLayer._variableRelIndices Object.
+	 * @returns 
+	 */
 	showVariable(name) {
 		// updates the name of variables for the contour map
         this.variableName = name;
@@ -252,18 +332,40 @@ L.MultiContLayer = L.CanvasLayer.extend({
             this.redraw();
     },
 
-	//Update range for the current shown variable
+	/**
+	 * Passes the range values used in the animation from the configuration settings to the MultiContLayer.
+	 * 
+	 * @memberof MultiContLayer
+	 * 
+	 * @param {Number} lower 
+	 * @param {Number} upper 
+	 * @returns
+	 */
 	updateRange(lower, upper){
 		this._uScaleMax = upper;
 		this._uScaleMin = lower;
 	},
 
+	/**
+	 * Switches the state of MultiContLayer._render
+	 * 
+	 * @memberof MultiContLayer
+	 * 
+	 * @returns
+	 */
     toggleRender() {
         this._render = !this._render;
         console.log("MultiContour rendering: ", this._render);
     },
 
-	//Used for prioritize button, just copies over everything
+	/**
+	 * Changes the newlayer’s current values to be those from another newlayer. Used exclusively for the “Prioritize Layer” button.
+	 * 
+	 * @memberof MultiContLayer
+	 * 
+	 * @param {Object} oldlayer - The newlayer that the values are being taken from.
+	 * @returns
+	 */
 	stealVals(oldlayer) {
 		
 		this._context = oldlayer._context;
@@ -274,7 +376,6 @@ L.MultiContLayer = L.CanvasLayer.extend({
 		this._cache = oldlayer._cache;
 		this.variableName = oldlayer.variableName;
 		this._render = oldlayer._render;
-		
 	}
 });
 
