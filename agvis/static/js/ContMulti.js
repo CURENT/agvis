@@ -10,31 +10,31 @@
  * ***********************************************************************************/
 
 /*
-const contourVertexShader = `
-precision mediump float;
-attribute vec2 aPosition;
-attribute float aValue;
-uniform mat4 uProjection;
-varying float vValue;
+	const contourVertexShader = `
+	precision mediump float;
+	attribute vec2 aPosition;
+	attribute float aValue;
+	uniform mat4 uProjection;
+	varying float vValue;
 
-void main() {
-	gl_Position = uProjection * vec4(aPosition, 0, 1);
-	vValue = aValue;
-}
-`;
+	void main() {
+		gl_Position = uProjection * vec4(aPosition, 0, 1);
+		vValue = aValue;
+	}
+	`;
 
-const contourFragmentShader = `
-precision mediump float;
-varying float vValue;
-uniform sampler2D uColormapSampler;
-uniform float uScaleMin;
-uniform float uScaleMax;
+	const contourFragmentShader = `
+	precision mediump float;
+	varying float vValue;
+	uniform sampler2D uColormapSampler;
+	uniform float uScaleMin;
+	uniform float uScaleMax;
 
-void main() {
-	float value = (vValue - uScaleMin) / (uScaleMax - uScaleMin);
-	gl_FragColor = texture2D(uColormapSampler, vec2(value, 0.0));
-}
-`;
+	void main() {
+		float value = (vValue - uScaleMin) / (uScaleMax - uScaleMin);
+		gl_FragColor = texture2D(uColormapSampler, vec2(value, 0.0));
+	}
+	`;
 */
 
 /**
@@ -48,6 +48,10 @@ void main() {
  * @returns
  */
 function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate }) {
+	// ===================================================
+	// Initialize variables
+	// ===================================================
+
 	const context = this._context;
 	if (!context) return;
 	const SysParam = this._newlayer.data;
@@ -71,7 +75,6 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 			break;
 		}
 	}
-
 	
 	temparr.push(this._newlayer.data["history"]["varvgs"][x].length);
 	
@@ -83,7 +86,10 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 		this._cache.set(SysParam, paramCache);
 	}
 
-	// I don't entirely understand how it works, but it basically uses delauney triangles to create heat maps between nodes, then it uses a gradient function to smooth it over
+	/** 
+	 * I don't entirely understand how it works, but it basically uses delauney 
+	 * triangles to create heat maps between nodes, then it uses a gradient function to smooth it over.
+	 */
     const nelems = Bus.idx.length;
 
 	let { busLatLngCoords } = paramCache;
@@ -241,14 +247,6 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
  * @var     {Number}                 MultiContLayer._uScaleMax          - Maximum range of a variable
  * @var     {Number}                 MultiContLayer._opacity            - The opacity for the heatmap. Applied in a fragment shader.
  * @var     {Boolean}                MultiContLayer._render             - Determines if MultiContLayer has been rendered or not.
- * @var     {WeakMap}                ContourLayer._cache                - Caches the information used in the rendering functions
- * @var     {NDArray}                busLatLngCoords                    - Stores the latitude and longitude for each node. Stored as a [# nodes][2] array. Accessed by busLatLngCoords[lat][lng].
- * @var     {NDArray}                busPixelCoords                     - Stores the pixel location for each node. Stored in the same manner as busLatLngCoords.
- * @var     {NDArray}                busTriangles                       - Stores all of the Delaunay triangles. Effectively stored as a [# of triangles][3] array.
- * @var     {WebGL2RenderingContext} gl                                 - The canvas context used for rendering the MultiContLayer animations.
- * @var     {ProgramInfo}            programInfo                        - A TWGL Object that contains the shaders and context.
- * @var     {WebGlTexture}           uColormapSampler                   - The texture map used to create the heatmaps.
- * 
  * @returns
  */
 L.MultiContLayer = L.CanvasLayer.extend({

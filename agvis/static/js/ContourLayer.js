@@ -190,10 +190,6 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 		0, 0, 0, 0,
 		-1, 1, 0, 1,
 	];
-	
-	// ==================================================
-	// Render
-	// ==================================================
 
 	const vars = new dime.NDArray(Varvgs.vars.order, Varvgs.vars.shape, Float32Array.from(Varvgs.vars.array));
 	const variableValue = vars.subarray(this._variableRange);
@@ -215,6 +211,10 @@ function renderContour(canvas, { size, bounds, project, needsProjectionUpdate })
 	});
 
 	const uOpacity = this._opacity;
+
+	// ==================================================
+	// Render
+	// ==================================================
 
     if(this._render) {
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
