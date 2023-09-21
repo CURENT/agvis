@@ -1,6 +1,6 @@
 /* ***********************************************************************************
  * File Name:   ContourLayer.js
- * Authors:     Nicholas West, Nicholas Parsley
+ * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/20/2023 (last modified)
  * 
  * ContourLayer.js contains the code for the ContourLayer class. This class handles 

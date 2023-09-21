@@ -1,6 +1,6 @@
 /* ***********************************************************************************
  * File Name:   Window.js
- * Authors:     Nicholas West, Nicholas Parsley, Zack Malkmus
+ * Authors:     Nicholas West, Nicholas Parsly, and Zack Malkmus
  * Date:        9/15/2023 (last modified)
  * 
  * The window class is the main class for AGVis. It contains 5 layers: 

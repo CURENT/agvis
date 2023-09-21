@@ -1,6 +1,6 @@
 /* ****************************************************************************************
  * File Name:   ConfigControl.js
- * Authors:     Nicholas West, Nicholas Parsley
+ * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/16/2023 (last modified)
  * 
  * This file sets up the configuration control menu sidebar. The config menu is used

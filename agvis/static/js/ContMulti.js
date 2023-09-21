@@ -1,6 +1,6 @@
 /* ***********************************************************************************
  * File Name:   ContMulti.js
- * Authors:     Nicholas West, Nicholas Parsley
+ * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/16/2023 (last modified)
  * 
  * ContMulti.js contains the code relating to the MultiContiLayer. MultiContLayer
