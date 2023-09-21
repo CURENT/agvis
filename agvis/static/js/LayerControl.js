@@ -117,10 +117,8 @@ function transpose(a) {
 
 /**
  * Begins the setup for the animation. Stores where the info relating to 
- * the three possible variables is stored.
- * 
- * Does some initial setup for letting a MultiContLayer display a simulation animation. 
- * Called in tandem with endMultiSim().
+ * the three possible variables is stored. Does some initial setup for letting 
+ * a MultiContLayer display a simulation animation. Called in tandem with endMultiSim().
  *
  * @param {Object} newlayer - The newlayer containing the MultiContLayer that needs to start its simulation.
  * @returns
@@ -143,6 +141,7 @@ function startMultiSim(newlayer) {
  * 
  * @param {Object} newlayer - The newlayer containing the MultiContLayer that needs to display its simulation.
  * @param {Window} win      - AGVis’s Window. Passed to the function for updating the MultiContLayer.
+ * @returns
  */
 function endMultiSim(newlayer, win) {
 	newlayer.time = newlayer.end_time;
@@ -153,10 +152,10 @@ function endMultiSim(newlayer, win) {
 /**
  * Adds the “Add Layers” menu and sets up the “Add Layer” button.
  * 
- * @param {Window}  win     - AGVis’s Window. Passed to stepRead() when files are uploaded.
- * @param {Object}  options - The Window’s options variable. Passed to stepRead() when files are uploaded.
- * @param {Sidebar} sidebar - Adds the “Add Layers” menu to its display. Passed to stepRead() when files are uploaded.
- * @returns 
+ * @param   {Window}  win      - AGVis’s Window. Passed to stepRead() when files are uploaded.
+ * @param   {Object}  options  - The Window’s options variable. Passed to stepRead() when files are uploaded.
+ * @param   {Sidebar} sidebar  - Adds the “Add Layers” menu to its display. Passed to stepRead() when files are uploaded.
+ * @returns {String}  table_id - A string containing the element id of the configuration panel
  */
 function addSidebarLayers(win, options, sidebar) {
 	const table_id = "layerpanel" + win.num;
@@ -183,7 +182,7 @@ function addSidebarLayers(win, options, sidebar) {
 	 * Upon a user uploading a file, creates a newlayer, sets its initial values, 
 	 * and calls stepRead() on the files.
 	 * 
-	 * @returns 
+	 * @returns
 	 */
 	opt_addlayer_input.onchange = function() {
 		//Check if a file was actually uploaded
@@ -516,7 +515,7 @@ function addSidebarLayers(win, options, sidebar) {
 					clabel3.innerText = "Toggle Custom Line Colors";
 					
 					/**
-					 * Toggles whether to use custom node colors for a newlayer.
+					 * Toggles whether to use custome node colors for a newlayer.
 					 * 
 					 * @returns
 					 */
@@ -613,7 +612,7 @@ function addSidebarLayers(win, options, sidebar) {
 					clabel4.innerText = "Custom Node Color";
 					
 					/**
-					 * Updates the node color values in the multitop
+					 * Prompts the user to select a color for a newlayer's nodes
 					 * 
 					 * @returns
 					 */
@@ -679,7 +678,7 @@ function addSidebarLayers(win, options, sidebar) {
 					rlabel1.for = lrange1;
 					rlabel1.id = llabel1;
 					rlabel1.innerText = "Node Opacity (0-100) -- Value: " + range1.value;
-					
+
 					/**
 					 * Updates the node opacity for a newlayer along with the UI.
 					 * 
@@ -791,7 +790,11 @@ function addSidebarLayers(win, options, sidebar) {
 					rlabel4.id = llabel4;
 					rlabel4.innerText = "Node Size (4-36) -- Value: " + range4.value;
 					
-					//Change the node size values and change the display on the input
+					/**
+					 * Change the node size values and change the display on the input
+					 * 
+					 * @returns
+					 */
 					range4.onchange = function() {
 												
 						let cid = this.id.slice(7);
@@ -813,16 +816,17 @@ function addSidebarLayers(win, options, sidebar) {
 						newlayer.topo.updateCNVal(color1.value);
 						ctog2.click();
 					}
-					
+
 					if (newlayer.data.Line.color != null) {
 						color2.value = newlayer.data.Line.color[0];
 						newlayer.topo.updateCLVal(color2.value);
 						ctog3.click();
 					}
 								
-					//Contour Layer Simulation stuff
+					// =========================================
+					// Simulation Utility
+					// =========================================
 					if (newlayer.sim) {
-								
 						newlayer.cont = L.multicontLayer(newlayer).addTo(win.map);
 						
 						startMultiSim(newlayer);
@@ -901,9 +905,9 @@ function addSidebarLayers(win, options, sidebar) {
 						}
 
 						/**
-						 * Updates the displayed simulation variable to be Voltage Frequency, 
-						 * or whatever values have been put in place of Voltage Frequency. 
-						 * Also updates the heatmap ranges to those corresponding with Voltage Frequency.
+						 * Updates the displayed simulation variable to be Voltage Frequency, or whatever 
+						 * values have been put in place of Voltage Frequency. Also updates the heatmap 
+						 * ranges to those corresponding with Voltage Frequency.
 						 * 
 						 * @returns
 						 */
@@ -917,26 +921,36 @@ function addSidebarLayers(win, options, sidebar) {
 						};
 
 
+						/**
+						 * Updates the displayed simulation variable to be Voltage Magnitude, or whatever 
+						 * values have been put in place of Voltage Magnitude. Also updates the heatmap 
+						 * ranges to those corresponding with Voltage Magnitude.
+						 * 
+						 * @returns
+						 */
 						vbut.onchange = function() {
-							
 							let cid = this.id.slice(8);
 							console.log(cid);
 							let cnum = Number(cid);
 							let clayer = win.multilayer[cnum];
 							clayer.cont.showVariable("V");
 							clayer.cont.updateRange(newlayer.options.vmin, newlayer.options.vmax);
-							
 						};
 
+						/**
+						 * Updates the displayed simulation variable to be Voltage Angle, or whatever 
+						 * values have been put in place of Voltage Angle. Also updates the heatmap 
+						 * ranges to those corresponding with Voltage Angle.
+						 * 
+						 * @returns
+						 */
 						tbut.onchange = function() {
-							
 							let cid = this.id.slice(6);
 							console.log(cid);
 							let cnum = Number(cid);
 							let clayer = win.multilayer[cnum];
 							clayer.cont.showVariable("theta");
 							clayer.cont.updateRange(newlayer.options.tmin, newlayer.options.tmax);
-							
 						};
 
 						simdiv1.appendChild(fbut);
@@ -969,7 +983,6 @@ function addSidebarLayers(win, options, sidebar) {
 						let tminid = "tmin_" + newlayer.num; 
 						let tmaxid = "tmax_" + newlayer.num;
 
-
 						const str1 = document.createElement("tr");
 						const str2 = document.createElement("tr");
 						const str3 = document.createElement("tr");
@@ -996,7 +1009,7 @@ function addSidebarLayers(win, options, sidebar) {
 						const spara2 = document.createElement("span");
 						const spara3 = document.createElement("span");
 
-						//Once again, by default it is frequency, votlage magnitude and voltage angle
+						//Once again, by default it is frequency, voltage magnitude and voltage angle
 						//Might allow user to customize the names of the variables later
 						spara1.innerText = " - ";
 						spara2.innerText = " - ";
@@ -1081,315 +1094,345 @@ function addSidebarLayers(win, options, sidebar) {
 						sinput5.value = newlayer.options.tmin;
 						sinput6.value = newlayer.options.tmax;
 
-						//On change update the value for that variable in the newlayer options
-						//If that specific variable is being shown, update the range in multicont as well
-						sinput1.oninput = function() {
+						// ======================================================
+						// Update Ranges
+						// ======================================================
 
+						/**
+						 * Updates the minimum range variable for Voltage Frequency in the newlayer. Also 
+						 * updates ranges in the newlayer’s MultiContLayer if Voltage Frequency is the currently 
+						 * shown variable.
+						 * 
+						 * @returns
+						 */
+						sinput1.oninput = function() {
 							let val = Number(sinput1.value);
 
 							if (val === val) {
-
 								newlayer.options.fmin = val;
 								
 								if (newlayer.cont.variableName == "freq") {
-									
 									newlayer.cont.updateRange(newlayer.options.fmin, newlayer.options.fmax);
 								}
 							}
 						};
 
+						/**
+						 * Updates the maximum range variable for Voltage Frequency in the newlayer. Also 
+						 * updates ranges in the newlayer’s MultiContLayer if Voltage Frequency is the currently 
+						 * shown variable.
+						 * 
+						 * @returns
+						 */
 						sinput2.oninput = function() {
-
 							let val = Number(sinput2.value);
 
 							if (val === val) {
-
 								newlayer.options.fmax = val;
 								
 								if (newlayer.cont.variableName == "freq") {
-									
 									newlayer.cont.updateRange(newlayer.options.fmin, newlayer.options.fmax);
 								}
 							}
 						};
 
+						/**
+						 * Updates the minimum range variable for Voltage Magnitude in the newlayer. Also 
+						 * updates ranges in the newlayer’s MultiContLayer if Voltage Magnitude is the currently 
+						 * shown variable.
+						 * 
+						 * @returns
+						 */
 						sinput3.oninput = function() {
-
 							let val = Number(sinput3.value);
 
 							if (val === val) {
-
 								newlayer.options.vmin = val;
 								
 								if (newlayer.cont.variableName == "V") {
-									
 									newlayer.cont.updateRange(newlayer.options.vmin, newlayer.options.vmax);
 								}
 							}
 						};
 
+						/**
+						 * Updates the maximum range variable for Voltage Magnitude in the newlayer. Also 
+						 * updates ranges in the newlayer’s MultiContLayer if Voltage Magnitude is the currently 
+						 * shown variable.
+						 * 
+						 * @returns
+						 */
 						sinput4.oninput = function() {
-
 							let val = Number(sinput4.value);
 
 							if (val === val) {
-
 								newlayer.options.vmax = val;
 								
 								if (newlayer.cont.variableName == "V") {
-									
 									newlayer.cont.updateRange(newlayer.options.vmin, newlayer.options.vmax);
 								}
 							}
 						};
 
+						/**
+						 * Updates the minimum range variable for Voltage Angle in the newlayer. Also 
+						 * updates ranges in the newlayer’s MultiContLayer if Voltage Angle is the currently 
+						 * shown variable.
+						 * 
+						 * @returns
+						 */
 						sinput5.oninput = function() {
-
 							let val = Number(sinput5.value);
 
 							if (val === val) {
-
 								newlayer.options.tmin = val;
 								
 								if (newlayer.cont.variableName == "theta") {
-									
 									newlayer.cont.updateRange(newlayer.options.tmin, newlayer.options.tmax);
 								}
 							}
 						};
-
+						
+						/**
+						 * Updates the maximum range variable for Voltage Angle in the newlayer. Also 
+						 * updates ranges in the newlayer’s MultiContLayer if Voltage Angle is the currently 
+						 * shown variable.
+						 * 
+						 * @returns
+						 */
 						sinput6.oninput = function() {
-
 							let val = Number(sinput6.value);
 
 							if (val === val) {
-
 								newlayer.options.tmax = val;
 								
 								if (newlayer.cont.variableName == "theta") {
-									
 									newlayer.cont.updateRange(newlayer.options.tmin, newlayer.options.tmax);
 								}
 							}
 						};
 
 					
-					//Put a break between the animation settings and the timestamp settings
-					const hr3 = document.createElement("hr");
-					hr3.style.marginTop = "10px";
-					hr3.style.marginBottom = "10px";
-					elem.appendChild(hr3);
-					
-					const h3 = document.createElement("h3");
-					h3.innerText = "Timestamp Settings";
-					elem.appendChild(h3);
-					
-
-					const simdiv4 = document.createElement("div");
-					
-					//Check if user wants to use timestamp
-					const stog1 = document.createElement("input");
-					stog1.id = "ny_" + newlayer.num;
-					stog1.type = "checkbox";
-					stog1.value = "ny";
-					ctog3.style.marginLeft = "15px";
-					ctog3.style.marginRight = "5px";
-					
-					const slabel4 = document.createElement("label");
-					slabel4.for = "ny_" + newlayer.num;
-					slabel4.innerText = "Use Timestamp?";
-					
-					if (newlayer.preset) {
+						//Put a break between the animation settings and the timestamp settings
+						const hr3 = document.createElement("hr");
+						hr3.style.marginTop = "10px";
+						hr3.style.marginBottom = "10px";
+						elem.appendChild(hr3);
 						
-						stog1.checked = newlayer.s_tstamp;
-					}
-					
-					simdiv4.appendChild(slabel4);
-					simdiv4.appendChild(stog1);
-					
-					
-					elem.appendChild(simdiv4);
-					
-					//Date setting
-					const simdiv5 = document.createElement("div");
-					const sdate1 = document.createElement("input");
-					sdate1.id = "ts_date_" + newlayer.num;
-					sdate1.type = "date";
-					
-					const slabel5 = document.createElement("label");
-					slabel5.for = "ts_date_" + newlayer.num;
-					slabel5.innerText = "Select a Date: ";
-					
-					if (newlayer.preset) {
-						
-						sdate1.value = newlayer.s_tdate;
-					}
-					
-					simdiv5.appendChild(slabel5);
-					simdiv5.appendChild(sdate1);
-					
-					
-					elem.appendChild(simdiv5);
-					
-					//Time of day setting
-					const simdiv6 = document.createElement("div");
-					const stime1 = document.createElement("input");
-					stime1.id = "ts_time_" + newlayer.num;
-					stime1.type = "time";
-					
-					const slabel6 = document.createElement("label");
-					slabel6.for = "ts_time_" + newlayer.num;
-					slabel6.innerText = "Select a Time: ";
-					
-					if (!newlayer.preset) {
+						const h3 = document.createElement("h3");
+						h3.innerText = "Timestamp Settings";
+						elem.appendChild(h3);
 
-						stime1.value = "00:00:00";					
-					}
-					
-					else {
+						const simdiv4 = document.createElement("div");
 						
-						stime1.value = newlayer.s_ttime;
-					}
-
-					simdiv6.appendChild(slabel6);
-					simdiv6.appendChild(stime1);
-					
-					elem.appendChild(simdiv6);
-
-					//Select option for what increment the timer should increase in
-					const simdiv7 = document.createElement("div");
-					const sselect1 = document.createElement("select");
-					sselect1.id = "ts_inc_" + newlayer.num;
-					
-					const soption1 = document.createElement("option");					
-					soption1.value = "ms";
-					soption1.id = "ms_" + newlayer.num;
-					soption1.innerText = "Milliseconds";
-					
-					const soption2 = document.createElement("option");
-					soption2.value = "s";
-					soption2.id = "s_" + newlayer.num;
-					soption2.innerText = "Seconds";
-					
-					const soption3 = document.createElement("option");
-					soption3.value = "min";
-					soption3.id = "min_" + newlayer.num;
-					soption3.innerText = "Minutes";
-					
-					const soption4 = document.createElement("option");
-					soption4.value = "h";
-					soption4.id = "h_" + newlayer.num;
-					soption4.innerText = "Hours";
-					
-					const soption5 = document.createElement("option");
-					soption5.value = "day";
-					soption5.id = "day_" + newlayer.num;
-					soption5.innerText = "Days";
-					
-					
-					//And by how much of that increment per second
-					const slabel7 = document.createElement("label");
-					slabel7.for = "ts_inc_" + newlayer.num;
-					slabel7.innerText = "Select an Increment: ";
-					
-					const simdiv8 = document.createElement("div");
-					const sinput7 = document.createElement("input");
-					sinput7.type = "number";
-					sinput7.id = "ts_num_" + newlayer.num;
-					sinput7.value = "1";
-					sinput7.min = "0";
-					sinput7.step = "1";
-					
-					const slabel8 = document.createElement("label");
-					slabel8.for = "ts_num_" + newlayer.num;
-					
-					slabel8.id = "ts_lab_" + newlayer.num;
-					
-					
-					if (!newlayer.preset) {
-						slabel8.innerText = "Number of Milliseconds per Second:";
-						soption1.selected = true;
-					}
-					
-					else {
+						//Check if user wants to use timestamp
+						const stog1 = document.createElement("input");
+						stog1.id = "ny_" + newlayer.num;
+						stog1.type = "checkbox";
+						stog1.value = "ny";
+						ctog3.style.marginLeft = "15px";
+						ctog3.style.marginRight = "5px";
 						
-						sinput7.value = newlayer.s_tnum;
-						sselect1.value = newlayer.s_tinc;
-						switch(newlayer.s_tinc) {
-                
-							case "s":
-							soption2.selected = true;
-							slabel8.innerText = "Number of Seconds per Second:";
-							break;
+						const slabel4 = document.createElement("label");
+						slabel4.for = "ny_" + newlayer.num;
+						slabel4.innerText = "Use Timestamp?";
+						
+						if (newlayer.preset) {
 							
-							case "min":
-							soption3.selected = true;
-							slabel8.innerText = "Number of Minutes per Second:";
-							break;
-							
-							case "h":
-							soption4.selected = true;
-							slabel8.innerText = "Number of Hours per Second:";
-							break;
-							
-							case "day":
-							soption5.selected = true;
-							slabel8.innerText = "Number of Days per Second:";
-							break;
+							stog1.checked = newlayer.s_tstamp;
+						}
+					
+						simdiv4.appendChild(slabel4);
+						simdiv4.appendChild(stog1);
 						
-							default:
-							soption1.select = "selected";
+						
+						elem.appendChild(simdiv4);
+						
+						//Date setting
+						const simdiv5 = document.createElement("div");
+						const sdate1 = document.createElement("input");
+						sdate1.id = "ts_date_" + newlayer.num;
+						sdate1.type = "date";
+						
+						const slabel5 = document.createElement("label");
+						slabel5.for = "ts_date_" + newlayer.num;
+						slabel5.innerText = "Select a Date: ";
+						
+						if (newlayer.preset) {
+							
+							sdate1.value = newlayer.s_tdate;
+						}
+						
+						simdiv5.appendChild(slabel5);
+						simdiv5.appendChild(sdate1);
+						
+						
+						elem.appendChild(simdiv5);
+						
+						//Time of day setting
+						const simdiv6 = document.createElement("div");
+						const stime1 = document.createElement("input");
+						stime1.id = "ts_time_" + newlayer.num;
+						stime1.type = "time";
+						
+						const slabel6 = document.createElement("label");
+						slabel6.for = "ts_time_" + newlayer.num;
+						slabel6.innerText = "Select a Time: ";
+						
+						if (!newlayer.preset) {
+
+							stime1.value = "00:00:00";					
+						}
+						
+						else {
+							
+							stime1.value = newlayer.s_ttime;
+						}
+
+						simdiv6.appendChild(slabel6);
+						simdiv6.appendChild(stime1);
+						
+						elem.appendChild(simdiv6);
+
+						// ================================================================
+						// Select option for what increment the timer should increase in
+						// ================================================================
+
+						const simdiv7 = document.createElement("div");
+						const sselect1 = document.createElement("select");
+						sselect1.id = "ts_inc_" + newlayer.num;
+						
+						const soption1 = document.createElement("option");					
+						soption1.value = "ms";
+						soption1.id = "ms_" + newlayer.num;
+						soption1.innerText = "Milliseconds";
+						
+						const soption2 = document.createElement("option");
+						soption2.value = "s";
+						soption2.id = "s_" + newlayer.num;
+						soption2.innerText = "Seconds";
+						
+						const soption3 = document.createElement("option");
+						soption3.value = "min";
+						soption3.id = "min_" + newlayer.num;
+						soption3.innerText = "Minutes";
+						
+						const soption4 = document.createElement("option");
+						soption4.value = "h";
+						soption4.id = "h_" + newlayer.num;
+						soption4.innerText = "Hours";
+						
+						const soption5 = document.createElement("option");
+						soption5.value = "day";
+						soption5.id = "day_" + newlayer.num;
+						soption5.innerText = "Days";
+						
+						//And by how much of that increment per second
+						const slabel7 = document.createElement("label");
+						slabel7.for = "ts_inc_" + newlayer.num;
+						slabel7.innerText = "Select an Increment: ";
+						
+						const simdiv8 = document.createElement("div");
+						const sinput7 = document.createElement("input");
+						sinput7.type = "number";
+						sinput7.id = "ts_num_" + newlayer.num;
+						sinput7.value = "1";
+						sinput7.min = "0";
+						sinput7.step = "1";
+						
+						const slabel8 = document.createElement("label");
+						slabel8.for = "ts_num_" + newlayer.num;
+						
+						slabel8.id = "ts_lab_" + newlayer.num;
+						
+						if (!newlayer.preset) {
 							slabel8.innerText = "Number of Milliseconds per Second:";
-							
+							soption1.selected = true;
 						}
-					}
-					
-					sselect1.appendChild(soption1);
-					sselect1.appendChild(soption2);
-					sselect1.appendChild(soption3);
-					sselect1.appendChild(soption4);
-					sselect1.appendChild(soption5);
-					simdiv7.appendChild(slabel7);
-					simdiv7.appendChild(sselect1);
-					simdiv8.appendChild(slabel8);
-					simdiv8.appendChild(sinput7);
-					
-					elem.appendChild(simdiv7);
-					elem.appendChild(simdiv8);
-					
-					//Update the text for the increments per second label on change
-					sselect1.onchange = function() {
-					
-						const slab8 = document.getElementById("ts_lab_" + newlayer.num);
-						switch(this.value) {
-                
-							case "s":
-                        
-							slab8.innerText = "Number of Seconds per Second:";
-							break;
+						else {
+							sinput7.value = newlayer.s_tnum;
+							sselect1.value = newlayer.s_tinc;
+
+							switch(newlayer.s_tinc) {
+								case "s":
+								soption2.selected = true;
+								slabel8.innerText = "Number of Seconds per Second:";
+								break;
+								
+								case "min":
+								soption3.selected = true;
+								slabel8.innerText = "Number of Minutes per Second:";
+								break;
+								
+								case "h":
+								soption4.selected = true;
+								slabel8.innerText = "Number of Hours per Second:";
+								break;
+								
+								case "day":
+								soption5.selected = true;
+								slabel8.innerText = "Number of Days per Second:";
+								break;
 							
-							case "min":
-                        
-							slab8.innerText = "Number of Minutes per Second:";
-							break;
-							
-							case "h":
-                        
-							slab8.innerText = "Number of Hours per Second:";
-							break;
-                    
-							case "day":
-                    
-							slab8.innerText = "Number of Days per Second:";
-							break;
+								default:
+								soption1.select = "selected";
+								slabel8.innerText = "Number of Milliseconds per Second:";
+							}
+						}
+					
+						sselect1.appendChild(soption1);
+						sselect1.appendChild(soption2);
+						sselect1.appendChild(soption3);
+						sselect1.appendChild(soption4);
+						sselect1.appendChild(soption5);
+						simdiv7.appendChild(slabel7);
+						simdiv7.appendChild(sselect1);
+						simdiv8.appendChild(slabel8);
+						simdiv8.appendChild(sinput7);
 						
-							default:
-							slab8.innerText = "Number of Milliseconds per Second:";
+						elem.appendChild(simdiv7);
+						elem.appendChild(simdiv8);
+
+						/**
+						 * Update the text for the increments per second label on change
+						 * 
+						 * Updates the text in the newlayer’s Custom Timestamp UI when a new 
+						 * increment type is selected. As a side note, most of the UI elements 
+						 * for the newlayer Custom Timestamp features do not have event functions 
+						 * because their values are simply checked by the PlayMulti.
+						 * 
+						 * @returns
+						 */
+						sselect1.onchange = function() {
+							const slab8 = document.getElementById("ts_lab_" + newlayer.num);
+							switch(this.value) {
+					
+								case "s":
 							
-						}
-					};
-				}
-				
+								slab8.innerText = "Number of Seconds per Second:";
+								break;
+								
+								case "min":
+							
+								slab8.innerText = "Number of Minutes per Second:";
+								break;
+								
+								case "h":
+							
+								slab8.innerText = "Number of Hours per Second:";
+								break;
+						
+								case "day":
+						
+								slab8.innerText = "Number of Days per Second:";
+								break;
+							
+								default:
+								slab8.innerText = "Number of Milliseconds per Second:";
+								
+							}
+						};
+					}
 				
 					//Add the div to the table
 					let ls = document.getElementById("layerstore");
@@ -1401,9 +1444,6 @@ function addSidebarLayers(win, options, sidebar) {
 
 				};
 				
-				
-
-				
 				//Read the first file they input
 				reader.readAsBinaryString(opt_addlayer_input.files[0]);
 			}
@@ -1411,6 +1451,12 @@ function addSidebarLayers(win, options, sidebar) {
 		}
 	};
 
+	/**
+	 * Calls the addlayer_input function.
+	 * 
+	 * @returns
+	 * @see opt_addlayer_input
+	 */
 	opt_addlayer.onclick = function() {
 		opt_addlayer_input.click();
 	};
