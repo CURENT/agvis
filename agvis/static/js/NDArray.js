@@ -2,6 +2,7 @@
  * File Name:   NDArray.js
  * Authors:     Nicholas West, Nicholas Parsly (Comments by Zack Malkmus)
  * Date:        9/21/2023 (last modified)
+ * 
  * Description: This JavaScript file defines a class called NDArray, which represents
  *              a multidimensional array with various methods for manipulation. It
  *              supports both row-major ('C') and column-major ('F') storage orders.
