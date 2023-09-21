@@ -22,7 +22,6 @@ L.CanvasLayer = L.Layer.extend({
 	 * Initializes the canvas layer with options
 	 * 
 	 * @memberof CanvasLayer
-	 * 
 	 * @param   {Object} options 
 	 * @returns
 	 */
@@ -35,7 +34,6 @@ L.CanvasLayer = L.Layer.extend({
 	 * Establishes how resizing works for the Layer.
 	 * 
 	 * @memberof CanvasLayer
-	 * 
 	 * @param   {Object} map
 	 * @returns
 	 */
@@ -60,7 +58,7 @@ L.CanvasLayer = L.Layer.extend({
 
 	/**
 	 * Redraws the canvas layer
-	 * 
+	 *
 	 * @memberof CanvasLayer
 	 * @returns
 	 */
@@ -75,7 +73,6 @@ L.CanvasLayer = L.Layer.extend({
 	 * Clean up for the canvas layer
 	 * 
 	 * @memberof CanvasLayer
-	 * 
 	 * @param   {Object} map
 	 * @returns
 	 */
@@ -93,7 +90,6 @@ L.CanvasLayer = L.Layer.extend({
 	 * Adds the canvas layer to the map
 	 * 
 	 * @memberof CanvasLayer
-	 * 
 	 * @param   {Object} map
 	 * @returns {Object} CanvasLayer object
 	 */
@@ -106,7 +102,6 @@ L.CanvasLayer = L.Layer.extend({
 	 * Resizes the canvas layer from a resize event
 	 * 
 	 * @memberof CanvasLayer
-	 * 
 	 * @param   {Object} resizeEvent
 	 * @returns
 	 */
@@ -120,7 +115,6 @@ L.CanvasLayer = L.Layer.extend({
 	 * and requests a projection update.
 	 * 
 	 * @memberof CanvasLayer
-	 * 
 	 * @returns
 	 */
 	_reset() {
@@ -136,7 +130,6 @@ L.CanvasLayer = L.Layer.extend({
 	 * and Contour-type Layers.
 	 * 
 	 * @memberof CanvasLayer
-	 * 
 	 * @returns
 	 */
 	_redraw() {
