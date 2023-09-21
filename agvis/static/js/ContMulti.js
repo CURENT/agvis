@@ -259,7 +259,6 @@ L.MultiContLayer = L.CanvasLayer.extend({
 	 * 
 	 * @constructs MultiContLayer
 	 * @memberof   MultiContiLayer
-	 * 
 	 * @param {*}      newlayer 
 	 * @param {Object} options  - (Optional) The options Object from Window. Unused beyond being passed to the CanvasLayer initialization function.
 	 * @returns
@@ -282,7 +281,6 @@ L.MultiContLayer = L.CanvasLayer.extend({
 	 * Updates the values for the variables and then re-renders the MultiContLayer.
 	 * 
 	 * @memberof MultiContLayer
-	 * 
 	 * @param {Object} - The workspace from Window.
 	 * @returns
 	 */
@@ -295,7 +293,6 @@ L.MultiContLayer = L.CanvasLayer.extend({
 	 * Handles adding the MultiContLayer to the map.
 	 * 
 	 * @memberof MultiContLayer
-	 * 
 	 * @param {map} map - The map from Window
 	 * @returns 
 	 */
@@ -308,7 +305,6 @@ L.MultiContLayer = L.CanvasLayer.extend({
 	 * Passes the relative indices for the simulation variables from Window to MultiContLayer.
 	 * 
 	 * @memberof MultiContLayer
-	 * 
 	 * @param {Object} idx - Relative indices
 	 * @returns
 	 */
@@ -348,7 +344,6 @@ L.MultiContLayer = L.CanvasLayer.extend({
 	 * Switches the state of MultiContLayer._render
 	 * 
 	 * @memberof MultiContLayer
-	 * 
 	 * @returns
 	 */
     toggleRender() {
@@ -360,7 +355,6 @@ L.MultiContLayer = L.CanvasLayer.extend({
 	 * Changes the newlayer’s current values to be those from another newlayer. Used exclusively for the “Prioritize Layer” button.
 	 * 
 	 * @memberof MultiContLayer
-	 * 
 	 * @param {Object} oldlayer - The newlayer that the values are being taken from.
 	 * @returns
 	 */
