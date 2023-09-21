@@ -3,8 +3,8 @@
  * Author:      Zack Malkmus
  * Date:        9/6/2023 (last modified)
  * 
- * The DynamicLegend class creates a new dynamic legend for AGVis that is 
- * draggable and updatable.
+ * Description: The DynamicLegend class creates a new dynamic legend for AGVis that is 
+ *              draggable and updatable.
  * ***********************************************************************************/
 
 L.DynamicLegend = L.Control.extend({

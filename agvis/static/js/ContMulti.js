@@ -3,10 +3,11 @@
  * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/16/2023 (last modified)
  * 
- * ContMulti.js contains the code relating to the MultiContiLayer. MultiContLayer
- * shares many things with the ContourLayer (like MultiTopLayer does with TopologyLayer).
- * Once again, the main difference is that the MultiContLayer uses data from a newlayer
- * as opposed to the Window's workspace.
+ * Description: ContMulti.js contains the code relating to the MultiContiLayer. 
+ * 				MultiContLayer shares many things with the ContourLayer (like 
+ * 				MultiTopLayer does with TopologyLayer). Once again, the main difference 
+ * 				is that the MultiContLayer uses data from a newlayer as opposed to the 
+ * 				Window's workspace.
  * ***********************************************************************************/
 
 /*

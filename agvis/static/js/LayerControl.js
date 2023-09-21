@@ -3,12 +3,13 @@
  * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/20/2023 (last modified)
  * 
- * LayerControl.js contains the code for the “Add Layers” menu, which handles the data 
- * parsing, variable management, and UI for the IDR and MultiLayer functionality. 
- * Effectively, LayerControl.js contains the dynamic equivalent of Window.js, 
- * ControlLayer.js, and SimTimeBox.js. This partially explains why it is one of the 
- * largest files currently in AGVis. LayerControl uses both the Papa Parse library and 
- * the SheetJs library for file reading.
+ * Description: LayerControl.js contains the code for the “Add Layers” menu, which 
+ * 				handles the data parsing, variable management, and UI for the IDR and 
+ * 				MultiLayer functionality. Effectively, LayerControl.js contains the 
+ * 				dynamic equivalent of Window.js, ControlLayer.js, and SimTimeBox.js. 
+ * 				This partially explains why it is one of the largest files currently 
+ * 				in AGVis. LayerControl uses both the Papa Parse library and the 
+ * 				SheetJs library for file reading.
  * ***********************************************************************************/
 
 //Table containing the sidebar

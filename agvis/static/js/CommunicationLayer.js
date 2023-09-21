@@ -3,12 +3,13 @@
  * Authors:     Nicholas West
  * Date:        9/15/2023 (last modified)
  * 
- * This file is not in use. It was used to draw the communication layer on the map.
+ * Description: It appears that it was originally going to draw substantially more 
+ *              lines between points compared to the TopologyLayer. The color and 
+ *              curve of these lines would be determined by devices associated with 
+ *              the nodes and their capacities for transferring and receiving data. 
  * 
- * It appears that it was originally going to draw substantially more lines between 
- * points compared to the TopologyLayer. The color and curve of these lines would be 
- * determined by devices associated with the nodes and their capacities for 
- * transferring and receiving data. 
+ * Warning:     This file is not in use. It was used to draw the communication layer 
+ *              on the map.
  * ***********************************************************************************/
 
 function renderCommunication(canvas, { size, bounds, project, needsProjectionUpdate }) {

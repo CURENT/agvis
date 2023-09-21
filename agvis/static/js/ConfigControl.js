@@ -3,13 +3,13 @@
  * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/16/2023 (last modified)
  * 
- * This file sets up the configuration control menu sidebar. The config menu is used
- * to select the view state (what variable to show) of the contour layer. It creates
- * custom Timestamps for the SimTimeBox, can change DiME server settings, change 
- * graphical settings, and save/load configurations and simulations.
+ * Description: This file sets up the configuration control menu sidebar. The config menu is used
+ *              to select the view state (what variable to show) of the contour layer. It creates
+ *              custom Timestamps for the SimTimeBox, can change DiME server settings, change 
+ *              graphical settings, and save/load configurations and simulations.
  * 
- * [Note] Saving/loading configurations and simulations from the config control menu
- *        differs from the functionality of the Multilater and IDR.
+ * Note:        Saving/loading configurations and simulations from the config control menu
+ *              differs from the functionality of the Multilater and IDR.
  * ****************************************************************************************/
 
 // HTML for Configuration Control UI

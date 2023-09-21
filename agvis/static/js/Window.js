@@ -3,17 +3,18 @@
  * Authors:     Nicholas West, Nicholas Parsly, and Zack Malkmus
  * Date:        9/15/2023 (last modified)
  * 
- * The window class is the main class for AGVis. It contains 5 layers: 
- * (Tile Layer | Zone Layer | Topology Layer | Contour Layer | User Layer)
+ * Important:   The window class is the main class for AGVis. It contains 5 layers: 
+ *              (Tile Layer | Zone Layer | Topology Layer | Contour Layer | User Layer)
  * 
- * [Note] Each of these are described in their respective files and on the github
- * https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/index.html#development
+ * Description: Windows initialize the map and all of the layers, and contains the 
+ *              main thread. They handle timing for the animations and receiving data 
+ *              from DiME. They also instantiate most of the Layers and UI elements 
+ *              used for displaying data.Developers that want to add new features to 
+ *              AGVis will inevitably have to either interface with a Window directly 
+ *              or with one of its components.
  * 
- * Windows initialize the map and all of the layers, and contains the main thread.
- * They handle timing for the animations and receiving data from DiME. They 
- * also instantiate most of the Layers and UI elements used for displaying data.
- * Developers that want to add new features to AGVis will inevitably have to either 
- * interface with a Window directly or with one of its components.
+ * Note:        Each layer is described in their respective files and on the github
+ *              https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/index.html#development
  * ***********************************************************************************/
 
 class Window {

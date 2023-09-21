@@ -3,11 +3,12 @@
  * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/20/2023 (last modified)
  * 
- * ContourLayer.js contains the code for the ContourLayer class. This class handles 
- * displaying the heatmap animations for a given power system. The heatmap bounds are 
- * done using the Delaunay Triangulation implementation from the D3.js library. The 
- * actual visuals for each heatmap are done using TWGL to apply a texture to each 
- * triangle’s fragments based on their interpolated values.
+ * Description: ContourLayer.js contains the code for the ContourLayer class. This 
+ * 				class handles displaying the heatmap animations for a given power 
+ * 				system. The heatmap bounds are done using the Delaunay Triangulation 
+ * 				implementation from the D3.js library. The actual visuals for each 
+ * 				heatmap are done using TWGL to apply a texture to each triangle’s 
+ * 				fragments based on their interpolated values.
  * ***********************************************************************************/
 
 /**

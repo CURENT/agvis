@@ -2,11 +2,11 @@
  * File Name:   CanvasLayer.js
  * Authors:     Nicholas West, Nicholas Parsley
  * Date:        9/15/2023 (last modified)
-
- * CanvasLayer class. The CanvasLayer is an intermediary class, extending from 
- * Leaflet’s Layer class and being extended from by most of the other Layer-type 
- * classes in AGVis.Contains basic functions for rendering, removing, and adding 
- * layers to the map.
+ * 
+ * Description: CanvasLayer class. The CanvasLayer is an intermediary class, extending 
+ * 				from Leaflet’s Layer class and being extended from by most of the other 
+ * 				Layer-type classes in AGVis.Contains basic functions for rendering, 
+ * 				removing, and adding layers to the map.
  * ***********************************************************************************/
 
 L.CanvasLayer = L.Layer.extend({
