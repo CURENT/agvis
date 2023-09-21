@@ -1,8 +1,27 @@
+/* ****************************************************************************************
+ * File Name:   PlaybackControl.js
+ * Authors:     Nicholas West, Nicholas Parsly
+ * Date:        9/21/2023 (last modified)
+ * 
+ * Description: PlaybackControl.js contains the code for the PlaybackControl class, also 
+ *              known as the Playback Bar. The Playback Bar handles the UI for the 
+ *              ContourLayer animations. It updates the Window’s timescale when the user 
+ *              changes the animation speed, sets the time when the user restarts or scrubs 
+ *              through the animation, and changes the opacity setting for ContourLayer’s 
+ *              rendering based on the user’s input.
+ * ****************************************************************************************/
+
 let PlaybackControl = L.Control.extend({
     options: {
         position: "bottomleft"
     },
 
+    /**
+     * Sets PlaybackControl.win and calls the Leaflet Util Initialization function.
+     * 
+     * @param {Window} win     -
+     * @param {Object} options - (optional) Passed to leaflet 
+     */
     initialize: function(win, options) {
         this.win = win;
         this.opacitybar = null;
