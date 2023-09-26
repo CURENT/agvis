@@ -1,4 +1,18 @@
-//topmulti.js is basically just the topology layer but adjusted to work for multiple layers and file input
+/* ****************************************************************************************
+ * File Name:   TopMulti.js
+ * Authors:     Nicholas West, Nicholas Parsly
+ * Date:        9/26/2023 (last modified)
+ * 
+ * Description: TopMulti.js contains the code for the MultiTopLayer. You’ll notice many 
+ * 				similarities between this code and that of the standard TopologyLayer. 
+ * 				This is due to the fact that the MultiTopLayer was built off of the 
+ * 				TopologyLayer. The major difference between them is that the MultiTopLayer 
+ * 				has more customization features and uses newlayer data as opposed to the 
+ * 				Window’s workspace.
+ *              
+ * Documentation: https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/topmulti.html
+ * ****************************************************************************************/
+
 function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }) {
 	const images = this._images;
 	if (!images.allLoaded) return;
@@ -213,36 +227,34 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 
 	if(this._render) {
 		/*
-	if (this._states) {
-	    for (let zone of this._states) {
-		ctx.fillStyle = zone.color;
+		if (this._states) {
+			for (let zone of this._states) {
+			ctx.fillStyle = zone.color;
 
-		for (let i = 0; i < zone.coords.shape[0]; i++) {
-		    const lat = zone.coords.get(i, 0);
-		    const lon = zone.coords.get(i, 1);
+			for (let i = 0; i < zone.coords.shape[0]; i++) {
+				const lat = zone.coords.get(i, 0);
+				const lon = zone.coords.get(i, 1);
 
-		    const {x, y} = project(L.latLng(lat, lon));
+				const {x, y} = project(L.latLng(lat, lon));
 
-		    if (i === 0) {
-			ctx.beginPath();
-			ctx.moveTo(x, y);
-		    } else {
-			ctx.lineTo(x, y);
-		    }
+				if (i === 0) {
+				ctx.beginPath();
+				ctx.moveTo(x, y);
+				} else {
+				ctx.lineTo(x, y);
+				}
+			}
+
+			ctx.closePath();
+			ctx.fill("evenodd");
+			}
 		}
-
-		ctx.closePath();
-		ctx.fill("evenodd");
-	    }
-	}
-	*/
-	
+		*/
 
 		//{$this._opacity} - change back
 		ctx.strokeStyle = `rgba(0, 0, 0, ${this._lop})`;
 		
 		if (this._cline) {
-			
 			ctx.strokeStyle = `rgba(${this._lr}, ${this._lg}, ${this._lb}, ${this._lop})`; 
 		}
 
@@ -253,7 +265,6 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 		for (let i=0; i < Line.idx.length; ++i){
 			//const voltageRating = Line.Vn1.get(0, i);
 			//if (voltageRating <= zoomToLineVoltageRatingMinLookup.get(zoomLevel)) continue;
-
 			const fromNumber = Line.bus1[i];
 			const fromIndex = busToIndexLookup.get(fromNumber);
 			const fromX = busPixelCoords.get(fromIndex, 0);
@@ -265,8 +276,6 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 			const toY = busPixelCoords.get(toIndex, 1);
 
 			const dist = Math.hypot(toX - fromX, toY - fromY);
-					
-
 			
 			if (dist > 12) {
 				ctx.moveTo(fromX, fromY);
@@ -282,8 +291,7 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 		
 		let ncop = Math.trunc(Math.round((this._nop * 255)));
 		let lcop = Math.trunc(Math.round((this._lop * 255)));
-//this._nop = Math.trunc((rval1 / 100.0) * 255);
-
+		//this._nop = Math.trunc((rval1 / 100.0) * 255);
 
 		// Draws the buses (vertices)
 		for (let i=0; i < nelems; ++i) {
@@ -303,7 +311,6 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 		}
 		
 		if ((!this._cnode) && (1 != Math.floor(this._nop))) {
-			
 			var cimg = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			
 			for (let j = 0; j < cimg.data.length; j = j + 4) {
@@ -312,27 +319,23 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 					
 					continue;
 				}
-				
+
 				cimg.data[j + 3] = ncop;
 			}
-			
+
 			ctx.putImageData(cimg, 0, 0);
 		}
 		
 		
 		if (this._cnode) {
-			
 			var cimg = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			
 			for (let j = 0; j < cimg.data.length; j = j + 4) {
-				
 				if (cimg.data[j + 3] == 0) {
-					
 					continue;
 				}
 				
 				if ((cimg.data[j] == 0xfa && cimg.data[j + 1] == 0x80 && cimg.data[j + 2] == 0x72) || (cimg.data[j] == 0xff && cimg.data[j + 1] == 0xff && cimg.data[j + 2] == 0xff)) {
-					
 						cimg.data[j] = (this._nr & cimg.data[j]);
 						cimg.data[j + 1] = (this._ng & cimg.data[j + 1]);
 						cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
@@ -341,9 +344,7 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 				
 				
 				if (1 != Math.floor(this._nop)) {
-					
 					if (cimg.data[j + 3] != lcop) {
-					
 						cimg.data[j + 3] = ncop;
 					}
 				}
@@ -351,52 +352,54 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 				
 			ctx.putImageData(cimg, 0, 0);
 		}
+
+		/*
+		//Better but still laggy
+		if (this._cnode) {
 		
-					/*
-			//Better but still laggy
-			if (this._cnode) {
+			let cv = document.createElement("canvas");
+			cv.width = 12;
+			cv.height = 12;
+			let c2 = cv.getContext("2d");
+			c2.drawImage(image, 0, 0, size, size);
+			let cimg = c2.getImageData(0, 0, 12, 12);
 			
-				let cv = document.createElement("canvas");
-				cv.width = 12;
-				cv.height = 12;
-				let c2 = cv.getContext("2d");
-				c2.drawImage(image, 0, 0, size, size);
-				let cimg = c2.getImageData(0, 0, 12, 12);
+			for (let j = 0; j < cimg.data.length; j = j + 4) {
 				
-				for (let j = 0; j < cimg.data.length; j = j + 4) {
-					
-					cimg.data[j] = (this._nr & cimg.data[j]);
-					cimg.data[j + 1] = (this._ng & cimg.data[j + 1]);
-					cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
-				
-				}
-				
-				ctx.putImageData(cimg, (x - (size / 2)), (y - (size / 2)));
-				
-			}
-			
-			else {
-				
-				ctx.drawImage(image, x - size/2, y - size/2, size, size);
-			}
-			*/
-			//This will make it so the line and node colors don't interact, but it makes the browser incredibly laggy
-			/*
-			if (this._cnode) {
-				
-				var cimg = ctx.getImageData((x - (size / 2)), (y - (size / 2)), (x + (size / 2)), (y + (size / 2)));
-				
-				for (let j = 0; j < cimg.data.length; j = j + 4) {
-					
 				cimg.data[j] = (this._nr & cimg.data[j]);
 				cimg.data[j + 1] = (this._ng & cimg.data[j + 1]);
 				cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
-				
-				}
-				
-				ctx.putImageData(cimg, (x - (size / 2)), (y - (size / 2)));
+			
 			}
-			*/
+			
+			ctx.putImageData(cimg, (x - (size / 2)), (y - (size / 2)));
+			
+		}
+		
+		else {
+			
+			ctx.drawImage(image, x - size/2, y - size/2, size, size);
+		}
+		*/
+
+		//This will make it so the line and node colors don't interact, but it makes the browser incredibly laggy
+
+		/*
+		if (this._cnode) {
+			
+			var cimg = ctx.getImageData((x - (size / 2)), (y - (size / 2)), (x + (size / 2)), (y + (size / 2)));
+			
+			for (let j = 0; j < cimg.data.length; j = j + 4) {
+				
+			cimg.data[j] = (this._nr & cimg.data[j]);
+			cimg.data[j + 1] = (this._ng & cimg.data[j + 1]);
+			cimg.data[j + 2] = (this._nb & cimg.data[j + 2]);
+			
+			}
+			
+			ctx.putImageData(cimg, (x - (size / 2)), (y - (size / 2)));
+		}
+		*/
 		/*
 		if (this._cnode) {
 			
@@ -500,17 +503,14 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 	},
 	
 	toggleCNode() {
-		
 		this._cnode = !this._cnode;
 	},
 	
 	toggleCLine() {
-		
 		this._cline = !this._cline;
 	},
 	
 	updateCNVal(cval1) {
-		
 		this._nr = parseInt(cval1.slice(1, 3), 16);
 		this._ng = parseInt(cval1.slice(3, 5), 16);
 		this._nb = parseInt(cval1.slice(5, 7), 16);
@@ -521,7 +521,6 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 	},
 	
 	updateCLVal(cval2) {
-		
 		this._lr = parseInt(cval2.slice(1, 3), 16);
 		this._lg = parseInt(cval2.slice(3, 5), 16);
 		this._lb = parseInt(cval2.slice(5, 7), 16);
@@ -540,13 +539,11 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 	},
 	
 	updateNOp(rval1) {
-		
 		//this._nop = Math.trunc((rval1 / 100.0) * 255);
 		this._nop = rval1 / 100.0;
 	},
 	
 	updateLOp(rval2) {
-		
 		//this._lop = Math.trunc((rval2 / 100.0) * 255);
 		let temp = rval2;
 		
@@ -559,17 +556,14 @@ L.MultiTopLayer = L.CanvasLayer.extend({
 	},
 	
 	updateLThick(rval3) {
-		
 		this._lthick = rval3;
 	},
 	
 	updateNSize(rval4) {
-		
 		this._nsize = rval4;
 	},
 	
 	stealVals(oldlayer) {
-		
 		this._render = oldlayer._render;
 		this._render_bus_ids = oldlayer._render_bus_ids;
 		this._cnode = oldlayer._cnode;
