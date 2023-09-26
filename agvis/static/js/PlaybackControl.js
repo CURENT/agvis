@@ -5,6 +5,7 @@ let PlaybackControl = L.Control.extend({
 
     initialize: function(win, options) {
         this.win = win;
+        this.opacitybar = null;
         this.playbackbar = null;
 
         if (options) L.Util.setOptions(this, options);
@@ -66,6 +67,28 @@ let PlaybackControl = L.Control.extend({
         let rdiv = L.DomUtil.create('div', '', div);
         rdiv.style.float = "right";
 
+        let opacitylabel = L.DomUtil.create('span', '', rdiv);
+        opacitylabel.innerHTML = "Opacity ";
+        let opacitybar = L.DomUtil.create('input', '', rdiv);
+        this.opacitybar = opacitybar;
+        opacitybar.type = "range";
+        opacitybar.min = 0;
+        opacitybar.max = 1;
+        opacitybar.step = 0.01;
+        opacitybar.value = 1.0;
+
+        let opacityspan = L.DomUtil.create('span', '', rdiv);
+        opacityspan.innerHTML = " 100 ";
+        opacityspan.style.marginRight = '20px';
+
+        opacitybar.oninput = function(e) {
+            a = Math.round(e.target.value*100);
+            opacityspan.innerHTML = ' ' + a + ' ';
+            win.contourLayer.updateOpacity(e.target.value);
+        }
+
+        let playbackspeedlabel = L.DomUtil.create('span', '', rdiv);
+        playbackspeedlabel.innerHTML = "Speed ";
         let playbackspeedrange = L.DomUtil.create('input', '', rdiv);
         playbackspeedrange.type = "range";
         playbackspeedrange.value = 2;
@@ -142,4 +165,6 @@ let PlaybackControl = L.Control.extend({
             this.playbackbar.value = value;
         }
     }
+
+
 });

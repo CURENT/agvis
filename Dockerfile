@@ -24,7 +24,8 @@ RUN python3 -m pip install \
         git+https://github.com/cuihantao/andes.git@develop \
         --no-cache-dir \
     && python3 -m pip install \
-        git+https://github.com/jinningwang/agvis.git@docker \
+        git+https://github.com/zmalkmus/agvisdev.git \
+        # git+https://github.com/CURENT/agvis.git \
         --no-cache-dir
 
 # Create a new user named 'cui' and a work directory
@@ -55,6 +56,9 @@ WORKDIR /home/cui/work
 
 # Copy the Andes config file to the new user's home directory
 COPY andes.rc /home/cui/.andes
+
+# Copy the current AGVis directory into the container.
+COPY . .
 
 # Set the entrypoint and command for the container
 ENTRYPOINT []

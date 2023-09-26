@@ -65,10 +65,25 @@ Here is an edited version of the wecc.xlsx file from the AGVis cases directory o
 simulation data included:
 [sim_example.xlsx](https://github.com/CURENT/agvis/files/10785612/sim_example.xlsx)
 
+CSV Reader
+----------------------------
+
+As of the v3.2.0 update, the IDR can accept CSV files along with an Excel file. This feature
+was included so that users could upload an ANDES input file along with an ANDES output file without
+having to make modifications. When using the CSV file reader, AGVis expects an Excel file to be uploaded as well.
+This Excel file should contain the MultiLayer (Bus and Line) data. The CSV file should only contain simulation data.
+The CSV file can be in one of two formats: IDR and ANDES Output. The IDR format is the same style listed in the O_His section.
+The ANDES Output format is exactly that--an ANDES output file. The CSV Reader has to make certain assumptions to work with this format.
+Specifically, it assumes that the Time column comes before the variable columns so that it can determine how much of each column to read,
+and it assumes that the number of buses corresponds to the variable (Voltage Frequency, Magnitude, and Angle) with the most entries. If a
+simulation variable has less entries than the assumed bus number, it will be padded to meet that number. 
+
+The ANDES Output format is also accepted in the O_His sheet when uploading a single Excel file.
+
 IDR Options
 ==================
 
-After uploading a valid Excel sheet, the MultiLayer menu will fill with both the MultiLayer options
+After uploading a valid file set, the MultiLayer menu will fill with both the MultiLayer options
 and the IDR options:
 
 .. image:: diagrams/idr/idr.png
