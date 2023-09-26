@@ -1,18 +1,23 @@
+/* ****************************************************************************************
+ * File Name:   TimeBox.js
+ * Authors:     Nicholas West, Nicholas Parsly
+ * Date:        9/26/2023 (last modified)
+ * 
+ * Description: TimeBox.js contains the code the SimTimeBox class, which is extended from 
+ *              a Leaflet Control. The SimTimeBox updates timer in the top left corner of 
+ *              the map when a simulation occurs. It also handles the calculations and 
+ *              checking for the Custom Timestamp feature.
+ * ****************************************************************************************/
+
 L.SimTimeBox = L.Control.extend({
     simulation_time: 0.0,
 
     onAdd: function(map) {
-                this.simulation_time = 0;
-                this.text = L.DomUtil.create('div');
-                this.text.id = "info_text";
-                this.text.innerHTML = "<p style=\"font-size:250%;\"><strong>Simulation time:</strong> " + this.simulation_time + "</p>";
-                return this.text;
-
-    },
-
-    onRemove: function(map) {
-                    // Nothing to do here
-
+        this.simulation_time = 0;
+        this.text = L.DomUtil.create('div');
+        this.text.id = "info_text";
+        this.text.innerHTML = "<p style=\"font-size:250%;\"><strong>Simulation time:</strong> " + this.simulation_time + "</p>";
+        return this.text;
     },
 
     update: function(t){
