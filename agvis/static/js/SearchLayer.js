@@ -1,4 +1,24 @@
+/* ****************************************************************************************
+ * File Name:   SearchLayer.js
+ * Authors:     Nicholas West, Nicholas Parsly
+ * Date:        9/26/2023 (last modified)
+ * 
+ * Description: Places the markers on the SearchLayer. First it loops through the 
+ * 				multilayer Objects to determine whether their MultiTopLayers are rendered. 
+ * 				If a MultiTopLayer is not rendered, then its markers will not be added to 
+ * 				the SearchLayer. After that it checks if the nodes received through DiME 
+ * 				need markers to be added to the SearchLayer. If they do, it adds them and 
+ * 				updates appropriate variables accordingly.
+ * ****************************************************************************************/
+
 L.SearchLayer = L.LayerGroup.extend({
+
+	/**
+	 * Sets the SearchLayer’s starting variables.
+	 * 
+	 * @constructs L.SearchLayer
+	 * @param {Object} options - (Optional) The options Object from Window. Unused beyond being passed to the LayerGroup’s initialization function.
+	 */
 	initialize(options) {
 		this._context = null;
 		this._cache = new WeakMap();
@@ -14,29 +34,34 @@ L.SearchLayer = L.LayerGroup.extend({
         });
 	},
 
+	/**
+	 * Places the markers on the SearchLayer. First it loops through the multilayer Objects to 
+	 * determine whether their MultiTopLayers are rendered. If a MultiTopLayer is not rendered, 
+	 * then its markers will not be added to the SearchLayer. After that it checks if the nodes 
+	 * received through DiME need markers to be added to the SearchLayer. If they do, it adds 
+	 * them and updates appropriate variables accordingly.
+	 * 
+	 * @memberof  SearchLayer
+	 * @param {Object} context - The workspace from Window.
+	 * @param {Window} win     - The Window itself. Included in order to access the MultiLayer data.
+	 * @returns 
+	 */
 	update(context, win) {
-		
 		if (win.multilayer.length > 0) {
-		
 			this.clearLayers();
 			
 			for (let i = 0; i < win.multilayer.length; i++) {
-				
 				let mlayer = win.multilayer[i];
 				
 				if (mlayer == null) {
-					
 					continue;
 				}
 				
 				if (!mlayer.topo._render) {					
-					
 					continue;
 				}
 				
 				for (let j = 0; j < mlayer.data.Bus.idx.length; j++) {
-					
-					
 					const lat = mlayer.data.Bus.ycoord[j];
 					const lng = mlayer.data.Bus.xcoord[j];
 					const idx = mlayer.data.Bus.idx[j];
@@ -49,7 +74,6 @@ L.SearchLayer = L.LayerGroup.extend({
 				}
 			}
 		}
-		
 		
         if (!this._needs_update) {
             return;
@@ -75,10 +99,8 @@ L.SearchLayer = L.LayerGroup.extend({
         }
 
         const Bus = SysParam.Bus;
-
         
 		if (win.multilayer.length == 0) {
-			
 			this.clearLayers();
 		}
 
