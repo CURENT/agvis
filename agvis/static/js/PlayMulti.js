@@ -1,26 +1,52 @@
+/* ****************************************************************************************
+ * File Name:   PlayMulti.js
+ * Authors:     Nicholas West, Nicholas Parsly
+ * Date:        9/26/2023 (last modified)
+ * 
+ * Description: PlayMulti.js contains the code for the PlayMulti control, which handles 
+ *              the simulation controls for newlayers. It is mostly the same as the 
+ *              PlaybackControl, though it does also incorporate some aspects from 
+ *              SimTimeBox since the timer for each newlayer is just some updating text as 
+ *              opposed to a full time box.
+ * ****************************************************************************************/
+
 let PlayMulti = L.Control.extend({
     options: {
         position: "bottomleft"
     },
 
-	//Multilayer version of the playback bar
+	/**
+     * Primarily just sets PlayMulti.win and calls the Leaflet Util initialization function.
+     * 
+     * @memberof PlayMulti
+     * @param {*}      newlayer - AGVis layer
+     * @param {Object} options  - (optional) Passed to leaflet
+     * @param {*}      elem     
+     * @param {Window} win      - The primary window for AGVis
+     * @returns
+     */
     initialize: function(newlayer, options, elem, win) {
         this.newlayer = newlayer;
         this.playbackbar = null;
 
         if (options) L.Util.setOptions(this, options);
-	//},
 		
-	
         let paused = false;
         let playbackspeed = 1.0;
 
-		//Define style
+        // ===============================================================
+        // Define the CSS styles for the playback control.
+        // ===============================================================
+
         let div = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
         div.style.backgroundColor = "white";
         div.style.boxSizing = "border-box";
         div.style.padding = "4px";
 		div.id = "pbar" + newlayer.num;
+
+        // ===============================================================
+        // Create the playback control.
+        // ===============================================================
 
         L.DomEvent.disableClickPropagation(div);
 		div.appendChild(document.createElement("br"));
@@ -36,11 +62,20 @@ let PlayMulti = L.Control.extend({
 		this.newlayer.curtime = Number(Date.now());
 		this.prev = Number(newlayer.end_time);
 
-		//Set time for manual inpout change
+		/**
+         * Updates the Window’s time whenever the user changes the range input.
+         * 
+         * @memberof PlayMulti
+         * @returns
+         */
         playbackbar.oninput = function() {
             newlayer.time = Number(playbackbar.value);
 			newlayer.cont.update(this.win);
         }
+
+        // ===============================================================
+        // Create the playback control buttons.
+        // ===============================================================
 
         let ldiv = L.DomUtil.create('div', '', div);
         ldiv.style.float = "left";
@@ -49,7 +84,6 @@ let PlayMulti = L.Control.extend({
         pausebutton.type = "button";
         pausebutton.value = "Pause";
 
-		//Pause and unpause functionality
         pausebutton.onclick = function() {
             paused = !paused;
 
@@ -62,30 +96,30 @@ let PlayMulti = L.Control.extend({
             }
         }
 
-		//Stop button (should really probably be called the restart button)
         let stopbutton = L.DomUtil.create('input', '', ldiv);
         stopbutton.type = "button";
         stopbutton.value = "Restart";
 
+        /**
+         * Resets the animation back to the beginning.
+         * 
+         * @memberof PlayMulti
+         * @returns
+         */
         stopbutton.onclick = function() {
             newlayer.time = playbackbar.min;
 			playbackbar.value = playbackbar.min;
-			
-			
-			
         }
 
         let rdiv = L.DomUtil.create('div', '', div);
         rdiv.style.float = "right";
 
-		//Custom speed input
         let playbackspeedrange = L.DomUtil.create('input', '', ldiv);
         playbackspeedrange.type = "range";
         playbackspeedrange.value = 2;
         playbackspeedrange.min = -1;
         playbackspeedrange.max = 6;
         playbackspeedrange.step = 1;
-		
 
         let playbackspeedspan = L.DomUtil.create('span', '', rdiv);
         playbackspeedspan.innerHTML = " 1x ";
@@ -97,6 +131,13 @@ let PlayMulti = L.Control.extend({
         playbackspeedtext.disabled = true;
         playbackspeedtext.size = 4;
 
+        /**
+         * Updates the Window’s timescale when the user changes the input bar. Also handles 
+         * adjusting settings when a user selects the custom playback speed option.
+         * 
+         * @memberof PlayMulti
+         * @returns
+         */
         playbackspeedrange.oninput = function() {
             if (playbackspeedrange.value < 0) {
                 playbackspeedtext.disabled = false;
@@ -130,11 +171,17 @@ let PlayMulti = L.Control.extend({
                     newlayer.timescale = playbackspeed;
                 }
 
-				
                 playbackspeedspan.innerHTML = " " +  val + "x ";
             }
         }
 
+        /**
+         * Sets the Window’s timescale to the value the user input in the text box if 
+         * the custom playback speed option has been selected.
+         * 
+         * @memberof PlayMulti
+         * @returns
+         */
         playbackspeedtext.oninput = function() {
             const val = Number(playbackspeedtext.value);
 
@@ -142,10 +189,13 @@ let PlayMulti = L.Control.extend({
                 playbackspeed = val;
                 if (!paused) {
                     newlayer.timescale = playbackspeed;
-
                 }
             }
         }
+
+        // ===============================================================
+        // Create div2 to hold the playback control.
+        // ===============================================================
 	
 	    let div2 = document.createElement("div");
 	    div.style.marginTop = "10px";
@@ -156,7 +206,13 @@ let PlayMulti = L.Control.extend({
 
     onRemove: function(options) {},
 
-	//Called every 17 milliseconds, updates the animations
+	/**
+     * Updates the Playback Bar’s value based on the Window’s current time, requests that the MultiContLayer 
+     * updates, and checks for Custom Timestamp settings.
+     * 
+     * @param {Number} dt       - The number of seconds between the current update and the most recent update.
+     * @param {Number} timestep - The current time from the window.
+     */
     updatePlaybackBar: function(dt, timestep) {
         if (this.playbackbar) {
 			
@@ -168,7 +224,6 @@ let PlayMulti = L.Control.extend({
 				
 				this.playbackbar.value = this.playbackbar.max;
 			}
-			
 			else {
 				this.playbackbar.value = Number(this.playbackbar.value) + pt;
 			}
@@ -189,17 +244,13 @@ let PlayMulti = L.Control.extend({
 					//If you are, use the provided timer, not the pure seconds one
 					let dval2 = document.getElementById("ts_date_" + this.newlayer.num).value;
 					let nval2 = Number(document.getElementById("ts_num_" + this.newlayer.num).value);
-					let yval2 = document.getElementById("ny_" + this.newlayer.num).checked;
+					// let yval2 = document.getElementById("ny_" + this.newlayer.num).checked;
 					let tval2 = document.getElementById("ts_time_" + this.newlayer.num).value;
-					
 					
 					if ((dval2 == "") || (nval2 < 0) || (!(Number.isFinite(nval2))) || (tval2 == "")) {
 						timerup.innerText = "Simulation Time: " + this.newlayer.time;
-					
 					}
-            
 					else {
-                
 						//msmult is the millisecond multiplier. It determines how many ms need to be added to the time per frame.
 						let msmult = 1;
 						let ival2 = document.getElementById("ts_inc_" + this.newlayer.num).value;
