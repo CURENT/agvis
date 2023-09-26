@@ -296,9 +296,7 @@ let PlayMulti = L.Control.extend({
 					
 					}
 				}
-				
 				else {
-					
 					timerup.innerText = "Simulation Time: " + this.newlayer.time;
 				}
 				
