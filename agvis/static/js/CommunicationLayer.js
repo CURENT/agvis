@@ -1,3 +1,47 @@
+/* ****************************************************************************************
+ * File Name:   CommunicationLayer.js (Deprecated)
+ * Authors:     Nicholas West
+ * Date:        9/15/2023 (last modified)
+ * 
+ * Description: It appears that it was originally going to draw substantially more 
+ *              lines between points compared to the TopologyLayer. The color and 
+ *              curve of these lines would be determined by devices associated with 
+ *              the nodes and their capacities for transferring and receiving data. 
+ * 
+ * Warning:     This file is not in use. It was used to draw the communication layer 
+ *              on the map.
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/communication.html
+ * ****************************************************************************************/
+
+/**
+ * Renders for the CommunicationLayer. It primarily establishes lookup variables for 
+ * device locations, device links, and data transfers. After setting up the variables, 
+ * the Canvas Context draws lines between each set of linked devices. If then draws 
+ * gradient lines between devices that transfer data, with the gradient indicating 
+ * which node is the sending node and which is the receiving node. Lastly, it draws 
+ * circles at the location of each device, with the color being determined by the 
+ * device type.
+ * 
+ * @param {HTML Canvas Element}     canvas                 - The canvas that the layer will be drawn on.
+ * @param {Point}                    size                  - The size of the canvas.
+ * @param {LatLngBounds}             bounds                - The bounds of the map.
+ * @param {Function}                 project               - The latLngToContainerPoint function specifically for CanvasLayer._map.
+ * @param {Boolean}                  needsProjectionUpdate - Determines whether the Layer’s projection needs to be updated.
+ * 
+ * @var   {Object}                   paramCache            - Caches the locations for the various devices in the CommunciationLayer.
+ * @var   {Object}                   varCache              - Caches which devices send and which ones receive, along with how much data was transferred between them.
+ * @var   {NDArray}                  pdcPixelCoords        - Stores the location of each PDC device. 
+ * @var   {NDArray}                  pmuPixelCoords        - Stores the location of each PMU device.
+ * @var   {NDArray}                  switchPixelCoords     - Stores the location of each Switch device. 
+ * @var   {NDArray}                  linkPixelCoords       - Stores the connections between the various devices. 
+ * @var   {Object}                   transferBytesPerNode  - Keeps track of the location and transfer amount of each node that sends data.
+ * @var   {Object}                   receiveBytesPerNode   - Keeps track of the location and transfer amount of each node that receives data. 
+ * @var   {NDArray}                  transferPixelCoords   - Stores the data transfers between the various devices. 
+ * @var   {CanvasRenderingContext2D} ctx                   - The canvas context used to render the communication lines.
+ * 
+ * @returns 
+ */
 function renderCommunication(canvas, { size, bounds, project, needsProjectionUpdate }) {
     const context = this._context;
     if (!context) return;
@@ -301,12 +345,31 @@ function toggleRender () {
     this._render = !this._render;
 }
 
+/**
+ * @class CommunicationLayer
+ * @extends {L.CanvasLayer}
+ * 
+ * @param {Object} options
+ * 
+ * @var {Object}  _context - The Window’s workspace.
+ * @var {Object}  _cache   - Caches the data for different device types from the context.
+ * @var {Boolean} _render  - Determines whether the CommunicationLayer will be displayed.
+ * 
+ * @returns {CommunicationLayer}
+ */
 L.CommunicationLayer = L.CanvasLayer.extend({
     options: {
         render: renderCommunication,
         toggle: toggleRender
     },
 
+    /**
+     * Sets the CommunicationLayer’s starting variables.
+     * 
+     * @constructs CommunicationLayer
+     * @param {Object} options
+     * @returns 
+     */
     initialize(options) {
         this._context = null;
         this._cache = new WeakMap();
@@ -314,6 +377,13 @@ L.CommunicationLayer = L.CanvasLayer.extend({
         L.CanvasLayer.prototype.initialize.call(this, options);
     },
 
+    /**
+     * Updates the values for the devices and then re-renders the CommunicationLayer.
+     * 
+     * @memberof CommunicationLayer
+     * @param {Object} context 
+     * @returns
+     */
     update(context) {
         this._context = context;
         this.redraw();

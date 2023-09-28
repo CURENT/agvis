@@ -1,20 +1,20 @@
-/**
- * ==================================================================================================
+/* ****************************************************************************************
  * File Name:   Legend.js
  * Author:      Zack Malkmus
- * Date:        9/6/2023 
- * Description: Creates a draggable and updating legend for LTB AGVis
- * ==================================================================================================
- */
+ * Date:        9/6/2023 (last modified)
+ * 
+ * Description: The DynamicLegend class creates a new dynamic legend for AGVis that is 
+ *              draggable and updatable.
+ *
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/?badge=stable
+ * ****************************************************************************************/
 
 /**
- * Create a new dynamic legend for AGVis.
+ * @class DynamicLegend
+ * @extends {L.Control}
  * 
- * This class creates a new legend for AGVis that is draggable and updatable
- * 
- * @author  Zack Malkmus
  * @param   {Object} win - The AGVis window that the legend is associated with.
- * @returns {Object}       The new legend element.
+ * @returns {DynamicLegend}
  */
 L.DynamicLegend = L.Control.extend({
     options: {
@@ -22,11 +22,11 @@ L.DynamicLegend = L.Control.extend({
     },
 
     /**
-     * Initialize the legend.
-     * @memberof    L.DynamicLegend
-     * @param       {Object} win - The AGVis window that the legend is associated with.
-     * @returns     {void}
-     * @constructor
+     * Initialize the legend. 
+     * 
+     * @constructs L.DynamicLegend
+     * @param {Object} win - The AGVis window that the legend is associated with.
+     * @returns
      */
     initialize: function(win) {
         this.win = win;
@@ -34,8 +34,9 @@ L.DynamicLegend = L.Control.extend({
 
     /**
      * Create the legend element.
+     * 
      * @memberof L.DynamicLegend
-     * @returns  {Element}       - The legend element.
+     * @returns  {Element} - The legend element.
      */
     onAdd: function() {
         // Legend Container
@@ -95,9 +96,10 @@ L.DynamicLegend = L.Control.extend({
 
     /**
      * Set the legend to be draggable.
+     * 
      * @memberof L.DynamicLegend
      * @param    {Object} e - The event object.
-     * @returns  {void}
+     * @returns
      */
     onDragStart: function (e) {
         this.dragging = true;
@@ -105,14 +107,14 @@ L.DynamicLegend = L.Control.extend({
         this.dragStartY = e.clientY;
         this.originalX = parseInt(this._container.style.left) || 0;
         this.originalY = parseInt(this._container.style.top) || 0;
-
     },
 
     /**
      * Update the legend position while dragging.
+     * 
      * @memberof L.DynamicLegend
      * @param    {Object} e - The event object.
-     * @returns  {void}
+     * @returns
      */
     onDrag: function (e) {
         if (!this.dragging) return;
@@ -127,8 +129,9 @@ L.DynamicLegend = L.Control.extend({
 
     /**
      * Stop dragging the legend.
+     * 
      * @memberof L.DynamicLegend
-     * @returns  {void}
+     * @returns
      */
     onDragEnd: function () {
         this.dragging = false;
@@ -136,27 +139,26 @@ L.DynamicLegend = L.Control.extend({
 
     /**
      * Used to update the legend values when the user changes the state or min/max values of the state.
+     * 
      * @memberof L.DynamicLegend
-     * @returns  {void}
+     * @returns
+     * 
      * @see      ConfigControl.js
      * @see      Window.js
      */
     update: function() {
-        // Voltage Angle
         if (this.win.state == this.win.states.angl) {
             this.title.innerHTML = "<span>V Angle</span>";
             this.units.innerHTML = "<span>(rad)</span>";
             this.min.innerHTML = "<span>" + this.win.options.amin + "</span>";
             this.max.innerHTML = "<span>" + this.win.options.amax + "</span>";
         } 
-        // Voltage Magnitude
         else if (this.win.state == this.win.states.volt) {
             this.title.innerHTML = "<span>V Magnitude</span>";
             this.units.innerHTML = "<span>(p.u.)</span>";
             this.min.innerHTML = "<span>" + this.win.options.vmin + "</span>";
             this.max.innerHTML = "<span>" + this.win.options.vmax + "</span>";
         }
-        // Frequency
         else if (this.win.state == this.win.states.freq) {
             this.title.innerHTML = "<span>Frequency</span>";
             this.units.innerHTML = "<span>(p.u.)</span>";

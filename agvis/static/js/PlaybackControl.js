@@ -1,8 +1,44 @@
+/* ****************************************************************************************
+ * File Name:   PlaybackControl.js
+ * Authors:     Nicholas West, Nicholas Parsly
+ * Date:        9/21/2023 (last modified)
+ * 
+ * Description: PlaybackControl.js contains the code for the PlaybackControl class, also 
+ *              known as the Playback Bar. The Playback Bar handles the UI for the 
+ *              ContourLayer animations. It updates the Window’s timescale when the user 
+ *              changes the animation speed, sets the time when the user restarts or scrubs 
+ *              through the animation, and changes the opacity setting for ContourLayer’s 
+ *              rendering based on the user’s input.
+ * 
+ * API Docs:   https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/playback.html
+ * ****************************************************************************************/
+
+/**
+ * @class PlaybackControl
+ * @extends {L.Control}
+ * 
+ * @param   {Window}             win           - The Window the Playback Bar is associated with.
+ * @param   {Object}             options       - (optional) Passed to leaflet
+ * 
+ * @var     {HTML Input Element} opacitybar    - The range input for the opacity slider.
+ * @var     {HTML Input Element} playbackbar   - The range input for the playback slider.
+ * @var     {Boolean}            paused        - Used by the pause button to determine what state the animation is in.
+ * @var     {Number}             playbackspeed - The current speed of the animation.
+ * 
+ * @returns {PlaybackControl}
+ */
 let PlaybackControl = L.Control.extend({
     options: {
         position: "bottomleft"
     },
 
+    /**
+     * Sets PlaybackControl.win and calls the Leaflet Util Initialization function.
+     * 
+     * @constructs PlaybackControl
+     * @param {Window} win     - The Window the Playback Bar is associated with.
+     * @param {Object} options - (optional) Passed to leaflet 
+     */
     initialize: function(win, options) {
         this.win = win;
         this.opacitybar = null;
@@ -11,6 +47,13 @@ let PlaybackControl = L.Control.extend({
         if (options) L.Util.setOptions(this, options);
     },
 
+    /**
+     * Adds all the UI elements to the map. Also sets up all of their event functions.
+     * 
+     * @memberof PlaybackControl
+     * @param   {Object} options - Completely unused.
+     * @returns 
+     */
     onAdd: function(options) {
         const { win } = this;
         let paused = false;
@@ -33,6 +76,12 @@ let PlaybackControl = L.Control.extend({
         playbackbar.step = 0.01;
         playbackbar.value = win.end_time;
 
+        /**
+         * Updates the Window’s time whenever the user changes the range input.
+         * 
+         * @memberof PlaybackControl
+         * @returns
+         */
         playbackbar.oninput = function() {
             win.time = Number(playbackbar.value);
         }
@@ -44,6 +93,12 @@ let PlaybackControl = L.Control.extend({
         pausebutton.type = "button";
         pausebutton.value = "Pause";
 
+        /**
+         * Toggles whether the animation is paused or not. When paused, timescale is set to 0. When not, it is set to whatever timescale the user has selected.
+         * 
+         * @memberof PlaybackControl
+         * @returns
+         */
         pausebutton.onclick = function() {
             paused = !paused;
 
@@ -56,6 +111,7 @@ let PlaybackControl = L.Control.extend({
             }
         }
 
+        // Stop button
         let stopbutton = L.DomUtil.create('input', '', ldiv);
         stopbutton.type = "button";
         stopbutton.value = "Stop";
@@ -106,6 +162,12 @@ let PlaybackControl = L.Control.extend({
         playbackspeedtext.disabled = true;
         playbackspeedtext.size = 4;
 
+        /**
+         * Updates the Window’s timescale when the user changes the input bar. Also handles adjusting settings when a user selects the custom playback speed option.
+         * 
+         * @memberof PlaybackControl
+         * @returns
+         */
         playbackspeedrange.oninput = function() {
             if (playbackspeedrange.value < 0) {
                 playbackspeedtext.disabled = false;
@@ -143,6 +205,12 @@ let PlaybackControl = L.Control.extend({
             }
         }
 
+        /**
+         * Sets the Window’s timescale to the value the user input in the text box if the custom playback speed option has been selected.
+         * 
+         * @memberof PlaybackControl
+         * @returns
+         */
         playbackspeedtext.oninput = function() {
             const val = Number(playbackspeedtext.value);
 
@@ -160,11 +228,16 @@ let PlaybackControl = L.Control.extend({
 
     onRemove: function(options) {},
 
+    /**
+     * Updates the Playback Bar’s value based on the Window’s current time.
+     * 
+     * @memberof PlaybackControl
+     * @param {Number} value - The time passed from the window
+     * @returns
+     */
     updatePlaybackBar: function(value) {
         if (this.playbackbar) {
             this.playbackbar.value = value;
         }
     }
-
-
 });
