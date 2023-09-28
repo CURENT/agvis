@@ -1,12 +1,21 @@
-/* ***********************************************************************************
+/* ****************************************************************************************
  * File Name:   Legend.js
  * Author:      Zack Malkmus
  * Date:        9/6/2023 (last modified)
  * 
  * Description: The DynamicLegend class creates a new dynamic legend for AGVis that is 
  *              draggable and updatable.
- * ***********************************************************************************/
+ *
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/?badge=stable
+ * ****************************************************************************************/
 
+/**
+ * @class DynamicLegend
+ * @extends {L.Control}
+ * 
+ * @param   {Object} win - The AGVis window that the legend is associated with.
+ * @returns {DynamicLegend}
+ */
 L.DynamicLegend = L.Control.extend({
     options: {
         position: 'bottomright',
@@ -16,9 +25,7 @@ L.DynamicLegend = L.Control.extend({
      * Initialize the legend. 
      * 
      * @constructs L.DynamicLegend
-     * 
-     * @memberof L.DynamicLegend
-     * @param    {Object} win - The AGVis window that the legend is associated with.
+     * @param {Object} win - The AGVis window that the legend is associated with.
      * @returns
      */
     initialize: function(win) {

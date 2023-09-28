@@ -1,4 +1,4 @@
-/* ***********************************************************************************
+/* ****************************************************************************************
  * File Name:   LayerControl.js
  * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/20/2023 (last modified)
@@ -10,7 +10,9 @@
  * 				This partially explains why it is one of the largest files currently 
  * 				in AGVis. LayerControl uses both the Papa Parse library and the 
  * 				SheetJs library for file reading.
- * ***********************************************************************************/
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/layer.html
+ * ****************************************************************************************/
 
 //Table containing the sidebar
 const layers_html = `

@@ -1,14 +1,31 @@
-/* ***********************************************************************************
+/* ****************************************************************************************
  * File Name:   CanvasLayer.js
  * Authors:     Nicholas West, Nicholas Parsley
- * Date:        9/15/2023 (last modified)
+ * Date:        9/28/2023 (last modified)
  * 
  * Description: CanvasLayer class. The CanvasLayer is an intermediary class, extending 
  * 				from Leaflet’s Layer class and being extended from by most of the other 
  * 				Layer-type classes in AGVis.Contains basic functions for rendering, 
  * 				removing, and adding layers to the map.
- * ***********************************************************************************/
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/canvas.html
+ * ****************************************************************************************/
 
+/**
+ * @class CanvasLayer
+ * @extends {L.Layer}
+ * 
+ * @param   {Object} options
+ * 
+ * @var {Map}                 _map                   - The leaflet map passed from the Window.
+ * @var {HTML Canvas Element} _canvas                - The canvas element that will be drawn on.
+ * @var {Boolean}             _needsProjectionUpdate - Determines whether the Layer’s projection needs to be updated.
+ * @var {Point}               size					 - Represents the current size of the map in pixels.
+ * @var {LatLngBounds}        bounds			     - Represents the geographical bounds of the map.
+ * @var {Function}            project				 - The latLngToContainerPoint function specifically for CanvasLayer._map.
+ * 
+ * @returns {CanvasLayer}
+ */
 L.CanvasLayer = L.Layer.extend({
 
 	options: {

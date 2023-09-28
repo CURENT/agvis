@@ -1,4 +1,4 @@
-/* ***********************************************************************************
+/* ****************************************************************************************
  * File Name:   ContourLayer.js
  * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/20/2023 (last modified)
@@ -9,7 +9,9 @@
  * 				implementation from the D3.js library. The actual visuals for each 
  * 				heatmap are done using TWGL to apply a texture to each triangle’s 
  * 				fragments based on their interpolated values.
- * ***********************************************************************************/
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/contour.html
+ * ****************************************************************************************/
 
 /**
  * The vertex shader for the Contour-type Layers. Passes the values for a given 

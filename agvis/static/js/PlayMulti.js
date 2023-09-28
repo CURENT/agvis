@@ -8,8 +8,20 @@
  *              PlaybackControl, though it does also incorporate some aspects from 
  *              SimTimeBox since the timer for each newlayer is just some updating text as 
  *              opposed to a full time box.
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/playmulti.html
  * ****************************************************************************************/
 
+/**
+ * @class PlayMulti
+ * @extends {L.Control}
+ * 
+ * @var {Object}  newlayer    - The newlayer associated with the specific Playback Bar.
+ * @var {Element} playbackbar - The multiplier for how much time passes per timestep. Setting it to 0 pauses the animation.
+ * @var {Number}  prev        - The previous Playback Bar value. Used to check if the timer actually needs to update.
+ * 
+ * @returns {PlayMulti}
+ */
 let PlayMulti = L.Control.extend({
     options: {
         position: "bottomleft"
@@ -18,8 +30,8 @@ let PlayMulti = L.Control.extend({
 	/**
      * Primarily just sets PlayMulti.win and calls the Leaflet Util initialization function.
      * 
-     * @memberof PlayMulti
-     * @param {*}      newlayer - AGVis layer
+     * @constructs PlayMulti
+     * @param {*}      newlayer - The newlayer associated with the specific Playback Bar.
      * @param {Object} options  - (optional) Passed to leaflet
      * @param {*}      elem     
      * @param {Window} win      - The primary window for AGVis

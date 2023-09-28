@@ -9,8 +9,21 @@
  * 				the SearchLayer. After that it checks if the nodes received through DiME 
  * 				need markers to be added to the SearchLayer. If they do, it adds them and 
  * 				updates appropriate variables accordingly.
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/search.html
  * ****************************************************************************************/
 
+/**
+ * @class SearchLayer
+ * @extends {L.LayerGroup}
+ * 
+ * @var {Object}  _context      - The Window’s workspace.
+ * @var {WeakMap} _cache        - Caches the data from the context. For the most part it goes unused, though it does see use as one of the methods of checking if markers need to be placed.
+ * @var {Boolean} _needs_update - Set to true when initialized. Another one of the ways the update function checks if markers need to be placed.
+ * @var {Marker}  marker        - The two variables named “marker” do the same thing, namely they are added to the SearchLayer so that they can be searched. They contain location and identification data for nodes.
+ * 
+ * @returns {SearchLayer}
+ */
 L.SearchLayer = L.LayerGroup.extend({
 
 	/**

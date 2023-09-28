@@ -11,6 +11,8 @@
  * 			    behind by the creator(s). As such, some of the developer comments may be
  * 				incorrect. I have also left out specifying typing as I am unfamiliar with
  * 				the NDArray class structure.
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/?badge=stable
  * ****************************************************************************************/
 
 class NDArray {

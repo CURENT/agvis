@@ -1,4 +1,4 @@
-/* ***********************************************************************************
+/* ****************************************************************************************
  * File Name:   Window.js
  * Authors:     Nicholas West, Nicholas Parsly, and Zack Malkmus
  * Date:        9/15/2023 (last modified)
@@ -15,33 +15,41 @@
  * 
  * Note:        Each layer is described in their respective files and on the github
  *              https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/index.html#development
- * ***********************************************************************************/
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/window.html
+ * ****************************************************************************************/
 
+/**
+ * @class Window
+ * 
+ * @param {Number} num        - The number of the window.
+ * @param {Object} options    - The options for the window.
+ * @param {Object} dimec      - The DiME client (Unused).
+ * @param
+ * 
+ * @var   {Object} workspace  - Contains the data of all variables for the current timestep.
+ * @var   {Object} history    - Contains the data of all variabes for all timesteps.
+ * @var   {Object} states     - The enum for the window's view state.
+ * @var   {Number} state      - The window's current view state.
+ * @var   {Object} options    - The options for the window.
+ * @var   {Array}  multilayer - An array of newlayer Objects containing the data necessary for displaying simulations added by file upload.
+ * 
+ * @example const window1 = new Window(1, options[0]);
+ * @see     index.html
+ */
 class Window {
     /**
-     * The constructor for the Window class. 
-     * 
      * Instantiates the layers along with various UI elements. It also begins 
      * the timer loop for simulations uploaded by users instead of sent through DiME.
      * 
      * @constructs Window
-     * 
      * @param   {Number} num     - The number of the window.
      * @param   {Object} options - The options for the window.
      * @param   {Object} dimec   - The DiME client (Unused).
      * @returns
-     * 
-     * @var {Object} workspace  - Contains the data of all variables for the current timestep.
-     * @var {Object} history    - Contains the data of all variabes for all timesteps.
-     * @var {Object} states     - The enum for the window's view state.
-     * @var {Number} state      - The window's current view state.
-     * @var {Object} options    - The options for the window.
-     * @var {Array}  multilayer - An array of newlayer Objects containing the data necessary for displaying simulations added by file upload.
-     * 
-     * @example const window1 = new Window(1, options[0]);
-     * @see     index.html
      */
     constructor(num, options, dimec) {
+
         // ====================================================================
         // Initialize workspace and history
         // ====================================================================
@@ -71,7 +79,6 @@ class Window {
          * the bundled version.
          * 
          * @memberof Window
-         * 
          * @param    {Object} multilayer - The array of multilayers.
          * @returns
          */
@@ -141,7 +148,6 @@ class Window {
          * The function that is called when the user clicks on the map. It is used to toggle the sidebar.
          * 
          * @memberof Window
-         * 
          * @param    {Object} e - The event object.
          * @returns
          */
@@ -193,7 +199,6 @@ class Window {
      * playback of simulations.
      * 
      * @memberof    Window
-     * 
      * @param       {String} varname              - The name of the variable to retrieve.
      * @param       {Number} currentTimeInSeconds - The current time in seconds.
      */
@@ -219,7 +224,7 @@ class Window {
      * Begins drawing the simulation once initial data is received from DiME.
      * Initializes Contour Layer and starts its animation.
      * 
-     * @memberof    Window
+     * @memberof Window
      * @returns
      */
     startSimulation() {
@@ -421,6 +426,7 @@ class Window {
         /**
          * Resets the variable for telling if an animation is starting from the beginning.
          * 
+         * @memberof Window
          * @returns
          */
         function reset() {
@@ -443,7 +449,6 @@ class Window {
      * Invoked in index.html after creating the window.
      * 
      * @memberof Window
-     * 
      * @returns
      * 
      * @see      index.html
@@ -578,7 +583,6 @@ class Window {
      * found in the Configuration menu.
      * 
      * @memberof Window
-     * 
      * @param   {Object} buf - The Array buffer from the file upload
      * @returns
      */
@@ -594,8 +598,7 @@ class Window {
      * Note that this is separate from the MultiLayer and IDR features.
      * 
      * @memberof Window
-     * 
-     * @returns  {Object} The DiME file of the current simulation.
+     * @returns  {Object} - The DiME file of the current simulation.
      */
     save() {
         return dime.dimebdumps({history: this.history, workspace: this.workspace});

@@ -1,4 +1,4 @@
-/* ***********************************************************************************
+/* ****************************************************************************************
  * File Name:   ContMulti.js
  * Authors:     Nicholas West, Nicholas Parsly
  * Date:        9/16/2023 (last modified)
@@ -8,7 +8,9 @@
  * 				MultiTopLayer does with TopologyLayer). Once again, the main difference 
  * 				is that the MultiContLayer uses data from a newlayer as opposed to the 
  * 				Window's workspace.
- * ***********************************************************************************/
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/contmulti.html
+ * ****************************************************************************************/
 
 /*
 	const contourVertexShader = `
@@ -41,14 +43,22 @@
 /**
  * Render the multi contour layer
  * 
- * @param   {HTML Canvas Element} canvas                - The canvas that the layer will be drawn on.
- * @param   {Point Class}         size                  - Represents the current size of the map in pixels.
- * @param   {LatLngBounds Class}  bounds                - Represents the geographical bounds of the map.
- * @param   {Function}            project               - The latLngToContainerPoint function specifically for CanvasLayer._map.
- * @param   {Boolean}             needsProjectionUpdate - Determines whether the Layer’s projection needs to be updated.
+ * @param   {HTML Canvas Element}    canvas                - The canvas that the layer will be drawn on.
+ * @param   {Point Class}            size                  - Represents the current size of the map in pixels.
+ * @param   {LatLngBounds Class}     bounds                - Represents the geographical bounds of the map.
+ * @param   {Function}               project               - The latLngToContainerPoint function specifically for CanvasLayer._map.
+ * @param   {Boolean}                needsProjectionUpdate - Determines whether the Layer’s projection needs to be updated.
+ * 
+ * @var     {NDArray}                busLatLngCoords       - Stores the latitude and longitude for each node.
+ * @var     {NDArray}                busPixelCoords        - Stores the pixel coordinates for each node.
+ * @var     {NDArray}                busTriangles          - Stores the triangles used to create the heat map.
+ * @var     {WebGL2RenderingContext} gl				       - The WebGL2RenderingContext for the canvas.
+ * @var     {ProgramInfo}            programInfo		   - The ProgramInfo for the canvas.
+ * @var     {WebGLTexture}           uColormapSampler	   - The WebGLTexture for the canvas.
  * @returns
  */
 function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate }) {
+
 	// ===================================================
 	// Initialize variables
 	// ===================================================
@@ -241,13 +251,13 @@ function renderMultiCont(canvas, { size, bounds, project, needsProjectionUpdate 
 /**
  * The MultContLayer Class
  * 
- * @var     {Object}                 MultiContLayer._context            - Another name for the Window's workspace
- * @var     {Object}                 MultiContLayer._variableRange      - Minimum and maximum index for a given variable in "begin" and "end" respectively
- * @var     {Object}                 MultiContLayer._variableRelIndices - Stores the ranges for all the variables
- * @var     {Number}                 MultiContLayer._uScaleMin          - Minimum range of a variable
- * @var     {Number}                 MultiContLayer._uScaleMax          - Maximum range of a variable
- * @var     {Number}                 MultiContLayer._opacity            - The opacity for the heatmap. Applied in a fragment shader.
- * @var     {Boolean}                MultiContLayer._render             - Determines if MultiContLayer has been rendered or not.
+ * @var     {Object}  MultiContLayer._context            - Another name for the Window's workspace
+ * @var     {Object}  MultiContLayer._variableRange      - Minimum and maximum index for a given variable in "begin" and "end" respectively
+ * @var     {Object}  MultiContLayer._variableRelIndices - Stores the ranges for all the variables
+ * @var     {Number}  MultiContLayer._uScaleMin          - Minimum range of a variable
+ * @var     {Number}  MultiContLayer._uScaleMax          - Maximum range of a variable
+ * @var     {Number}  MultiContLayer._opacity            - The opacity for the heatmap. Applied in a fragment shader.
+ * @var     {Boolean} MultiContLayer._render             - Determines if MultiContLayer has been rendered or not.
  * @returns
  */
 L.MultiContLayer = L.CanvasLayer.extend({
@@ -259,7 +269,6 @@ L.MultiContLayer = L.CanvasLayer.extend({
 	 * Initializes the MultiContLayer's setting
 	 * 
 	 * @constructs MultiContLayer
-	 * @memberof   MultiContiLayer
 	 * @param {*}      newlayer 
 	 * @param {Object} options  - (Optional) The options Object from Window. Unused beyond being passed to the CanvasLayer initialization function.
 	 * @returns

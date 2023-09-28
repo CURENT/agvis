@@ -8,9 +8,28 @@
  *              the map when a simulation occurs. It also handles the calculations and 
  *              checking for the Custom Timestamp feature.
  *              
- * Documentation: https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/timebox.html
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/timebox.html
  * ****************************************************************************************/
 
+/** 
+ * SimTimeBox Class
+ * 
+ * @class SimTimeBox
+ * @extends {L.Control}
+ * 
+ * @var {Number} simulation_time - The current time for the simulation.
+ * @var {String} text            - The text that will be displayed in the SimTimeBox.
+ * @var {String} dval2           - The date selected by the user for the Custom Timestamp feature.
+ * @var {String} nval2           - The number of increments for the Custom Timestamp feature.
+ * @var {String} yval2           - Whether SimTimeBox will try to set a Custom Timestamp or not.
+ * @var {String} tval2           - The hour, minute, and second of the day selected by the user for the Custom Timestamp feature.
+ * @var {Number} msmult          - The multiple of milliseconds equal to the increment selected by the user.
+ * @var {String} ival2           - The size of each increment on the timer.
+ * @var {Date}   ddate           - The Date determined from the Custom Timestamp settings.
+ * @var {String} isostring       - The ISO string of the Date determined from the Custom Timestamp settings.
+ * 
+ * @returns {SimTimeBox}
+ */
 L.SimTimeBox = L.Control.extend({
     simulation_time: 0.0, //The current time for the simulation.
 

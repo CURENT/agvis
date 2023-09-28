@@ -10,7 +10,7 @@
  * 				has more customization features and uses newlayer data as opposed to the 
  * 				Window’s workspace.
  *              
- * Devdocs:     https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/topmulti.html
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/topmulti.html
  * ****************************************************************************************/
 
 /**
@@ -446,8 +446,6 @@ function renderMultiTop(canvas, { size, bounds, project, needsProjectionUpdate }
 }
 
 /**
- * MultiTopLayer Class
- * 
  * @class MultiTopLayer
  * @extends {L.CanvasLayer}
  * 

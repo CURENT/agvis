@@ -9,8 +9,24 @@
  *              changes the animation speed, sets the time when the user restarts or scrubs 
  *              through the animation, and changes the opacity setting for ContourLayer’s 
  *              rendering based on the user’s input.
+ * 
+ * API Docs:   https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/playback.html
  * ****************************************************************************************/
 
+/**
+ * @class PlaybackControl
+ * @extends {L.Control}
+ * 
+ * @param   {Window}             win           - The Window the Playback Bar is associated with.
+ * @param   {Object}             options       - (optional) Passed to leaflet
+ * 
+ * @var     {HTML Input Element} opacitybar    - The range input for the opacity slider.
+ * @var     {HTML Input Element} playbackbar   - The range input for the playback slider.
+ * @var     {Boolean}            paused        - Used by the pause button to determine what state the animation is in.
+ * @var     {Number}             playbackspeed - The current speed of the animation.
+ * 
+ * @returns {PlaybackControl}
+ */
 let PlaybackControl = L.Control.extend({
     options: {
         position: "bottomleft"
