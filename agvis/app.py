@@ -1,7 +1,11 @@
 import os
+import sys
 import subprocess
 from flask import Flask, render_template, send_from_directory
 import requests
+
+# Grab the operating system
+os_name = sys.platform
 
 # Create the Flask application
 app = Flask(__name__)
@@ -14,14 +18,25 @@ def run_app(app_module, host='localhost', port=8810, workers=1):
         print(f"at the URL http://{host}:{port}. Open your web browser and navigate to the URL to access the application.")
         print("\nStarting AGVis... Press Ctrl+C to stop.\n")
 
-        # Build the command to start the application
-        command = [
-            'gunicorn',
-            '-b', f'{host}:{port}',
-            '-w', str(workers),
-            app_module
-        ]
-        
+        # Run flask as a development server if the operating system is Windows
+        if (os_name == 'win32' or os_name == 'cygwin' or os_name == 'msys'):
+            command = [
+                'flask',
+                'run',
+                '--host', host,
+                '--port', str(port),
+                '--no-reload'
+            ]
+        # Run flask as a production server if the operating system is Linux
+        else:
+            command = [
+                'gunicorn',
+                '-b', f'{host}:{port}',
+                '-w', str(workers),
+                '--timeout', '600',
+                app_module
+            ]
+
         # Start the application
         with app.requests_session as session:
             subprocess.run(command, check=True)
