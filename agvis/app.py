@@ -6,6 +6,7 @@ import requests
 
 # Grab the operating system
 os_name = sys.platform
+file_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Create the Flask application
 app = Flask(__name__)
@@ -27,6 +28,7 @@ def run_app(app_module, host='localhost', port=8810, workers=1):
                 '--port', str(port),
                 '--no-reload'
             ]
+
         # Run flask as a production server if the operating system is Linux
         else:
             command = [
@@ -37,13 +39,14 @@ def run_app(app_module, host='localhost', port=8810, workers=1):
                 app_module
             ]
 
-        # Start the application
         with app.requests_session as session:
-            subprocess.run(command, check=True)
+            p = subprocess.Popen(command, cwd=file_dir)
+            p.wait()
+
     except KeyboardInterrupt:
         print('\nAGVis has been stopped. You may now close the browser.')
     except Exception as e:
-        print(f'An unexpected error has occured while trying to start AGVis: {e}')
+        print(f'An unexpected error occured while trying to start AGVis: {e}')
 
 # Serve index.html
 @app.route('/')
