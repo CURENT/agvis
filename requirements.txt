@@ -4,3 +4,4 @@ dime-client
 flask
 gunicorn
 requests
+pytest
