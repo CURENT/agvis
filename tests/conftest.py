@@ -1,9 +1,9 @@
 import pytest
-from agvis import run_app
+from agvis import app as flask_app
 
 @pytest.fixture()
 def app():
-    app = run_app()
+    app = flask_app
     app.config.update({
         "TESTING": True,
     })
