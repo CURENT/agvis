@@ -1,18 +1,41 @@
+# ================================================================================
+# File Name:   web.py
+# Author:      Zack Malkmus
+# Date:        10/20/2023 (last modified)
+# Description: The backend for the AGVis web application.
+# API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/?badge=stable
+# ================================================================================
+
 import os
 import sys
 import subprocess
 from flask import Flask, render_template, send_from_directory
 import requests
 
-# flask_app = Flask(__name__)
-
 class AgvisWeb():
+    """
+    The backend for the AGVis web application.
+    This class handles all routes and web application logic.
+    """
 
     def __init__(self):
+        """
+        Initializes the AgvisWeb class with operating system name and
+        application directory.
+        """
         self.os_name = sys.platform
-        self.app = self.create_app()
+        self.app_dir = os.path.dirname(os.path.abspath(__file__))
+    
 
     def create_app(self):
+        """
+        Create the Flask application.
+
+        Returns
+        -------
+        app
+            Flask application with added routes
+        """
         app = Flask(__name__)
         app.requests_session = requests.Session()
 
@@ -28,7 +51,11 @@ class AgvisWeb():
         return app
 
 
-    def run(self, app_module, host='localhost', port=8810, workers=1):
+    def run(self, app, app_module, host='localhost', port=8810, workers=1):
+        """
+        Run the AGVis web application using Gunicorn.
+        For windows, use Flask's development server.
+        """
         try:
             # Print out the URL to access the application
             print(f"AGVis will serve static files from directory \"{os.path.join(os.getcwd(), 'agvis/static')}\"")
@@ -55,14 +82,12 @@ class AgvisWeb():
                 ]
 
             # Start the application
-            with self.app.requests_session as session:
-                subprocess.run(command, check=True)
+            with app.requests_session as session:
+                p = subprocess.Popen(command, cwd=self.app_dir)
+                p.wait()
 
         except KeyboardInterrupt:
             print('\nAGVis has been stopped. You may now close the browser.')
             
         except Exception as e:
             print(f'An unexpected error has occured while trying to start AGVis: {e}')
-
-webapp = AgvisWeb()
-app = webapp.app

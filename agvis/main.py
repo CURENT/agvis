@@ -14,9 +14,10 @@ from ._version import get_versions
 from andes.utils.misc import is_interactive
 
 import agvis
-from agvis.app import AgvisWeb
+from agvis.web import AgvisWeb
 
-webapp = AgvisWeb()
+agvis_web = AgvisWeb()
+app = agvis_web.create_app()
 
 logger = logging.getLogger(__name__)
 
@@ -212,9 +213,7 @@ def run(filename='', input_path='', verbose=20,
     cases = _find_cases(filename, input_path) #NOQA
 
     # Run the flask web app
-    # agvis.app.run_app("agvis.app:app", host=host, port=port)
-    # flaskapp = agvis.app.create_app()
-    webapp.run("agvis.app:app", host=host, port=port)
+    agvis_web.run(app, "agvis.main:app", host=host, port=port)
 
     return True
 
