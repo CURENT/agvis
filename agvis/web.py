@@ -51,7 +51,7 @@ class AgvisWeb():
         return app
 
 
-    def run(self, app, app_module, host='localhost', port=8810, workers=1):
+    def run(self, app, app_module, host='localhost', port=8810, workers=1, dev=False):
         """
         Run the AGVis web application using Gunicorn.
         For windows, use Flask's development server.
@@ -62,16 +62,23 @@ class AgvisWeb():
             print(f"at the URL http://{host}:{port}. Open your web browser and navigate to the URL to access the application.")
             print("\nStarting AGVis... Press Ctrl+C to stop.\n")
 
-            # Run flask as a development server if the operating system is Windows
+            # Check if AGVis is running on Windows
             if (self.os_name == 'win32' or self.os_name == 'cygwin' or self.os_name == 'msys'):
+                print("WARNING: AGVis is running on Windows. This is not recommended for production use.")
+                print("Please use a Linux-based operating system for production use.")
+                dev = True
+
+            # Run flask as a development server
+            if (dev == True):
                 command = [
                     'flask',
+                    '--app', 'main',
                     'run',
                     '--host', host,
                     '--port', str(port),
                     '--no-reload'
                 ]
-            # Run flask as a production server if the operating system is Linux
+            # Run flask as a production server
             else:
                 command = [
                     'gunicorn',

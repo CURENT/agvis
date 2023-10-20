@@ -175,8 +175,8 @@ def remove_output(recursive=False):
 
 
 def run(filename='', input_path='', verbose=20,
-        host='localhost', port=8810, socket_path=None,
-        static=None,
+        host='localhost', port=8810, dev=False,
+        socket_path=None, static=None,
         **kwargs):
     """
     Entry point to run AGVis.
@@ -213,7 +213,7 @@ def run(filename='', input_path='', verbose=20,
     cases = _find_cases(filename, input_path) #NOQA
 
     # Run the flask web app
-    agvis_web.run(app, "agvis.main:app", host=host, port=port)
+    agvis_web.run(app, "agvis.main:app", host=host, port=port, dev=dev)
 
     return True
 
