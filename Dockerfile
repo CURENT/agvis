@@ -24,8 +24,7 @@ RUN python3 -m pip install \
         git+https://github.com/cuihantao/andes.git@develop \
         --no-cache-dir \
     && python3 -m pip install \
-        git+https://github.com/zmalkmus/agvisdev.git \
-        # git+https://github.com/CURENT/agvis.git \
+        git+https://github.com/CURENT/agvis.git \
         --no-cache-dir
 
 # Create a new user named 'cui' and a work directory
