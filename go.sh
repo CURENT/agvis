@@ -45,7 +45,7 @@ build() {
 }
 
 dev2() {
-    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &!
+    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &
     
     tmux split-window -v
     tmux split-window -v
