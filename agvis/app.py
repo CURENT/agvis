@@ -35,6 +35,7 @@ def run_app(app_module, host='localhost', port=8810, workers=1):
                 'gunicorn',
                 '-b', f'{host}:{port}',
                 '-w', str(workers),
+                '--timeout', '600',
                 app_module
             ]
 
