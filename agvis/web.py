@@ -90,8 +90,9 @@ class AgvisWeb():
 
             # Start the application
             with app.requests_session as session:
-                p = subprocess.Popen(command, cwd=self.app_dir)
-                p.wait()
+                # p = subprocess.Popen(command, cwd=self.app_dir)
+                # p.wait()
+                subprocess.run(command, check=True, cwd=self.app_dir)
 
         except KeyboardInterrupt:
             print('\nAGVis has been stopped. You may now close the browser.')
