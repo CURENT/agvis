@@ -35,14 +35,12 @@ def run_app(app_module, host='localhost', port=8810, workers=1):
                 'gunicorn',
                 '-b', f'{host}:{port}',
                 '-w', str(workers),
-                '--timeout', '600',
                 app_module
             ]
 
         with app.requests_session as session:
-            # p = subprocess.Popen(command, shell=False, cwd=file_dir)
-            # p.wait()
-            subprocess.run(command, check=True)
+            p = subprocess.Popen(command, shell=False, cwd=file_dir)
+            p.wait()
 
     except KeyboardInterrupt:
         print('\nAGVis has been stopped. You may now close the browser.')
