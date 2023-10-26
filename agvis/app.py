@@ -40,7 +40,7 @@ def run_app(app_module, host='localhost', port=8810, workers=1):
             ]
 
         with app.requests_session as session:
-            p = subprocess.Popen(command, cwd=file_dir)
+            p = subprocess.Popen(command, shell=False, cwd=file_dir)
             p.wait()
 
     except KeyboardInterrupt:
