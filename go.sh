@@ -20,6 +20,12 @@ piptrustedhost=
 [ -f env.sh ] && . env.sh
 
 build() {
+    # Set Agvis Branch
+    local BRANCH_NAME=master
+    if [ "$1" ]; then
+        BRANCH_NAME=$1
+    fi
+
     # Clone ANDES and DiME if they don't exist
     if [ ! -d "../andes" ]; then
         echo "Cloning ANDES repository..."
@@ -41,6 +47,7 @@ build() {
         ${target:+--target $target} \
         ${pipindex:+--build-arg PIP_INDEX_URL=$pipindex} \
         ${piptrustedhost:+--build-arg PIP_TRUSTED_HOST=$piptrustedhost} \
+        --build-arg BRANCH_NAME=$BRANCH_NAME \
         -t $tag .
 }
 
