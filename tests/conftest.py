@@ -1,23 +1,20 @@
 import pytest
-from agvis import app as flask_app
+import sys
+sys.path.append('/../agvis')
+from agvis.web import AgvisWeb
 
-@pytest.fixture()
+@pytest.fixture
 def app():
-    app = flask_app
-    app.config.update({
-        "TESTING": True,
-    })
+    """
+    Setup our flask test app, this only gets executed once.
 
-    # other setup can go here
+    :return: Flask app
+    """
+    agvis_web = AgvisWeb()
+    yield agvis_web.app
 
-    yield app
-
-    # clean up / reset resources here
-
-@pytest.fixture()
 def client(app):
+    """
+    Create app client for testing
+    """
     return app.test_client()
-
-@pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
