@@ -25,7 +25,7 @@ class AgvisWeb():
         """
         self.os_name = sys.platform
         self.app_dir = os.path.dirname(os.path.abspath(__file__))
-    
+        self.app = self.create_app()
 
     def create_app(self):
         """
@@ -34,7 +34,7 @@ class AgvisWeb():
         Returns
         -------
         app
-            Flask application with added routes
+            Flask application
         """
         app = Flask(__name__)
         app.requests_session = requests.Session()
@@ -51,7 +51,7 @@ class AgvisWeb():
         return app
 
 
-    def run(self, app, app_module, host='localhost', port=8810, workers=1, dev=False):
+    def run(self, host='localhost', port=8810, workers=1, dev=False):
         """
         Run the AGVis web application using Gunicorn.
         For windows, use Flask's development server.
@@ -85,11 +85,11 @@ class AgvisWeb():
                     '-b', f'{host}:{port}',
                     '-w', str(workers),
                     '--timeout', '600',
-                    app_module
+                    'agvis.main:app'
                 ]
 
             # Start the application
-            with app.requests_session as session:
+            with self.app.requests_session as session:
                 # p = subprocess.Popen(command, cwd=self.app_dir)
                 # p.wait()
                 subprocess.run(command, check=True, cwd=self.app_dir)
