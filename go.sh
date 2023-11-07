@@ -187,7 +187,7 @@ dev-benchmark() {
 }
 
 dev() {
-    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &!
+    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &
     
     tmux split-window -v
     tmux split-window -v
@@ -208,11 +208,11 @@ dime-cygwin() {
 ####################################################################################################
 
 # dev-cygwin() {
-#     google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &!
+#     google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &
     
-#     mintty --exec "docker run --rm -t -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))" &!
-#     mintty --exec "docker run --rm -t -p 5000:5000 -p 8818:8818 $tag dime -vv -l tcp:5000 -l ws:$((port+8))" &!
-#     #mintty --exec "docker run --rm -t $tag andes -v 10 run /home/cui/wecc_vis.xlsx --dime tcp://127.0.0.1:5000 -r tds" &!
+#     mintty --exec "docker run --rm -t -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))" &
+#     mintty --exec "docker run --rm -t -p 5000:5000 -p 8818:8818 $tag dime -vv -l tcp:5000 -l ws:$((port+8))" &
+#     #mintty --exec "docker run --rm -t $tag andes -v 10 run /home/cui/wecc_vis.xlsx --dime tcp://127.0.0.1:5000 -r tds" &
 # }
 
 # http-cygwin() {
