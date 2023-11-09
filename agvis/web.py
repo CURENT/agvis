@@ -90,8 +90,6 @@ class AgvisWeb():
 
             # Start the application
             with self.app.requests_session as session:
-                # p = subprocess.Popen(command, cwd=self.app_dir)
-                # p.wait()
                 subprocess.run(command, check=True, cwd=self.app_dir)
 
         except KeyboardInterrupt:
