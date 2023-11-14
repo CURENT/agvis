@@ -1,7 +1,7 @@
-sys.path.append('/../agvis')
-sys.path.append('/../')
-import pytest
 import sys
+# sys.path.append('/../agvis')
+
+import pytest
 from agvis.web import AgvisWeb
 
 @pytest.fixture
