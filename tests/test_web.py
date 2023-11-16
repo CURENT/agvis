@@ -1,3 +1,10 @@
+# ================================================================================
+# File Name:   test_web.py
+# Author:      Zack Malkmus
+# Date:        11/16/2023 (last modified)
+# Description: Tests AGVis' Flask web application
+# ================================================================================
+
 import os, os.path
 from tests.conftest import client
 
