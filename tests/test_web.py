@@ -6,6 +6,7 @@
 # ================================================================================
 
 import os, os.path
+import pytest
 from tests.conftest import client
 
 def test_index(client):

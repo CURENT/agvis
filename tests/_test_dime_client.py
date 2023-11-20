@@ -29,7 +29,7 @@ def start_dime_server():
         return server
     except Exception as e:
         print(f"Failed to start DiME server: {e}")
-        return None
+        yield
     
 def stop_dime_server(server):
     try:
