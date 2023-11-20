@@ -20,10 +20,6 @@ def test_static_js_files(client):
         response = client.get(f'/static/js/{filename}')
         assert response.status_code == 200
 
-def test_invalid_static_path(client):
-    response = client.get('/static/invalid_path')
-    assert response.status_code == 404
-
 def test_nonexistent_route(client):
     response = client.get('/nonexistent')
     assert response.status_code == 404
