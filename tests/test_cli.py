@@ -1,18 +1,20 @@
+# ================================================================================
+# File Name:   test_client.py
+# Author:      Zack Malkmus
+# Date:        11/20/2023 (last modified)
+# Description: Test the CLI for AGVis
+# ================================================================================
+
 import pytest
-from unittest.mock import patch
-import logging
 import argparse
-from io import StringIO
 import subprocess
-from tests.conftest import client
-from agvis.cli import create_parser, preamble, main
+from agvis.cli import create_parser, main
 
 @pytest.fixture
 def parser():
     return create_parser()
 
 def test_create_parser(parser):
-    # Test if create_parser returns an instance of argparse.ArgumentParser
     assert isinstance(parser, argparse.ArgumentParser)
 
 def test_agvis_run_default_port(monkeypatch, client):
@@ -65,4 +67,4 @@ def test_agvis_run_invalid_command(monkeypatch, capsys):
     with capsys.disabled(), pytest.raises(SystemExit) as exc_info:
         main()
 
-    assert exc_info.value.code == 0  # Change expected return code to 0
+    assert exc_info.value.code == 0
