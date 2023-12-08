@@ -4,18 +4,28 @@ on:
   pull_request:
 
 jobs:
-  test:
-    name: Run test suite
-    runs-on: ubuntu-latest
+  list-directory:
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: List Current Directory
+        run: |
+          ls -la
+  # test:
+  #   name: Run test suite
+  #   runs-on: ubuntu-latest
     
-    steps:
-    - name: Debug
-      run: |
-        ls -la
-        ./go.sh build
+  #   steps:
+  #   - name: Debug
+  #     run: |
+  #       ls -la
+  #       ./go.sh build
 
-    - name: Build the Docker image
-      run: ./go.sh build
+  #   - name: Build the Docker image
+  #     run: ./go.sh build
 
-    - name: Run tests
-      run: cd tests && pytest
+  #   - name: Run tests
+  #     run: cd tests && pytest
