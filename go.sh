@@ -45,7 +45,7 @@ build() {
 }
 
 run_tests() {
-    docker run -u root --rm -it $tag sh -c "cd tests && pytest"
+    docker run -u root --rm $tag sh -c "cd tests && pytest"
 }
 
 dev2() {
