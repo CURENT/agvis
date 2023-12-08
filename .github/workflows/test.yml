@@ -7,13 +7,13 @@ jobs:
   test:
     name: Run test suite
     runs-on: ubuntu-latest
-
+    
+    steps:
     - name: Debug
       run: |
         ls -la
         ./go.sh build
-    
-    steps:
+
     - name: Build the Docker image
       run: ./go.sh build
 
