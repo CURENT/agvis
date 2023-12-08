@@ -44,6 +44,10 @@ build() {
         -t $tag .
 }
 
+run_tests() {
+    docker run -u root --rm -it $tag sh -c "cd tests && pytest"
+}
+
 dev2() {
     google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &
     

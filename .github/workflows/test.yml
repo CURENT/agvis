@@ -16,4 +16,4 @@ jobs:
       run: ./go.sh build
 
     - name: Run tests
-      run: cd tests && pytest
+      run: ./go.sh run_tests
