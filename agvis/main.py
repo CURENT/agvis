@@ -12,10 +12,15 @@ import tempfile
 from ._version import get_versions
 
 from andes.utils.misc import is_interactive
+
 import agvis
+from agvis.web import AgvisWeb
+
+agvis_web = AgvisWeb()
+
+app = agvis_web.app
 
 logger = logging.getLogger(__name__)
-
 
 def config_logger(stream_level=logging.INFO, *,
                   stream=True,
@@ -171,8 +176,8 @@ def remove_output(recursive=False):
 
 
 def run(filename='', input_path='', verbose=20,
-        host='localhost', port=8810, socket_path=None,
-        static=None,
+        host='localhost', port=8810, dev=False,
+        socket_path=None, static=None,
         **kwargs):
     """
     Entry point to run AGVis.
@@ -209,7 +214,7 @@ def run(filename='', input_path='', verbose=20,
     cases = _find_cases(filename, input_path) #NOQA
 
     # Run the flask web app
-    agvis.app.run_app("agvis.app:app", host=host, port=port)
+    agvis_web.run(host=host, port=port, dev=dev)
 
     return True
 
