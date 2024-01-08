@@ -1,0 +1,15 @@
+[dime]
+dime_hostname = localhost
+dime_port = 8818
+
+[simulation]
+v_angle_min = -1
+v_angle_max = 1
+v_magnitude_min = 0.8
+v_magnitude_max = 1.2
+freq_min = 0.9998
+freq_max = 1.0002
+edge_opacity = 0.25
+toggle_handshake = 1
+toggle_zones = 1
+toggle_bus = 0
