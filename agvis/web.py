@@ -10,6 +10,7 @@ import os
 import sys
 import subprocess
 from flask import Flask, render_template, send_from_directory
+from .flask_configurations import *
 import requests
 
 class AgvisWeb():
@@ -38,6 +39,7 @@ class AgvisWeb():
         """
         app = Flask(__name__)
         app.requests_session = requests.Session()
+        app.config.from_object(DefaultConfig())
 
         # Add Routes
         @app.route('/')
@@ -70,6 +72,8 @@ class AgvisWeb():
 
             # Run flask as a development server
             if (dev == True):
+                self.app.config.from_object(DevelopmentConfig())
+
                 command = [
                     'flask',
                     '--app', 'main',
@@ -80,6 +84,8 @@ class AgvisWeb():
                 ]
             # Run flask as a production server
             else:
+                self.app.config.from_object(ProductionConfig())
+
                 command = [
                     'gunicorn',
                     '-b', f'{host}:{port}',
