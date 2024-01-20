@@ -19,6 +19,8 @@ RUN apt update \
         libev-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN python3 -m pip install --upgrade pip
+
 # Install the necessary Python packages
 RUN python3 -m pip install \
         kvxopt \
