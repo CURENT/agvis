@@ -82,6 +82,39 @@
     #configpanel tr {
         padding-top: 2px;
     }
+
+    /* Demo Buttons */
+    /* Add space between Vega-Embed links */
+    .vega-actions a {
+        margin-right: 500px;
+        z-index: 9999;
+    }
+
+    /* Center the demo buttons */
+    .demo-buttons {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+    }
+
+    /* Style for demo buttons */
+    .demo-button {
+        display: inline-block;
+        margin: 5px;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .demo-button.active {
+        background-color: #45a049;
+    }
+
     </style>
     <style media="screen">
         /* Add space between Vega-Embed links  */
@@ -242,10 +275,30 @@
         if (options.nview > 1) {
             toggleSecondMap();
         }
+
+        // Function to activate a demo button
+        function activateButton(index) {
+            const buttons = document.querySelectorAll('.demo-button');
+            buttons.forEach((button, i) => {
+                button.classList.toggle('active', i === index);
+            });
+
+            // Add logic to handle button activation here
+            // You can trigger different actions based on the selected option
+        }
     </script>
 
     <div id="agvis-demo" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background-color: white; padding: 10px; border-radius: 5px; z-index: 9999;">
         <h2>Agvis Demo Environment</h2>
     </div>
-
+    
+    <div class="demo-buttons" id="demoButtons" style="z-index: 9999">
+        <!-- Demo Buttons -->
+        <button class="demo-button active" onclick="activateButton(0)">NA</button>
+        <button class="demo-button" onclick="activateButton(1)">WECC</button>
+        <button class="demo-button" onclick="activateButton(2)">NPCC</button>
+        <button class="demo-button" onclick="activateButton(3)">IEEE39</button>
+        <button class="demo-button" onclick="activateButton(4)">ERCOT276</button>
+        <button class="demo-button" onclick="activateButton(5)">EI528</button>
+    </div>
 </body>
