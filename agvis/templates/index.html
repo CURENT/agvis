@@ -277,14 +277,50 @@
         }
 
         // Function to activate a demo button
-        function activateButton(index) {
+        function activateDemo(index) {
             const buttons = document.querySelectorAll('.demo-button');
             buttons.forEach((button, i) => {
                 button.classList.toggle('active', i === index);
             });
 
             // Add logic to handle button activation here
-            // You can trigger different actions based on the selected option
+            if (index == 0) {
+                console.log("NA DEMO");
+
+                // Activate NA
+                activateSimulation('NA.dimeb');
+            } else if (index == 1) {
+                console.log("WECC DEMO");
+
+                // Activate WECC
+                activateSimulation('wecc.dimeb');
+            } else if (index == 2) {
+                console.log("NPCC DEMO");
+
+                // Activate NPCC
+                activateSimulation('npcc.dimeb');
+            } else if (index == 3) {
+                console.log("IEEE39 DEMO");
+
+                // Activate IEEE39
+                activateSimulation('ieee39.dimeb');
+            } else if (index == 4) {
+                console.log("ERCOT276 DEMO");
+
+                // Activate ERCOT276
+                activateSimulation('ercot276.dimeb');
+            } else if (index == 5) {
+                console.log("EI528 DEMO");
+
+                // Activate EI528
+                activateSimulation('ei528.dimeb');
+            }
+        }
+
+        function activateSimulation(id) {
+            simulation_path = '../cases/simulations';
+
+
         }
     </script>
 
@@ -292,13 +328,13 @@
         <h2>Agvis Demo Environment</h2>
     </div>
     
-    <div class="demo-buttons" id="demoButtons" style="z-index: 9999">
+    <div class="demo-buttons" id="demoButtons" style="z-index: 799">
         <!-- Demo Buttons -->
-        <button class="demo-button active" onclick="activateButton(0)">NA</button>
-        <button class="demo-button" onclick="activateButton(1)">WECC</button>
-        <button class="demo-button" onclick="activateButton(2)">NPCC</button>
-        <button class="demo-button" onclick="activateButton(3)">IEEE39</button>
-        <button class="demo-button" onclick="activateButton(4)">ERCOT276</button>
-        <button class="demo-button" onclick="activateButton(5)">EI528</button>
+        <button class="demo-button active" onclick="activateDemo(0)">NA</button>
+        <button class="demo-button" onclick="activateDemo(1)">WECC</button>
+        <button class="demo-button" onclick="activateDemo(2)">NPCC</button>
+        <button class="demo-button" onclick="activateDemo(3)">IEEE39</button>
+        <button class="demo-button" onclick="activateDemo(4)">ERCOT276</button>
+        <button class="demo-button" onclick="activateDemo(5)">EI528</button>
     </div>
 </body>

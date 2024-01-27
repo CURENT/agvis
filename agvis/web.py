@@ -9,7 +9,7 @@
 import os
 import sys
 import subprocess
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, send_file
 from .flask_configurations import *
 import requests
 
@@ -50,6 +50,11 @@ class AgvisWeb():
         def static_proxy(path):
             return send_from_directory('static', path)
         
+        @app.route('/simulations/<filename>', methods=['GET'])
+        def get_simulation(filename):
+            file_path = f'cases/simulations/{filename}'
+            return send_file(file_path, as_attachment=True)
+
         return app
 
 
