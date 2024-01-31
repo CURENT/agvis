@@ -575,6 +575,7 @@ function addSidebarConfig(win, options, sidebar) {
 
     const opt_loadsimulation_input = document.createElement("input");
 
+    opt_loadsimulation_input.id = "opt_loadsimulation_input";
     opt_loadsimulation_input.style.display = "none";
     opt_loadsimulation_input.type = "file";
     document.body.appendChild(opt_loadsimulation_input);

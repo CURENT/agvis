@@ -40,16 +40,22 @@ class AgvisWeb():
         app = Flask(__name__)
         app.requests_session = requests.Session()
         app.config.from_object(DefaultConfig())
+        
+        # ====================================================
+        # App Routes
+        # ====================================================
 
-        # Add Routes
+        # Landing Page
         @app.route('/')
         def index():
             return render_template('index.html')
 
+        # Static Routes
         @app.route('/<path:path>', methods=['GET'])
         def static_proxy(path):
             return send_from_directory('static', path)
         
+        # Demo Simulations
         @app.route('/simulations/<filename>', methods=['GET'])
         def get_simulation(filename):
             file_path = f'cases/simulations/{filename}'

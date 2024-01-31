@@ -243,16 +243,6 @@
             }
         }
 
-        /*window.onbeforeunload = function() {
-            let dt = new Date();
-            dt.setTime(dt.getTime() + (365 * 24 * 60 * 60 * 1000));
-            dt = dt.toUTCString();
-
-            for (let [k, v] of Object.entries(options)) {
-                document.cookie = k + "=" + v + ";expires=" + dt + ";path=/";
-            }
-        }*/
-
         const x1 = document.getElementById("map1");
         const x2 = document.getElementById("map2");
 
@@ -314,13 +304,56 @@
 
                 // Activate EI528
                 activateSimulation('ei528.dimeb');
+            } else {
+                console.log("FAILED TO LOAD DEMO. INCORRECT ID");
             }
         }
 
-        function activateSimulation(id) {
-            simulation_path = '../cases/simulations';
+        async function getSimulationData(filename) {
+            const url = `/simulations/${filename}`
+            
+            try {
+                const response = await fetch(url);
 
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch file: ${response.statusText}`);
+                }
 
+                const simulationData = await response.blob();
+                return simulationData;
+
+            } catch (e) {
+                console.error('Error fetching file:', e);
+            }
+        }
+
+        async function activateSimulation(filename) {
+            const simulationData = await getSimulationData(filename);
+
+            // Activate simulation here
+            console.log(simulationData);
+
+            const load_simulation_input = document.getElementById('opt_loadsimulation_input');
+
+            load_simulation_input.files.append(simulationData); // Left off here, this doesn't work and may not work because of security issues
+            load_simulation_input.change();
+
+            // Download the simulation data as a test
+            // if (simulationData) {
+            //     // Create a download link
+            //     const downloadLink = document.createElement('a');
+            //     downloadLink.href = URL.createObjectURL(simulationData);
+            //     downloadLink.download = filename;
+
+            //     // Append the link to the document
+            //     document.body.appendChild(downloadLink);
+
+            //     // Trigger the click event on the link
+            //     downloadLink.click();
+
+            //     // Remove the link from the document
+            //     document.body.removeChild(downloadLink);
+            // }
         }
     </script>
 
@@ -330,7 +363,7 @@
     
     <div class="demo-buttons" id="demoButtons" style="z-index: 799">
         <!-- Demo Buttons -->
-        <button class="demo-button active" onclick="activateDemo(0)">NA</button>
+        <button class="demo-button" onclick="activateDemo(0)">NA</button>
         <button class="demo-button" onclick="activateDemo(1)">WECC</button>
         <button class="demo-button" onclick="activateDemo(2)">NPCC</button>
         <button class="demo-button" onclick="activateDemo(3)">IEEE39</button>
