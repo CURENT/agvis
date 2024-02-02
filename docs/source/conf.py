@@ -59,8 +59,8 @@ master_doc = 'index'
 # -- Project information -----------------------------------------------------
 
 project = 'AGVis'
-copyright = '2023, Nicholas Parsly, Jinning Wang'
-author = 'Nicholas Parsly, Jinning Wang'
+copyright = '2023-2024, Nicholas Parsly, Jinning Wang, Zackary Malkmus'
+author = 'Nicholas Parsly, Jinning Wang, Zackary Malkmus'
 
 # The full version, including alpha/beta/rc tags
 # The short X.Y version.
