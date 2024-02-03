@@ -271,7 +271,7 @@ def print_license():
     print(f"""
     AGVis version {agvis.__version__}
 
-    Copyright (c) 2020-2023 Nick West, Nicholas Parsly, Jinning Wang
+    Copyright (c) 2020-2024 Nick West, Nicholas Parsly, Jinning Wang
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
