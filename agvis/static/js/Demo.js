@@ -8,7 +8,13 @@
  * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/
  * ****************************************************************************************/
 
-// Function to activate a demo button
+/**
+ * A function to activate the Demo buttons
+ * 
+ * @author Zack Malkmus
+ * @param {int} index - Index of the button used on the frontend
+ * @returns 
+ */
 function activateDemo(index) {
     const buttons = document.querySelectorAll('.demo-button');
     buttons.forEach((button, i) => {
@@ -51,6 +57,13 @@ function activateDemo(index) {
     }
 }
 
+/**
+ * Grabs simulation data from the backend, stored in the cases folder.
+ * 
+ * @author Zack Malkmus
+ * @param {string} filename - name of the dimeb file to grab
+ * @returns 
+ */
 async function getSimulationData(filename) {
     const url = `/simulations/${filename}`
     
@@ -69,20 +82,29 @@ async function getSimulationData(filename) {
     }
 }
 
+/**
+ * Get simulation data and load it into the existing load_simulation_input element.
+ * 
+ * @author Zack Malkmus
+ * @param {string} filename - Name of the simulation to grab (.dimeb)
+ * @returns 
+ */
 async function activateSimulation(filename) {
+    // Get simulation file from the backend
     const simulationData = await getSimulationData(filename);
 
-    // Activate simulation here
-    console.log(simulationData);
-
+    // Grab the load simulation input
     const load_simulation_input = document.getElementById('opt_loadsimulation_input');
 
+    // Create a new file from the binary
     const myFile = new File([simulationData], filename)
 
+    // Create a datatransfer and load the file into our element
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(myFile);
     load_simulation_input.files = dataTransfer.files;
 
+    // Trigger an onchange event to start the sim
     var event = new Event('change');
     load_simulation_input.dispatchEvent(event);
 }
