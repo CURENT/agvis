@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#map1 {
+    width: 100vw;
+    height: 100vh;
+}
+
+#map2 {
+    display: none;
+}
+
+.row {
+display: flex;
+flex-grow: 1;
+}
+
+.column {
+flex: 50%;
+}
+
+.flex-container {
+/* We first create a flex layout context */
+    width: 25%;
+    display: flex;
+
+/* Then we define the flow direction
+    and if we allow the items to wrap
+* Remember this is the same as:
+* flex-direction: row;
+* flex-wrap: wrap;
+*/
+    flex-flow: row wrap;
+
+/* Then we define how is distributed the remaining space */
+    justify-content: flex-end;
+}
+
+.vega-actions a {
+    margin-right: 5px;
+    z-index: 9999;
+}
+
+#playbackpanel {
+    visibility: hidden;
+    position: absolute;
+    left: 25px;
+    bottom: 25px;
+    width: 50%;
+    z-index: 9999;
+
+    background-color: white;
+    color: black;
+    padding: 7px;
+    border-radius: 6px;
+}
+
+#configpanel {
+    visibility: hidden;
+    position: absolute;
+    left: 70px;
+    top: 25px;
+    z-index: 9999;
+
+    background-color: white;
+    color: black;
+    padding: 7px;
+    border-radius: 6px;
+}
+
+#configpanel table {
+    width: 100%;
+}
+
+#configpanel tr {
+    padding-top: 2px;
+}
+
+/* Demo Buttons */
+/* Add space between Vega-Embed links */
+.vega-actions a {
+    margin-right: 500px;
+    z-index: 9999;
+}
+
+/* Center the demo buttons */
+.demo-buttons {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
+
+/* Style for demo buttons */
+.demo-button {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.demo-button.active {
+    background-color: #45a049;
+}
+
+@media screen {
+    /* Add space between Vega-Embed links  */
+    .vega-actions a {
+        margin-right: 500px;
+        z-index: 9999;
+    }
+}
