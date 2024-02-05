@@ -108,7 +108,7 @@ class AgvisWeb():
 
         if (static is not None):
             if not os.path.exists(static):
-                print("Error: given file path does not exist. Exiting.")
+                print(f"Error: {static} does not exist. Exiting.")
                 exit(1)
             else: self.app.static_folder = static
 
