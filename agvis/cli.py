@@ -1,3 +1,11 @@
+# ================================================================================
+# File Name:   cli.py
+# Author:      Zack Malkmus
+# Date:        2/5/2024 (last modified)
+# Description: Command Line Interface for AGVis
+# API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/?badge=stable
+# ================================================================================
+
 """
 AGVis command-line interface and argument parsers.
 """

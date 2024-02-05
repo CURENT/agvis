@@ -1,3 +1,11 @@
+# ================================================================================
+# File Name:   main.py
+# Author:      Zack Malkmus
+# Date:        2/5/2024 (last modified)
+# Description: Main Entry for AGVis
+# API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/?badge=stable
+# ================================================================================
+
 """
 Main entry point for the AGVis CLI.
 """

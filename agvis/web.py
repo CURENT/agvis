@@ -1,7 +1,7 @@
 # ================================================================================
 # File Name:   web.py
 # Author:      Zack Malkmus
-# Date:        10/20/2023 (last modified)
+# Date:        2/5/2024 (last modified)
 # Description: The backend for the AGVis web application.
 # API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/?badge=stable
 # ================================================================================
@@ -16,7 +16,8 @@ import requests
 class AgvisWeb():
     """
     The backend for the AGVis web application.
-    This class handles all routes and web application logic.
+    This class handles all routes and backend logic.
+    Uses Flask.
     """
 
     # ====================================================
