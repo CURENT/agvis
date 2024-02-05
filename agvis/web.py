@@ -19,6 +19,10 @@ class AgvisWeb():
     This class handles all routes and web application logic.
     """
 
+    # ====================================================
+    # Initialize Flask App
+    # ====================================================
+
     def __init__(self):
         """
         Initializes the AgvisWeb class with operating system name and
@@ -27,6 +31,10 @@ class AgvisWeb():
         self.os_name = sys.platform
         self.app_dir = os.path.dirname(os.path.abspath(__file__))
         self.app = self.create_app()
+
+    # ====================================================
+    # Create Event and Routes
+    # ====================================================
 
     def create_app(self):
         """
@@ -40,10 +48,6 @@ class AgvisWeb():
         app = Flask(__name__)
         app.requests_session = requests.Session()
         app.config.from_object(DefaultConfig())
-        
-        # ====================================================
-        # App Routes
-        # ====================================================
 
         # Landing Page
         @app.route('/')
@@ -63,51 +67,60 @@ class AgvisWeb():
 
         return app
 
+    # ====================================================
+    # Run server in Flask DEV mode
+    # ====================================================
 
-    def run(self, host='localhost', port=8810, workers=1, dev=False):
+    def run_dev_server(self, host, port):
+        self.app.config.from_object(DevelopmentConfig())
+        command = ['flask','--app', 'main','run','--host', host,'--port', str(port),'--no-reload']
+        with self.app.requests_session as session:
+            subprocess.run(command, check=True, cwd=self.app_dir)
+
+    # ====================================================
+    # Run server with Gunicorn WSGI
+    # ====================================================
+
+    def run_prod_server(self, host, port, workers):
+        self.app.config.from_object(ProductionConfig())
+        command = ['gunicorn','-b', f'{host}:{port}','-w', str(workers),'--timeout', '600','agvis.main:app']
+        with self.app.requests_session as session:
+            subprocess.run(command, check=True, cwd=self.app_dir)
+
+    # ====================================================
+    # Handle user input and run the server
+    # ====================================================
+
+    def run(self, host='localhost', port=8810, static=None, workers=1, dev=False):
         """
         Run the AGVis web application using Gunicorn.
         For windows, use Flask's development server.
         """
+
+        if (self.os_name == 'win32' or self.os_name == 'cygwin' or self.os_name == 'msys'):
+            print("*** WARNING ***")
+            print("AGVis is running on Windows. It is recommended to use Linux for production deployments.")
+            print("Consider using a Linux-based operating system for improved performance and stability.")
+            print("For more information, refer to the AGVis documentation: https://ltb.readthedocs.io/projects/agvis/en/latest/?badge=stable")
+            print("\n")
+            dev = True  
+
+        if (static is not None):
+            if not os.path.exists(static):
+                print("Error: given file path does not exist. Exiting.")
+                exit(1)
+            else: self.app.static_folder = static
+
+        # Print out the URL to access the application
+        print(f"AGVis will serve static files from directory {self.app.static_folder}")
+        print(f"at the URL http://{host}:{port}. Open your web browser and navigate to the URL to access the application.")
+        print("\nStarting AGVis... Press Ctrl+C to stop.\n")
+
         try:
-            # Print out the URL to access the application
-            print(f"AGVis will serve static files from directory \"{os.path.join(os.getcwd(), 'agvis/static')}\"")
-            print(f"at the URL http://{host}:{port}. Open your web browser and navigate to the URL to access the application.")
-            print("\nStarting AGVis... Press Ctrl+C to stop.\n")
-
-            # Check if AGVis is running on Windows
-            if (self.os_name == 'win32' or self.os_name == 'cygwin' or self.os_name == 'msys'):
-                print("WARNING: AGVis is running on Windows. This is not recommended for production use.")
-                print("Please use a Linux-based operating system for production use.")
-                dev = True
-
-            # Run flask as a development server
-            if (dev == True):
-                self.app.config.from_object(DevelopmentConfig())
-
-                command = [
-                    'flask',
-                    '--app', 'main',
-                    'run',
-                    '--host', host,
-                    '--port', str(port),
-                    '--no-reload'
-                ]
-            # Run flask as a production server
+            if dev:
+                self.run_dev_server(host, port)
             else:
-                self.app.config.from_object(ProductionConfig())
-
-                command = [
-                    'gunicorn',
-                    '-b', f'{host}:{port}',
-                    '-w', str(workers),
-                    '--timeout', '600',
-                    'agvis.main:app'
-                ]
-
-            # Start the application
-            with self.app.requests_session as session:
-                subprocess.run(command, check=True, cwd=self.app_dir)
+                self.run_prod_server(host, port, workers)
 
         except KeyboardInterrupt:
             print('\nAGVis has been stopped. You may now close the browser.')

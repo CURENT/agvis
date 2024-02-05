@@ -214,7 +214,7 @@ def run(filename='', input_path='', verbose=20,
     cases = _find_cases(filename, input_path) #NOQA
 
     # Run the flask web app
-    agvis_web.run(host=host, port=port, dev=dev)
+    agvis_web.run(host=host, port=port, static=static, dev=dev)
 
     return True
 
