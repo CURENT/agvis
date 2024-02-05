@@ -77,23 +77,12 @@ async function activateSimulation(filename) {
 
     const load_simulation_input = document.getElementById('opt_loadsimulation_input');
 
-    load_simulation_input.files.append(simulationData); // Left off here, this doesn't work and may not work because of security issues
-    load_simulation_input.change();
+    const myFile = new File([simulationData], filename)
 
-    // Download the simulation data as a test
-    // if (simulationData) {
-    //     // Create a download link
-    //     const downloadLink = document.createElement('a');
-    //     downloadLink.href = URL.createObjectURL(simulationData);
-    //     downloadLink.download = filename;
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(myFile);
+    load_simulation_input.files = dataTransfer.files;
 
-    //     // Append the link to the document
-    //     document.body.appendChild(downloadLink);
-
-    //     // Trigger the click event on the link
-    //     downloadLink.click();
-
-    //     // Remove the link from the document
-    //     document.body.removeChild(downloadLink);
-    // }
+    var event = new Event('change');
+    load_simulation_input.dispatchEvent(event);
 }
