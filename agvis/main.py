@@ -8,6 +8,7 @@ import platform
 import pprint
 import logging
 import tempfile
+import subprocess
 
 from ._version import get_versions
 
@@ -318,7 +319,12 @@ def selftest(**kwargs):
     """
     TODO: Run unit tests.
     """
-    logger.warning("Tests have not been implemented")
+
+    # Get path of main
+    cwd = os.path.dirname(os.path.realpath(__file__))
+
+    # Run pytest from tests directory
+    subprocess.run('pytest', check=True, cwd=f'{cwd}/../tests')
 
 
 def demo(**kwargs):
