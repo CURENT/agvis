@@ -23,31 +23,26 @@ function activateDemo(index) {
 
     // Add logic to handle button activation here
     if (index == 0) {
-        console.log("NA DEMO");
-
-        // Activate NA
-        activateSimulation('NA.dimeb');
-    } else if (index == 1) {
         console.log("WECC DEMO");
 
         // Activate WECC
         activateSimulation('wecc.dimeb');
-    } else if (index == 2) {
+    } else if (index == 1) {
         console.log("NPCC DEMO");
 
         // Activate NPCC
         activateSimulation('npcc.dimeb');
-    } else if (index == 3) {
+    } else if (index == 2) {
         console.log("IEEE39 DEMO");
 
         // Activate IEEE39
         activateSimulation('ieee39.dimeb');
-    } else if (index == 4) {
+    } else if (index == 3) {
         console.log("ERCOT276 DEMO");
 
         // Activate ERCOT276
         activateSimulation('ercot276.dimeb');
-    } else if (index == 5) {
+    } else if (index == 4) {
         console.log("EI528 DEMO");
 
         // Activate EI528
