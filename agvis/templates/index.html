@@ -115,6 +115,11 @@
             if (options.nview > 1) {
                 toggleSecondMap();
             }
+
+            var inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(function(input) {
+                input.disabled = true;
+            });
         </script>
     </div>
 
