@@ -100,15 +100,19 @@ flex: 50%;
     display: inline-block;
     margin: 5px;
     padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
+    background-color: white;
+    color: black;
+    border: 2px solid grey;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.demo-button.active {
-    background-color: #45a049;
+.demo-button.active, #reset.active {
+    background-color: rgb(80, 80, 80);
+}
+
+.demo-button:hover, #reset:hover {
+    background-color: lightgray;
 }
 
 @media screen {
@@ -117,4 +121,57 @@ flex: 50%;
         margin-right: 500px;
         z-index: 9999;
     }
+}
+
+.loading-cursor {
+    cursor: wait;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid rgba(0, 0, 0, 0.1);
+    border-left-color: blue;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#reset {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px;
+    background-color: white;
+    color: black;
+    border: 2px solid grey;
+    border-radius: 5px;
+    cursor: pointer;
+    width:200px;
+}
+
+#agvis-demo-header {
+    position: fixed; 
+    top: 10px; 
+    left: 50%; 
+    transform: 
+    translateX(-50%); 
+    background-color: white;
+    border: 2px solid grey;
+    padding: 10px; 
+    border-radius: 5px; 
+    z-index: 799;
+}
+
+#loading-spinner {
+    position: fixed; 
+    top: 45%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    padding: 10px; 
+    border-radius: 5px; 
+    z-index: 9999;
 }

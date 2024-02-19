@@ -176,6 +176,7 @@ function addSidebarLayers(win, options, sidebar) {
 	//Upon clicking the Add Layer button, bring up the file selector
 	const opt_addlayer_input = document.createElement("input");
 	opt_addlayer_input.style.display = "none";
+	opt_addlayer_input.name = "opt_addlayer_input";
 	opt_addlayer_input.id = "fin";
 	opt_addlayer_input.type = "file";
 	opt_addlayer_input.accept = ".xlsx";

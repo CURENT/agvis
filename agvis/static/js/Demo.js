@@ -85,21 +85,61 @@ async function getSimulationData(filename) {
  * @returns 
  */
 async function activateSimulation(filename) {
-    // Get simulation file from the backend
-    const simulationData = await getSimulationData(filename);
+    // Show the loading spinner
+    const body = document.querySelector('body');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    loadingSpinner.style.display = 'block';
+    body.classList.add('loading-cursor');
 
-    // Grab the load simulation input
-    const load_simulation_input = document.getElementById('opt_loadsimulation_input');
+    try {
+        // Get simulation file from the backend
+        const simulationData = await getSimulationData(filename);
 
-    // Create a new file from the binary
-    const myFile = new File([simulationData], filename)
+        // Grab the load simulation input
+        const load_simulation_input = document.getElementById('opt_loadsimulation_input');
 
-    // Create a datatransfer and load the file into our element
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(myFile);
-    load_simulation_input.files = dataTransfer.files;
+        // Create a new file from the binary
+        const myFile = new File([simulationData], filename)
 
-    // Trigger an onchange event to start the sim
-    var event = new Event('change');
-    load_simulation_input.dispatchEvent(event);
+        // Create a datatransfer and load the file into our element
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(myFile);
+        load_simulation_input.files = dataTransfer.files;
+
+        // Trigger an onchange event to start the sim
+        var event = new Event('change');
+        load_simulation_input.dispatchEvent(event);
+
+    } catch (error) {
+        console.error('Error loading simulation:', error);
+        
+    } finally {
+        // Hide the loading spinner and restore cursor
+        loadingSpinner.style.display = 'none';
+        body.classList.remove('loading-cursor');
+
+        // Remove the simulation buttons, forcing them to refresh the page.
+        const opt_loadsimulation  = document.querySelector(`input[name='opt_loadsimulation']`);
+        opt_loadsimulation.disabled = true;
+
+        const demoButtons = document.querySelectorAll('.demo-button');
+        demoButtons.forEach(button => {
+            button.style.display = 'none';
+            button.disabled = true;
+        });
+
+        // Enable reset button
+        const reset = document.getElementById('reset');
+        reset.style.display = "inline-block";
+    }
+}
+
+/**
+ * Simple refresh the page.
+ * 
+ * @author Zack Malkmus
+ * @returns 
+ */
+function reset() {
+    location.reload(true);
 }

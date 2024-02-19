@@ -109,24 +109,31 @@
                 window2.map.invalidateSize();
             }
 
-            L.easyButton('<span>2nd</span>', toggleSecondMap).addTo(window1.map);
+            // const secondButton = L.easyButton('<span>2nd</span>', toggleSecondMap).addTo(window1.map);
 
             // set the number of map views
             if (options.nview > 1) {
                 toggleSecondMap();
             }
 
+            const allowedInputs = ['opt_loadsimulation', 'opt_loadsimulation_input', 'opt_savesimulation', 'opt_addlayer', 'opt_addlayer_input',
+                                   'opt_amin', 'opt_amax', 'opt_fmin', 'opt_fmax', 'opt_vmin', 'opt_vmax','opt_opacity', 
+                                   'opt_togglebuslabels', 'opt_togglezones', 'opt_togglehandshake'];
+
             var inputs = document.querySelectorAll('input, textarea, select');
             inputs.forEach(function(input) {
-                input.disabled = true;
+                if (!allowedInputs.includes(input.name)) {
+                    input.disabled = true;
+                }
             });
         </script>
     </div>
-
-    <div id="agvis-demo" style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); background-color: white; padding: 10px; border-radius: 5px; z-index: 9999;">
+    <div id="agvis-demo-header">
         <h2>Agvis Demo Environment</h2>
     </div>
-    
+    <div id="loading-spinner"  style="display: none;">
+        <div class="spinner"></div>
+    </div>
     <div class="demo-buttons" id="demoButtons" style="z-index: 799">
         <!-- Demo Buttons -->
         <button class="demo-button" onclick="activateDemo(0)">WECC</button>
@@ -134,5 +141,6 @@
         <button class="demo-button" onclick="activateDemo(2)">IEEE39</button>
         <button class="demo-button" onclick="activateDemo(3)">ERCOT276</button>
         <button class="demo-button" onclick="activateDemo(4)">EI528</button>
+        <button id="reset" style="display: none" onclick="reset()">Reset AGVis</button>
     </div>
 </body>
