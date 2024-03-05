@@ -114,23 +114,25 @@ async function activateSimulation(filename) {
         console.error('Error loading simulation:', error);
         
     } finally {
-        // Hide the loading spinner and restore cursor
-        loadingSpinner.style.display = 'none';
-        body.classList.remove('loading-cursor');
+        setTimeout(() => {
+            // Hide the loading spinner and restore cursor
+            loadingSpinner.style.display = 'none';
+            body.classList.remove('loading-cursor');
 
-        // Remove the simulation buttons, forcing them to refresh the page.
-        const opt_loadsimulation  = document.querySelector(`input[name='opt_loadsimulation']`);
-        opt_loadsimulation.disabled = true;
+            // Remove the simulation buttons, forcing them to refresh the page.
+            const opt_loadsimulation  = document.querySelector(`input[name='opt_loadsimulation']`);
+            opt_loadsimulation.disabled = true;
 
-        const demoButtons = document.querySelectorAll('.demo-button');
-        demoButtons.forEach(button => {
-            button.style.display = 'none';
-            button.disabled = true;
-        });
+            const demoButtons = document.querySelectorAll('.demo-button');
+            demoButtons.forEach(button => {
+                button.style.display = 'none';
+                button.disabled = true;
+            });
 
-        // Enable reset button
-        const reset = document.getElementById('reset');
-        reset.style.display = "inline-block";
+            // Enable reset button
+            const reset = document.getElementById('reset');
+            reset.style.display = "inline-block";
+        }, 500);
     }
 }
 
