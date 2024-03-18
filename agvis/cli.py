@@ -53,6 +53,7 @@ def create_parser():
     run.add_argument('--port', default=8810, type=int, help='Port to bind the server (default: 8810)')
     run.add_argument('--dev', default=False, type=bool, help='Run AGVis in development mode (default: False)')
     run.add_argument('--static', default=None, help='Static path to serve (default: None)')
+    run.add_argument('--workers', default=1, type=int, help='Number of workers (default: 1)')
 
     misc = sub_parsers.add_parser('misc')
     misc.add_argument('--license', action='store_true', help='Display software license', dest='show_license')
