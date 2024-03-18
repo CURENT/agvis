@@ -114,6 +114,7 @@ class AgvisWeb():
 
         # Print out the URL to access the application
         print(f"AGVis will serve static files from directory {self.app.static_folder}")
+        print(f"Number of workers: {workers}")
         print(f"at the URL http://{host}:{port}. Open your web browser and navigate to the URL to access the application.")
         print("\nStarting AGVis... Press Ctrl+C to stop.\n")
 
