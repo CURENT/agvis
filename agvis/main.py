@@ -186,7 +186,7 @@ def remove_output(recursive=False):
 def run(filename='', input_path='', verbose=20,
         host='localhost', port=8810, dev=False,
         socket_path=None, static=None, workers=1,
-        **kwargs):
+        working_dir=None, **kwargs):
     """
     Entry point to run AGVis.
 
@@ -210,6 +210,9 @@ def run(filename='', input_path='', verbose=20,
         An instance of system (if `cli == False`) or an exit code otherwise..
 
     """
+
+    if working_dir:
+        os.chdir(working_dir)
 
     if is_interactive() and len(logger.handlers) == 0:
         config_logger(verbose, file=False)

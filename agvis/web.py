@@ -47,6 +47,7 @@ class AgvisWeb():
             Flask application
         """
         app = Flask(__name__)
+        app.debug = True
         app.requests_session = requests.Session()
         app.config.from_object(DefaultConfig())
 
