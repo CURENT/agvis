@@ -122,7 +122,7 @@ class Window {
 
         this.map = L.map(this.map_name, {
             minZoom: 3,
-            maxZoom: 10,
+            maxZoom: 18,
 			zoomSnap: 0.01,
             center: [40, -100],
             zoom: 5,
