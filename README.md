@@ -36,13 +36,13 @@ AGVis is currently under active development. Use the following resources to get 
 + Report bugs or issues by submitting a [GitHub issue][GitHub issues]
 + Submit contributions using [pull requests][GitHub pull requests]
 + Read release notes highlighted [here][release notes]
-+ Check out and cite our [paper][arxiv paper]
++ Check out and cite our [paper][naps paper]
 
 # Citing AGVis
 
 If you use AGVis for research or consulting, please cite the following publications in your publication:
 
-> Parsly, N., Wang, J., West, N., Zhang, Q., Cui, H., & Li, F. (2022). "DiME and AGVIS A Distributed Messaging Environment and Geographical Visualizer for Large-scale Power System Simulation". arXiv. https://doi.org/https://arxiv.org/abs/2211.11990v1
+> N. Parsly, J. Wang, N. West, Q. Zhang, H. Cui and F. Li, "DiME and AGVis: A Distributed Messaging Environment and Geographical Visualizer for Large-Scale Power System Simulation," 2023 North American Power Symposium (NAPS), Asheville, NC, USA, 2023, pp. 1-5, doi: 10.1109/NAPS58826.2023.10318583.
 
 Please refer as **LTB AGVis** for the first occurence and then refer as **AGVis**.
 
@@ -70,7 +70,7 @@ AGVis is licensed under [GPL v3 License](./LICENSE)
 [readthedocs]: https://agvis.readthedocs.io
 [advanced usage]: https://agvis.readthedocs.io/en/latest/usage/index.html
 [release notes]: https://agvis.readthedocs.io/en/latest/release-notes.html
-[arxiv paper]: https://arxiv.org/abs/2211.11990
+[naps paper]: https://ieeexplore.ieee.org/document/10318583
 [tutorial]: https://agvis.readthedocs.io/en/latest/getting_started/tutorial/index.html
 [LTB Repository]: https://github.com/CURENT
 [Visualization Gallery]: https://ltb.readthedocs.io/projects/agvis/en/latest/getting_started/testcases.html#visualization-gallery

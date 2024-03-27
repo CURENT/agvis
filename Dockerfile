@@ -1,5 +1,6 @@
 # Start with a base Python 3.10 image from the Debian Buster distribution
 FROM python:3.10-buster AS base
+ARG BRANCH_NAME
 
 # Switch to the root user and set the working directory to /root
 USER root
@@ -18,14 +19,12 @@ RUN apt update \
         libev-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN python3 -m pip install --upgrade pip
+
 # Install the necessary Python packages
 RUN python3 -m pip install \
         kvxopt \
         git+https://github.com/cuihantao/andes.git@develop \
-        --no-cache-dir \
-    && python3 -m pip install \
-        git+https://github.com/zmalkmus/agvisdev.git \
-        # git+https://github.com/CURENT/agvis.git \
         --no-cache-dir
 
 # Create a new user named 'cui' and a work directory
@@ -49,6 +48,11 @@ RUN git clone https://github.com/CURENT/dime.git && \
     cd ../../ && \
     rm -rf dime \
     && rm -rf /tmp/dime
+
+RUN git clone --single-branch --branch unittesting https://github.com/CURENT/agvis.git && \
+    cd agvis && \
+    python3 -m pip install -e . && \
+    cd ..
 
 # Switch to the 'cui' user and set the working directory to the new user's work directory
 USER cui

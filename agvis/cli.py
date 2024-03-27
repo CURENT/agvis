@@ -43,6 +43,7 @@ def create_parser():
     run = sub_parsers.add_parser('run')
     run.add_argument('--host', default='127.0.0.1', help='Host to bind the server (default: 127.0.0.1)')
     run.add_argument('--port', default=8810, type=int, help='Port to bind the server (default: 8810)')
+    run.add_argument('--dev', default=False, type=bool, help='Run AGVis in development mode (default: False)')
     # run.add_argument('--static', default=None, help='Static path to serve (default: None)')
 
     misc = sub_parsers.add_parser('misc')

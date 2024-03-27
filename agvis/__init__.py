@@ -2,7 +2,7 @@ from . import _version
 __version__ = _version.get_versions()['version']
 
 from agvis.main import config_logger  # NOQA
-from agvis.app import run_app
+from agvis.web import AgvisWeb
 
 __author__ = 'Nicholas West, Nicholas Parsly, Zack Malkmus, and Jinning Wang'
 

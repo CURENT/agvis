@@ -1,5 +1,38 @@
+/* ****************************************************************************************
+ * File Name:   ZoneLayer.js
+ * Authors:     Nicholas West, Nicholas Parsley
+ * Date:        9/28/2023 (last modified)
+ * 
+ * Description: ZoneLayer.js contains the code for the ZoneLayer class. The ZoneLayer 
+ *              highlights certain areas of the map with colors. These areas are 
+ *              determined by a GeoJSON file. For the most part, ZoneLayer is fairly 
+ *              self-explanatory. During its initialization, it calls a chain of functions 
+ *              that ensure that the necessary data is loaded before rendering. It is also 
+ *              guaranteed to be drawn underneath the TopologyLayer and ContourLayer. The 
+ *              ZoneLayer extends from the Leaflet GeoJSON class.
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/zone.html
+ * ****************************************************************************************/
+
+/**
+ * @class ZoneLayer
+ * @extends {L.GeoJSON}
+ * @param   {Object}    options - The leaflet options passed to the ZoneLayer.
+ * @var     {Boolean}   _render - Determines whether the ZoneLayer is rendered or not.
+ * @var     {Response}  geojson - The main thing to note with the geojson variable is the fetch command used to initialize it.
+ * @returns {ZoneLayer}
+ */
 L.ZoneLayer = L.GeoJSON.extend({
 	options: {
+        /**
+         * Determines which colors are assigned to what zones based on the GeoJSON data. Adjusting the return values of the switch statement 
+         * can change the colors of the zones. The cases for the switch statement will most likely have to be changed if a different 
+         * GeoJSON file is used.
+         * 
+         * @memberof ZoneLayer
+         * @param {Object} feature - Contains the properties of the GeoJSON file that are used to determine the color of specific zones.
+         * @returns 
+         */
         style: function(feature) {
             switch (feature.properties.NERC) {
                 case 'MRO':  return {color: "#ff0000"};
@@ -14,6 +47,13 @@ L.ZoneLayer = L.GeoJSON.extend({
         }
 	},
 
+    /**
+     * Initialize the ZoneLayer variables.
+     * 
+     * @constructs ZoneLayer
+     * @param {Object} options
+     * @returns 
+     */
     initialize(options) {
         L.GeoJSON.prototype.initialize.call(this, null, options);
         this._render = false;
@@ -28,6 +68,14 @@ L.ZoneLayer = L.GeoJSON.extend({
         })(this);
     },
 
+    /**
+     * Adds GeoJSON data to the layer but also manipulates the order in which different 
+     * map layers are rendered by moving the GeoJSON layer's pane within the DOM structure. 
+     * 
+     * @memberof ZoneLayer
+     * @param {*} geojson 
+     * @returns
+     */
     addData(geojson) {
         L.GeoJSON.prototype.addData.call(this, geojson);
 
@@ -50,6 +98,12 @@ L.ZoneLayer = L.GeoJSON.extend({
         }
     },
 
+    /**
+     * Toggles the rendering of the ZoneLayer.
+     * 
+     * @memberof ZoneLayer
+     * @returns
+     */
     toggleRender() {
         this._render = !this._render;
         console.log("Zone rendering: ", this._render);

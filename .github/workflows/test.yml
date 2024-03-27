@@ -1,0 +1,20 @@
+on:
+  push:
+    branches: [ "master", "develop", "unittesting" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    name: Run test suite
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build the Docker image
+      run: ./go.sh build
+
+    - name: Run tests
+      run: ./go.sh run_tests

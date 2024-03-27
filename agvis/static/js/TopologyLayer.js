@@ -1,3 +1,29 @@
+/* ****************************************************************************************
+ * File Name:   TopologyLayer.js
+ * Authors:     Nicholas West, Nicholas Parsley
+ * Date:        9/28/2023 (last modified)
+ * 
+ * Description: TopologyLayer.js contains the code the TopologyLayer class. The 
+ * 				ToplogyLayer handles displaying the nodes (buses) and lines for a 
+ * 				given power system.
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/topology.html
+ * ****************************************************************************************/
+
+/**
+ * Renders for the TopologyLayer. It establishes many lookup variables for specific node 
+ * types, but these go unused for the most part. Lines are drawn between node locations 
+ * by the Canvas Context. Nodes are placed after the lines are drawn, and their icons 
+ * depend on their associated image in busToImageLookup. Lines and nodes are drawn in order
+ * of appearance in the data.
+ * 
+ * @param {HTML Canvas Element} canvas                - The canvas that the layer will be drawn on.
+ * @param {Point}               size                  - Represents the current size of the map in pixels.
+ * @param {LatLngBounds}        bounds                - Represents the geographical bounds of the map.
+ * @param {Function}            project               - The latLngToContainerPoint function specifically for CanvasLayer._map.
+ * @param {Boolean}             needsProjectionUpdate - Determines whether the Layer’s projection needs to be updated.
+ * @returns 
+ */
 function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }) {
 	const images = this._images;
 	if (!images.allLoaded) return;
@@ -258,11 +284,33 @@ function renderTopology(canvas, { size, bounds, project, needsProjectionUpdate }
     }
 }
 
+/**
+ * @class TopologyLayer
+ * @extends {L.CanvasLayer}
+ * 
+ * @var {Object}  _context         - Another name for the Window's workspace object.
+ * @var {WeakMap} _cache           - Caches the information needed to determine which buses are specific types so that those buses can be given special icons. This primarily goes unused.
+ * @var {Boolean} _render          - Determines if the TopologyLayer is displayed.
+ * @var {Boolean} _render_bus_ids  - Determines if the Bus IDs are rendered along with the buses. This is primarily for debugging purposes.
+ * @var {Number}  _opacity         - The opacity setting for the lines drawn between the buses.
+ * @var {Object}  _images          - Contains the icons for the various types of nodes.
+ * 
+ * @returns {TopologyLayer}
+ */
 L.TopologyLayer = L.CanvasLayer.extend({
 	options: {
 		render: renderTopology,
 	},
 
+	/**
+	 * Sets the TopologyLayer’s starting variables.
+	 * 
+	 * @constructs ToplogyLayer
+	 * @param {Object} options - The options Object from Window. Unused beyond being passed to the CanvasLayer's 
+	 * 							 initialization function, seemed to be initially used to set certain variables, 
+	 * 							 but those values are instead hardcoded into the initialization.
+	 * @returns
+	 */
 	initialize(options) {
 		this._context = null;
 		this._cache = new WeakMap();
@@ -303,16 +351,36 @@ L.TopologyLayer = L.CanvasLayer.extend({
 		L.CanvasLayer.prototype.initialize.call(this, options);
 	},
 
+	/**
+	 * Updates the values for the nodes and lines and then re-renders the TopologyLayer.
+	 * 
+	 * @memberof TopologyLayer
+	 * @param {Object} context - The workspace from Window.
+	 * @returns
+	 */
 	update(context) {
 		this._context = context;
 		this.redraw();
 	},
 
+	/**
+	 * Handles adding the TopologyLayer to the map.
+	 * 
+	 * @memberof TopologyLayer
+	 * @param {Map} map - The map from Window.
+	 * @returns
+	 */
     onAdd(map) {
         L.CanvasLayer.prototype.onAdd.call(this, map);
         this.getPane().classList.add("topology-pane");
     },
 
+	/**
+	 * Switches the state of TopologyLayer._render.
+	 * 
+	 * @memberof TopologyLayer
+	 * @returns
+	 */
     toggleRender() {
         this._render = !this._render;
         //console.log("Topology rendering: ", this._render);

@@ -103,6 +103,10 @@ the code and, for example, develop new models or routines.
 The benefit of development mode installation is that
 changes to source code will be reflected immediately without re-installation.
 
+.. note::
+
+    Windows users must use the development mode installation to run AGVis.
+
 Step 1: Get AGVis source code
 
 As a developer, you are strongly encouraged to clone the source code using ``git``
