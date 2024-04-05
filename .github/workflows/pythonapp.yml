@@ -1,8 +1,6 @@
-on:
-  push:
-    branches: [ "master", "develop", "unittesting" ]
-  pull_request:
-    branches: [ "master" ]
+name: Python application
+
+on: [push, pull_request]
 
 jobs:
   build:
@@ -47,25 +45,17 @@ jobs:
     #     pip install flake8  # specify flake8 to avoid unknown error
     #     # stop the build if there are Python syntax errors or undefined names
     #     flake8 .
-
+    
   publish-to-pypi:
     name: Publish Python distribution to PyPI
     if: github.ref == 'refs/heads/master' && github.event_name == 'push'
     needs:
-    - build
+      - build
+      - test
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/project/agvis/
-    permissions:
-      id-token: write
     steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      
-    
+      - name: Publish Python dist to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_PASSWORD }}
