@@ -1,9 +1,63 @@
+/* ****************************************************************************************
+ * File Name:   Window.js
+ * Authors:     Nicholas West, Nicholas Parsly, and Zack Malkmus
+ * Date:        9/15/2023 (last modified)
+ * 
+ * Important:   The window class is the main class for AGVis. It contains 5 layers: 
+ *              (Tile Layer | Zone Layer | Topology Layer | Contour Layer | User Layer)
+ * 
+ * Description: Windows initialize the map and all of the layers, and contains the 
+ *              main thread. They handle timing for the animations and receiving data 
+ *              from DiME. They also instantiate most of the Layers and UI elements 
+ *              used for displaying data.Developers that want to add new features to 
+ *              AGVis will inevitably have to either interface with a Window directly 
+ *              or with one of its components.
+ * 
+ * Note:        Each layer is described in their respective files and on the github
+ *              https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/index.html#development
+ * 
+ * API Docs:    https://ltb.readthedocs.io/projects/agvis/en/latest/modeling/window.html
+ * ****************************************************************************************/
+
+/**
+ * @class Window
+ * 
+ * @param {Number} num        - The number of the window.
+ * @param {Object} options    - The options for the window.
+ * @param {Object} dimec      - The DiME client (Unused).
+ * @param
+ * 
+ * @var   {Object} workspace  - Contains the data of all variables for the current timestep.
+ * @var   {Object} history    - Contains the data of all variabes for all timesteps.
+ * @var   {Object} states     - The enum for the window's view state.
+ * @var   {Number} state      - The window's current view state.
+ * @var   {Object} options    - The options for the window.
+ * @var   {Array}  multilayer - An array of newlayer Objects containing the data necessary for displaying simulations added by file upload.
+ * 
+ * @example const window1 = new Window(1, options[0]);
+ * @see     index.html
+ */
 class Window {
+    /**
+     * Instantiates the layers along with various UI elements. It also begins 
+     * the timer loop for simulations uploaded by users instead of sent through DiME.
+     * 
+     * @constructs Window
+     * @param   {Number} num     - The number of the window.
+     * @param   {Object} options - The options for the window.
+     * @param   {Object} dimec   - The DiME client (Unused).
+     * @returns
+     */
     constructor(num, options, dimec) {
+
+        // ====================================================================
+        // Initialize workspace and history
+        // ====================================================================
+         
         this.workspace = {};
         this.history = {};
 
-        // Keep track of the view state
+        // Enum to track the window's view state
         this.states = {
             angl: 0,
             volt: 1,
@@ -18,9 +72,16 @@ class Window {
         this.multihistory = [];
         this.mlayercur = 0;
         this.mnumfree = 0;
-		
-		//Loops every 17 milliseconds to update the animation for the independent simulation data
-		//Animation step is associated with receiving info from DiME, so we have to use this for the bundled version
+
+        /**
+         * The timer loop for the playback bar. It updates the playback bar every 17 milliseconds.
+         * Animation step is associated with receiving info from DiME, so we have to use this for 
+         * the bundled version.
+         * 
+         * @memberof Window
+         * @param    {Object} multilayer - The array of multilayers.
+         * @returns
+         */
 		setInterval(function(multilayer) {
 			let timestep = Number(Date.now());
 			for (let i = 0; i < multilayer.length; i++) {
@@ -61,11 +122,15 @@ class Window {
 
         this.map = L.map(this.map_name, {
             minZoom: 3,
-            maxZoom: 10,
+            maxZoom: 18,
 			zoomSnap: 0.01,
             center: [40, -100],
             zoom: 5,
         });
+        
+        // ===================================================================
+        // Initialize AGVis layers and UI elements
+        // ===================================================================
 
         this.map.handshake = true;
         this.legend = new L.DynamicLegend(this, options).addTo(this.map);
@@ -79,15 +144,21 @@ class Window {
         this.map.addControl(this.searchLayer.control);
         this.simTimeBox = L.simTimeBox({ position: 'topright' }).addTo(this.map);
 
-        // side bar
+        /**
+         * The function that is called when the user clicks on the map. It is used to toggle the sidebar.
+         * 
+         * @memberof Window
+         * @param    {Object} e - The event object.
+         * @returns
+         */
         const sidebar = L.control.sidebar({
-            autopan: true,       // whether to maintain the centered map point when opening the sidebar
-            closeButton: true,    // whether t add a close button to the panes
+            autopan: true,                         // whether to maintain the centered map point when opening the sidebar
+            closeButton: true,                     // whether t add a close button to the panes
             container: this.map_name + '_sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
-            position: 'right',     // left or right
+            position: 'right',                     // left or right
         }).addTo(this.map);
 
-        /* add a new panel */
+        // Add new panels to the sidebar
         let visPlotName = this.map_name + "Vis";
         let visPane = '';
 
@@ -107,11 +178,11 @@ class Window {
         addSidebarLayers(this, options, sidebar);
 
         sidebar.addPanel({
-            id: 'plotPanel',                     // UID, used to access the panel
-            tab: '<i class="fa fa-line-chart"></i>',  // content can be passed as HTML string,
-            pane: visPane,        // DOM elements can be passed, too
-            title: 'LTB Plot Panel',              // an optional pane header
-            position: 'top'                  // optional vertical alignment, defaults to 'top'
+            id: 'plotPanel',                         // UID, used to access the panel
+            tab: '<i class="fa fa-line-chart"></i>', // content can be passed as HTML string,
+            pane: visPane,                           // DOM elements can be passed, too
+            title: 'LTB Plot Panel',                 // an optional pane header
+            position: 'top'                          // optional vertical alignment, defaults to 'top'
         });
 
         sidebar.addPanel({
@@ -123,6 +194,14 @@ class Window {
         });
     }
 
+    /**
+     * This getter retrieves the variables stored in Window.history, allowing for the 
+     * playback of simulations.
+     * 
+     * @memberof    Window
+     * @param       {String} varname              - The name of the variable to retrieve.
+     * @param       {Number} currentTimeInSeconds - The current time in seconds.
+     */
     historyKeeper(varname, currentTimeInSeconds) {
         const varHistory = this.history[varname];
         let value;
@@ -141,6 +220,13 @@ class Window {
         return true;
     }
 
+    /**
+     * Begins drawing the simulation once initial data is received from DiME.
+     * Initializes Contour Layer and starts its animation.
+     * 
+     * @memberof Window
+     * @returns
+     */
     startSimulation() {
         const busVoltageIndices = this.workspace.Idxvgs.Bus.V.array;
         const busThetaIndices = this.workspace.Idxvgs.Bus.theta.array;
@@ -195,6 +281,13 @@ class Window {
         this.contourLayer.updateRange(fmin, fmax);
     }
 
+    /**
+     * Called once all the simulation data has been received. 
+     * It sets the end time for the animation and adds the Playback Bar UI element.
+     * 
+     * @memberof Window
+     * @return
+     */
     endSimulation() {
         this.time = this.end_time = Number(this.workspace.Varvgs.t.toFixed(2));
         this.pbar.addTo(this.map);
@@ -222,6 +315,12 @@ class Window {
 			}
 	}
 */
+    /**
+     * Creates and calls the step() and reset() functions to draw the animation
+     * 
+     * @memberof Window
+     * @returns
+     */
     async drawThread() {
         const lineSpec = {
             "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
@@ -259,6 +358,13 @@ class Window {
 
         let firstTime = null;
 
+        /**
+         * Finds the difference between the current time and the previous step() call’s time and 
+         * updates the variables and the Layers based on the new time. It also updates the SimTimeBox display.
+         * 
+         * @param   {*} currentTime 
+         * @returns
+         */
         function step(currentTime) {
             requestAnimationFrame(step);
 
@@ -317,6 +423,12 @@ class Window {
             }
         }
 
+        /**
+         * Resets the variable for telling if an animation is starting from the beginning.
+         * 
+         * @memberof Window
+         * @returns
+         */
         function reset() {
             firstTime = null;
             if (self.p1 !== undefined)
@@ -331,6 +443,16 @@ class Window {
         return reset;
     }
 
+    /**
+     * The main AGVis program. Starts and stops the simulation based on input from the
+     * DiME server. Also creates some UI elements for changing simulation view.
+     * Invoked in index.html after creating the window.
+     * 
+     * @memberof Window
+     * @returns
+     * 
+     * @see      index.html
+     */
     async mainThread() {
         const self = this;
 
@@ -339,7 +461,11 @@ class Window {
         this.map.resetTime = resetTime;
         this.resetTime = resetTime;
 
-        /// Bar of icons for voltage, theta and frequency
+        // ====================================================================
+        // UI Buttons
+        // ====================================================================
+
+        // voltage angle
         const thetaButton = L.easyButton('<span>&Theta;</span>', function(btn, map) {
             const amin = (self.options.amin === undefined) ? -1.0 : self.options.amin;
             const amax = (self.options.amax === undefined) ?  1.0 : self.options.amax;
@@ -349,7 +475,8 @@ class Window {
             self.state = self.states.angl;
             self.legend.update();
         });
-
+        
+        // voltage magnitude
         const voltageButton = L.easyButton('<span>V</span>', function(btn, map) {
             const vmin = (self.options.vmin === undefined) ? 0.8 : self.options.vmin;
             const vmax = (self.options.vmax === undefined) ? 1.2 : self.options.vmax;
@@ -360,6 +487,7 @@ class Window {
             self.legend.update();
         });
 
+        // frequency
         const freqButton = L.easyButton('<span><i>f</i></span>', function(btn, map) {
             const fmin = (self.options.fmin === undefined) ? 0.9998 : self.options.fmin;
             const fmax = (self.options.fmax === undefined) ? 1.0002 : self.options.fmax;
@@ -385,6 +513,10 @@ class Window {
 
         const toggleLayerButtons = [rendContourButton, rendCommunicationButton];
         const toggleLayerBar = L.easyBar(toggleLayerButtons).addTo(this.map);
+
+        // ====================================================================
+        // DiME
+        // ====================================================================
 
         newdimeserver: for (;;) {
             this.dimec = new dime.DimeClient(this.options.dimehost, this.options.dimeport);
@@ -445,6 +577,15 @@ class Window {
         }
     }
 
+    /**
+     * Sets the history and workspace when loading a previous simulation from a DiME file upload. 
+     * Note that this is separate from the MultiLayer and IDR features. The button for this is 
+     * found in the Configuration menu.
+     * 
+     * @memberof Window
+     * @param   {Object} buf - The Array buffer from the file upload
+     * @returns
+     */
     load(buf) {
         let {workspace, history} = dime.dimebloads(buf);
 
@@ -452,6 +593,13 @@ class Window {
         this.history = history;
     }
 
+    /**
+     * Downloads a DiME file of the current simulation. 
+     * Note that this is separate from the MultiLayer and IDR features.
+     * 
+     * @memberof Window
+     * @returns  {Object} - The DiME file of the current simulation.
+     */
     save() {
         return dime.dimebdumps({history: this.history, workspace: this.workspace});
     }
