@@ -21,3 +21,6 @@ python:
         - doc
     - method: setuptools
       path: .
+    - method: pip
+      extra_requirements:
+        - lxml[html_clean]  # Install the required lxml package with html_clean extras
