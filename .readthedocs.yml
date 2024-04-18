@@ -3,15 +3,16 @@ version: 2
 formats:
   - pdf
 
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.8"
+
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
   configuration: docs/source/conf.py
 
-build:
-  os: ubuntu-22.04
-
 python:
-  version: 3.8
   install:
     - requirements: requirements.txt
     - method: pip
@@ -20,4 +21,3 @@ python:
         - doc
     - method: setuptools
       path: .
-  system_packages: true
