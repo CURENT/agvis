@@ -14,13 +14,12 @@ sphinx:
 
 python:
   install:
-    - requirements: requirements.txt
+    - requirements: 
+        - requirements.txt
+        - lxml[html_clean]
     - method: pip
       path: .
       extra_requirements:
         - doc
     - method: setuptools
       path: .
-    - method: pip
-      extra_requirements:
-        - lxml[html_clean]  # Install the required lxml package with html_clean extras
