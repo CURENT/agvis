@@ -25,3 +25,7 @@ This section contains a more in-depth look at AGVis’s structure and implementa
     topmulti
     contmulti
     playmulti
+    main
+    cli
+    web
+    flask_configurations
