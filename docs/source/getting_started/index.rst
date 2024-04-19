@@ -52,7 +52,7 @@ check the guide in :ref:`Develop Install`.
     Prefer pip?
     ^^^^^^^^^^^
 
-    AGVis will come to PyPI soon, stay tuned!
+    Install AGVis from PyPI.
 
     ++++
 
