@@ -6,3 +6,4 @@ gunicorn
 requests
 pytest
 pytest-flask
+lxml[html_clean]
