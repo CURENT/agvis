@@ -141,8 +141,15 @@ flex: 50%;
     100% { transform: rotate(360deg); }
 }
 
+#reset-container {
+    position: fixed; 
+    top: 65px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    z-index: 799;
+}
+
 #reset {
-    display: inline-block;
     margin: 5px;
     padding: 10px;
     background-color: white;
@@ -150,7 +157,7 @@ flex: 50%;
     border: 2px solid grey;
     border-radius: 5px;
     cursor: pointer;
-    width:200px;
+    width:150px;
 }
 
 #agvis-demo-header {
