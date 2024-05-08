@@ -38,11 +38,17 @@ L.SimTimeBox = L.Control.extend({
      * @returns 
      */
     onAdd: function(map) {
-        this.simulation_time = 0;
-        this.text = L.DomUtil.create('div');
-        this.text.id = "info_text";
-        this.text.innerHTML = "<p style=\"font-size:250%;\"><strong>Simulation time:</strong> " + this.simulation_time + "</p>";
-        return this.text;
+        if (typeof L !== 'undefined') {
+            this.simulation_time = 0;
+            this.text = L.DomUtil.create('div');
+            this.text.id = "info_text";
+            this.text.innerHTML = "<p style=\"font-size:250%;\"><strong>Simulation time:</strong> " + this.simulation_time + "</p>";
+            return this.text;
+        }
+        else {
+            console.error("Leaflet not found.");
+            return null;
+        }
     },
 
     /**
