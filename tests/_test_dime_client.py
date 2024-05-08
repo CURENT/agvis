@@ -24,11 +24,12 @@ def start_dime_server():
     """Spin up the dime server"""
     try:
         command = "dime -l tcp:8888"
-        server = subprocess.Popen(command, shell=True)
+        server = subprocess.Popen(command)
         time.sleep(0.5) # Let DiME start
         return server
     except Exception as e:
         print(f"Failed to start DiME server: {e}")
+        server.terminate()
         yield
     
 def stop_dime_server(server):

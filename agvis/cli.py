@@ -55,8 +55,6 @@ def create_parser():
 
     selftest = sub_parsers.add_parser('selftest', aliases=command_aliases['selftest'])
 
-    demo = sub_parsers.add_parser('demo')  # NOQA
-
     return parser
 
 
@@ -108,7 +106,6 @@ def main():
     # Run the command
     if args.command is None:
         parser.parse_args(sys.argv.append('--help'))
-
     else:
         cmd = args.command
         for fullcmd, aliases in command_aliases.items():

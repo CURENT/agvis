@@ -14,7 +14,8 @@ def test_index(client):
     assert response.status_code == 200
 
 def test_static_js_files(client):
-    path = '../agvis/static/js'
+    path = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(path, '../agvis/static/js')
     assert os.path.exists(path)
     for filename in os.listdir(path):
         response = client.get(f'/static/js/{filename}')
