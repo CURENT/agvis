@@ -60,7 +60,7 @@ def test_agvis_run_invalid_command(monkeypatch, capsys):
 
     def mock_subprocess_run(c2, **kwargs):
         assert c2 == c1
-        return subprocess.CompletedProcess(args=c2, returncode=0, stdout=b'', stderr=b'Invalid command')
+        return subprocess.CompletedProcess(args=c2, stdout=b'', stderr=b'Invalid command')
 
     monkeypatch.setattr(subprocess, 'run', mock_subprocess_run)
 

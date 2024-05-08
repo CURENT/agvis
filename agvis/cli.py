@@ -106,7 +106,6 @@ def main():
     # Run the command
     if args.command is None:
         parser.parse_args(sys.argv.append('--help'))
-
     else:
         cmd = args.command
         for fullcmd, aliases in command_aliases.items():
