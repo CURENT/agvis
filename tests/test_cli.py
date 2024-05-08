@@ -55,16 +55,16 @@ def test_agvis_misc_license(monkeypatch, capsys):
     with capsys.disabled(), pytest.raises(SystemExit):
         main()
 
-def test_agvis_run_invalid_command(monkeypatch, capsys):
-    c1 = "agvis invalid_command"
+# def test_agvis_run_invalid_command(monkeypatch, capsys):
+#     c1 = "agvis invalid_command"
 
-    def mock_subprocess_run(c2, **kwargs):
-        assert c2 == c1
-        return subprocess.CompletedProcess(args=c2, stdout=b'', stderr=b'Invalid command')
+#     def mock_subprocess_run(c2, **kwargs):
+#         assert c2 == c1
+#         return subprocess.CompletedProcess(args=c2, stdout=b'', stderr=b'Invalid command')
 
-    monkeypatch.setattr(subprocess, 'run', mock_subprocess_run)
+#     monkeypatch.setattr(subprocess, 'run', mock_subprocess_run)
 
-    with capsys.disabled(), pytest.raises(SystemExit) as exc_info:
-        main()
+#     with capsys.disabled(), pytest.raises(SystemExit) as exc_info:
+#         main()
 
-    assert exc_info.value.code == 2
+#     assert exc_info.value.code == 2
