@@ -55,8 +55,6 @@ def create_parser():
 
     selftest = sub_parsers.add_parser('selftest', aliases=command_aliases['selftest'])
 
-    demo = sub_parsers.add_parser('demo')  # NOQA
-
     return parser
 
 

@@ -67,4 +67,4 @@ def test_agvis_run_invalid_command(monkeypatch, capsys):
     with capsys.disabled(), pytest.raises(SystemExit) as exc_info:
         main()
 
-    assert exc_info.value.code == 0
+    assert exc_info.value.code == 2

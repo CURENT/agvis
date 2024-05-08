@@ -8,11 +8,9 @@ import platform
 import pprint
 import logging
 import tempfile
-
+import subprocess
 from ._version import get_versions
-
 from andes.utils.misc import is_interactive
-
 import agvis
 from agvis.web import AgvisWeb
 
@@ -303,10 +301,6 @@ def misc(show_license=False, clean=True, recursive=False,
         remove_output(recursive)
         return
 
-    if demo is True:
-        demo(**kwargs)
-        return
-
     if version is True:
         versioninfo()
         return
@@ -318,15 +312,11 @@ def selftest(**kwargs):
     """
     TODO: Run unit tests.
     """
-    logger.warning("Tests have not been implemented")
-
-
-def demo(**kwargs):
-    """
-    TODO: show some demonstrations from CLI.
-    """
-    logger.warning("Demos have not been implemented")
-
+    # logger.warning("Tests have not been implemented")
+    logger.info('Running tests...')
+    path = os.path.dirname(os.path.abspath(__file__))
+    test_path = os.path.join(path, '../tests')
+    subprocess.run(['pytest', '-v', test_path])
 
 def versioninfo():
     """
