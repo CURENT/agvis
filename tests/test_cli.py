@@ -55,6 +55,10 @@ def test_agvis_misc_license(monkeypatch, capsys):
     with capsys.disabled(), pytest.raises(SystemExit):
         main()
 
+# ================================================================================
+# DISABLED: This test runs different locally than on GitHub Actions
+# ================================================================================
+
 # def test_agvis_run_invalid_command(monkeypatch, capsys):
 #     c1 = "agvis invalid_command"
 

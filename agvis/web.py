@@ -10,7 +10,9 @@ import os
 import sys
 import subprocess
 from flask import Flask, render_template, send_from_directory
-from .flask_configurations import *
+from .flask_configurations import DefaultConfig
+from .flask_configurations import DevelopmentConfig
+from .flask_configurations import ProductionConfig
 import requests
 
 class AgvisWeb():
@@ -71,7 +73,7 @@ class AgvisWeb():
                 dev = True
 
             # Run flask as a development server
-            if (dev == True):
+            if (dev):
                 self.app.config.from_object(DevelopmentConfig())
 
                 command = [
@@ -95,7 +97,7 @@ class AgvisWeb():
                 ]
 
             # Start the application
-            with self.app.requests_session as session:
+            with self.app.requests_session:
                 subprocess.run(command, check=True, cwd=self.app_dir)
 
         except KeyboardInterrupt:

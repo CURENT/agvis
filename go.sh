@@ -21,7 +21,7 @@ piptrustedhost=
 
 build() {
     # Set Agvis Branch
-    local BRANCH_NAME=master
+    local BRANCH_NAME="master"
     if [ "$1" ]; then
         BRANCH_NAME=$1
     fi
@@ -47,7 +47,7 @@ build() {
         ${target:+--target $target} \
         ${pipindex:+--build-arg PIP_INDEX_URL=$pipindex} \
         ${piptrustedhost:+--build-arg PIP_TRUSTED_HOST=$piptrustedhost} \
-        --build-arg BRANCH_NAME=$BRANCH_NAME \
+        --build-arg BRANCH_NAME="$BRANCH_NAME" \
         -t $tag .
 }
 
@@ -57,7 +57,6 @@ run_tests() {
 
 dev2() {
     google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &
-    
     tmux split-window -v
     tmux split-window -v
     tmux select-layout tiled
