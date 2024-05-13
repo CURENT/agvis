@@ -544,7 +544,10 @@ function addSidebarLayers(win, options, sidebar) {
 						clayer.topo.update(win.workspace);
 					};
 					
-					//Prioritize layer puts the given layer on top of the others
+					// ==========================================
+					// Prioritize Layer Button
+					// ==========================================
+					
 					const pbut = document.createElement("input");
 					pbut.id = lbut2;
 					pbut.type = "button";
@@ -601,7 +604,40 @@ function addSidebarLayers(win, options, sidebar) {
 					ndiv3.id = ldiv3;
 					elem.appendChild(ndiv3);
 					
-					//Color input for the nodes
+					// ==========================================
+					// Toggle Bus Labels for Multilayer
+					// ==========================================
+
+					const busLabelToggle = document.createElement("input");
+					busLabelToggle.id = "busLabelToggle" + newlayer.num;
+					busLabelToggle.type = "checkbox";
+					busLabelToggle.value = "Bus Labels";
+					busLabelToggle.style.marginLeft = "15px";
+
+					const busLabelToggleLabel = document.createElement("label");
+					busLabelToggleLabel.for = "busLabelToggle" + newlayer.num;
+					busLabelToggleLabel.innerText = "Toggle Bus Labels";
+
+					/**
+					 * Toggles the rendering of bus labels for a newlayer’s MultiTopLayer.
+					 * 
+					 * @returns
+					 * */
+					busLabelToggle.onchange = function() {
+						let cid = this.id.slice(13);
+						let cnum = Number(cid);
+						let clayer = win.multilayer[cnum];
+						clayer.topo.toggleBusLabels();
+						clayer.topo.update(win.workspace);
+					};
+
+					elem.appendChild(busLabelToggle);
+					elem.appendChild(busLabelToggleLabel);
+					
+					// ==========================================
+					// Color Inputs for Nodes
+					// ==========================================
+					
 					const color1 = document.createElement("input");
 					color1.id = lcolor1;
 					color1.type = "color";
@@ -629,6 +665,10 @@ function addSidebarLayers(win, options, sidebar) {
 					
 					elem.appendChild(color1);
 					elem.appendChild(clabel4);
+
+					// ==========================================
+					// Color Inputs for Lines
+					// ==========================================
 					
 					const ndiv4 = document.createElement("div");
 					ndiv4.id = ldiv4;
@@ -662,8 +702,11 @@ function addSidebarLayers(win, options, sidebar) {
 					
 					elem.appendChild(color2);
 					elem.appendChild(clabel5);
-					
-					//Node opacity
+
+					// ==========================================
+					// Node Opacity
+					// ==========================================
+				
 					const ndiv5 = document.createElement("div");
 					elem.appendChild(ndiv5);
 					
@@ -700,7 +743,10 @@ function addSidebarLayers(win, options, sidebar) {
 					elem.appendChild(range1);
 					elem.appendChild(rlabel1);
 										
-					//Line opacity
+					// ==========================================
+					// Line Opacity
+					// ==========================================
+
 					const ndiv6 = document.createElement("div");
 					elem.appendChild(ndiv6);
 					
@@ -736,8 +782,11 @@ function addSidebarLayers(win, options, sidebar) {
 					
 					elem.appendChild(range2);
 					elem.appendChild(rlabel2);
+
+					// ==========================================
+					// Line Width
+					// ==========================================
 					
-					//Line width was requested before node size, which is why it appears earlier
 					const ndiv7 = document.createElement("div");
 					elem.appendChild(ndiv7)
 					
@@ -774,7 +823,10 @@ function addSidebarLayers(win, options, sidebar) {
 					elem.appendChild(range3);
 					elem.appendChild(rlabel3);
 					
-					//Node size
+					// ==========================================
+					// Node Size
+					// ==========================================
+
 					const ndiv8 = document.createElement("div");
 					elem.appendChild(ndiv8)
 					
@@ -812,6 +864,10 @@ function addSidebarLayers(win, options, sidebar) {
 					
 					elem.appendChild(range4);
 					elem.appendChild(rlabel4);
+
+					// ==========================================
+					// Simulation Utility
+					// ==========================================
 					
 					//These handle if the node and line colors were preset in the file
 					if (newlayer.data.Bus.color != null) {
@@ -826,9 +882,6 @@ function addSidebarLayers(win, options, sidebar) {
 						ctog3.click();
 					}
 								
-					// =========================================
-					// Simulation Utility
-					// =========================================
 					if (newlayer.sim) {
 						newlayer.cont = L.multicontLayer(newlayer).addTo(win.map);
 						
