@@ -63,6 +63,11 @@ You can open the web application in your browser.
    :alt: webapplication
    :width: 960px
 
+.. note::
+
+    Windows users will have to use `agvis run` from the `agvis` directory.
+    This directory must contain both `app.py` and `__main__.py`.
+
 stop
 ..........
 

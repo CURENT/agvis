@@ -1,0 +1,61 @@
+name: Python application
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build distribution
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.8"
+    - name: Install pypa/build
+      run: >-
+        python3 -m
+        pip install
+        build
+        --user
+    - name: Build a binary wheel and a source tarball
+      run: python3 -m build
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-package-distributions
+        path: dist/
+
+  test:
+    name: Run test suite
+    needs:
+    - build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: ./go.sh build
+    - name: Run tests
+      run: ./go.sh run_tests
+    # Developer note: Fix flake8 errors before uncommenting here.
+    # - name: Lint with flake8 for pull requests
+    #   if: github.event_name == 'pull_request'
+    #   run: |
+    #     pip install flake8  # specify flake8 to avoid unknown error
+    #     # stop the build if there are Python syntax errors or undefined names
+    #     flake8 .
+    
+  publish-to-pypi:
+    name: Publish Python distribution to PyPI
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    needs:
+      - build
+      - test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish Python dist to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_PASSWORD }}

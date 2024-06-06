@@ -20,6 +20,12 @@ piptrustedhost=
 [ -f env.sh ] && . env.sh
 
 build() {
+    # Set Agvis Branch
+    local BRANCH_NAME="master"
+    if [ "$1" ]; then
+        BRANCH_NAME=$1
+    fi
+
     # Clone ANDES and DiME if they don't exist
     if [ ! -d "../andes" ]; then
         echo "Cloning ANDES repository..."
@@ -41,12 +47,16 @@ build() {
         ${target:+--target $target} \
         ${pipindex:+--build-arg PIP_INDEX_URL=$pipindex} \
         ${piptrustedhost:+--build-arg PIP_TRUSTED_HOST=$piptrustedhost} \
+        --build-arg BRANCH_NAME="$BRANCH_NAME" \
         -t $tag .
 }
 
+run_tests() {
+    docker run -u root --rm $tag sh -c "cd tests && pytest"
+}
+
 dev2() {
-    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &!
-    
+    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &
     tmux split-window -v
     tmux split-window -v
     tmux select-layout tiled
@@ -180,7 +190,7 @@ dev-benchmark() {
 }
 
 dev() {
-    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &!
+    google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &
     
     tmux split-window -v
     tmux split-window -v
@@ -201,11 +211,11 @@ dime-cygwin() {
 ####################################################################################################
 
 # dev-cygwin() {
-#     google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &!
+#     google-chrome --incognito http://localhost:8810/ 2> /dev/null > /dev/null &
     
-#     mintty --exec "docker run --rm -t -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))" &!
-#     mintty --exec "docker run --rm -t -p 5000:5000 -p 8818:8818 $tag dime -vv -l tcp:5000 -l ws:$((port+8))" &!
-#     #mintty --exec "docker run --rm -t $tag andes -v 10 run /home/cui/wecc_vis.xlsx --dime tcp://127.0.0.1:5000 -r tds" &!
+#     mintty --exec "docker run --rm -t -v C:/cygwin64/`pwd`/static:/srv -p 8810:8810 $tag python3 -m http.server -d /srv $((port+0))" &
+#     mintty --exec "docker run --rm -t -p 5000:5000 -p 8818:8818 $tag dime -vv -l tcp:5000 -l ws:$((port+8))" &
+#     #mintty --exec "docker run --rm -t $tag andes -v 10 run /home/cui/wecc_vis.xlsx --dime tcp://127.0.0.1:5000 -r tds" &
 # }
 
 # http-cygwin() {
