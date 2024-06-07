@@ -49,7 +49,7 @@ RUN git clone https://github.com/CURENT/dime.git && \
     rm -rf dime \
     && rm -rf /tmp/dime
 
-RUN git clone --single-branch --branch unittesting https://github.com/CURENT/agvis.git && \
+RUN git clone --single-branch --branch master https://github.com/CURENT/agvis.git && \
     cd agvis && \
     python3 -m pip install -e . && \
     cd ..
