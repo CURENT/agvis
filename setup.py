@@ -76,7 +76,7 @@ setup(
     description="Web application of geographical visualizer for energy systems",
     long_description=readme,
     long_description_content_type='text/markdown',
-    author="Nicholas West, Nicholas Parsly, Jinning Wang",
+    author="Zack Malkmus, Nicholas West, Nicholas Parsly, Jinning Wang",
     author_email='jinninggm@gmail.com',
     url='https://github.com/CURENT/agvis',
     packages=find_packages(exclude=[]),
@@ -93,6 +93,7 @@ setup(
             # 'path/to/data_file',
         ]
     },
+    use_scm_version=True,
     install_requires=parse_requires('requirements.txt'),
     extras_require=extras_require,
     license="GNU Public License v3",
