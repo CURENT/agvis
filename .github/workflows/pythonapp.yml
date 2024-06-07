@@ -13,7 +13,7 @@ jobs:
       with:
         python-version: "3.8"
     - name: Install pypa/build and twine
-      run: python3 -m pip install build twine setuptools_scm
+      run: python3 -m pip install build twine
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
     - name: Store the distribution packages
