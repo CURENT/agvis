@@ -12,15 +12,16 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.8"
-    - name: Install pypa/build and twine
-      run: python3 -m pip install build twine setuptools_scm
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
+    # PIP BUILD
+    # - name: Install pypa/build and twine
+    #   run: python3 -m pip install build twine setuptools_scm
+    # - name: Build a binary wheel and a source tarball
+    #   run: python3 -m build
+    # - name: Store the distribution packages
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: python-package-distributions
+    #     path: dist/
         
   test:
     name: Run test suite
@@ -41,32 +42,33 @@ jobs:
     #     pip install flake8  # specify flake8 to avoid unknown error
     #     # stop the build if there are Python syntax errors or undefined names
     #     flake8 .
-    
-  publish-to-pypi:
-    name: Publish Python distribution to PyPI
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs:
-      - build
-      - test
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.8"
-    - name: Install twine
-      run: pip install twine
-    - name: Download distribution packages
-      uses: actions/download-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Check dist/
-      run: twine check dist/*
-    - name: Publish Python dist to PyPI
-      run: twine upload dist/*
-      env:
-        TWINE_USERNAME: __token__
+
+  # PIP PUBLISH
+  # publish-to-pypi:
+  #   name: Publish Python distribution to PyPI
+  #   if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+  #   needs:
+  #     - build
+  #     - test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Checkout code
+  #     uses: actions/checkout@v4
+  #   - name: Set up Python
+  #     uses: actions/setup-python@v5
+  #     with:
+  #       python-version: "3.8"
+  #   - name: Install twine
+  #     run: pip install twine
+  #   - name: Download distribution packages
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: python-package-distributions
+  #       path: dist/
+  #   - name: Check dist/
+  #     run: twine check dist/*
+  #   - name: Publish Python dist to PyPI
+  #     run: twine upload dist/*
+  #     env:
+  #       TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
