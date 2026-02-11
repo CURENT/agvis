@@ -1,5 +1,5 @@
 # Start with a base Python 3.10 image from the Debian Buster distribution
-FROM python:3.10-buster AS base
+FROM python:3.10-bullseye AS base
 ARG BRANCH_NAME
 
 # Switch to the root user and set the working directory to /root
