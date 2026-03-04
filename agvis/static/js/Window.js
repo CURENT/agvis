@@ -114,9 +114,6 @@ class Window {
 
         const arch = "LTB Modules and Data Flow";
 
-        let TILE_LAYER_URL = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?' +
-                             'access_token=pk.eyJ1IjoiamhlcndpZzEiLCJhIjoiY2lrZnB2MnE4MDAyYnR4a2xua3pramprNCJ9.7-wu_YjNrTFsEE0mcUP06A';
-
         let plotOpen = false;
         let plot1Index = 5;
 
@@ -143,6 +140,17 @@ class Window {
         this.searchLayer = L.searchLayer().addTo(this.map);
         this.map.addControl(this.searchLayer.control);
         this.simTimeBox = L.simTimeBox({ position: 'topright' }).addTo(this.map);
+        
+        var latlngs = [
+            [10.195312, 43.755225],
+            [10.404052, 43.8424511],
+            [10.579833, 43.659924],
+            [10.360107, 43.516688],
+            [10.14038, 43.588348],
+            [10.195312, 43.755225]
+        ];
+        var polygon = new L.polygon(latlngs).addTo(this.map);
+        console.log(polygon);
 
         /**
          * The function that is called when the user clicks on the map. It is used to toggle the sidebar.
