@@ -24,6 +24,11 @@
  */
 L.ZoneLayer = L.GeoJSON.extend({
 	options: {
+        geojsonUrls: [
+            "/js/nerc_regions.geojson",
+            "/js/us_states.geojson",
+            "/js/impactzone.geojson",
+        ],
         /**
          * Determines which colors are assigned to what zones based on the GeoJSON data. Adjusting the return values of the switch statement 
          * can change the colors of the zones. The cases for the switch statement will most likely have to be changed if a different 
@@ -43,6 +48,14 @@ L.ZoneLayer = L.GeoJSON.extend({
                 case 'TRE':  return {color: "#0000ff"};
                 case 'WECC': return {color: "#8000ff"};
                 case '-':    return {color: "#808080"};
+                default:
+                    // Fallback style for non-NERC geojsons (e.g. US state boundaries, impactzone)
+                    return {
+                        color: "#666666",
+                        weight: 1,
+                        fill: false,
+                        opacity: 0.7,
+                    };
             }
         }
 	},
@@ -57,13 +70,28 @@ L.ZoneLayer = L.GeoJSON.extend({
     initialize(options) {
         L.GeoJSON.prototype.initialize.call(this, null, options);
         this._render = false;
-        this._geojson = null;
+        this._geojsons = [];
 
         (async function(zonelayer) {
-            let geojson = await fetch("/js/nerc_regions.geojson");
-            geojson = await geojson.json();
+            const urls = zonelayer.options.geojsonUrls || [];
+            const requests = urls.map((url) => fetch(url));
+            const responses = await Promise.allSettled(requests);
 
-            zonelayer._geojson = geojson;
+            const loaded = [];
+            for (let i = 0; i < responses.length; i++) {
+                const result = responses[i];
+                const url = urls[i];
+
+                if (result.status !== "fulfilled" || !result.value.ok) {
+                    console.warn("ZoneLayer failed to load:", url);
+                    continue;
+                }
+
+                const geojson = await result.value.json();
+                loaded.push(geojson);
+            }
+
+            zonelayer._geojsons = loaded;
             zonelayer.toggleRender();
         })(this);
     },
@@ -109,7 +137,9 @@ L.ZoneLayer = L.GeoJSON.extend({
         console.log("Zone rendering: ", this._render);
 
         if (this._render) {
-            this.addData(this._geojson);
+            for (let i = 0; i < this._geojsons.length; i++) {
+                this.addData(this._geojsons[i]);
+            }
         } else {
             this.clearLayers();
         }
